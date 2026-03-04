@@ -1,9 +1,14 @@
 import { Routes } from '@angular/router';
-import { CreateGameComponent } from './pages/create-game/create-game/create-game.component';
+import { HomeComponent } from './pages/home/home.component';
 
 export const routes: Routes = [
     {
-        path: 'create-game',
-        component: CreateGameComponent
+        path: '',
+        redirectTo: "home",
+        pathMatch: 'full'
+    },
+    {
+        path: "home",
+        component: HomeComponent
     }
 ];
