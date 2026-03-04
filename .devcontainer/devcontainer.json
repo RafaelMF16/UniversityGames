@@ -1,0 +1,33 @@
+{
+    "name": "UniversityGames",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "dev",
+    "dockerFile": "Dockerfile",
+    "context": "..",
+    "runArgs": ["--init"],
+    "postCreateCommand": "npm install",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "angular.ng-template",
+                "johnpapa.angular2",
+                "esbenp.prettier-vscode",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+    "forwardPorts": [57053],
+    "portsAttributes": {
+        "57053": {
+            "label": "Angular App",
+            "onAutoForward": "notify"
+        }
+    },
+    "mounts": ["source=${localWorkspaceFolder},target=/workspace,type=bind"],
+    "remoteUser": "node",
+    "workspaceFolder": "/workspace"
+}
