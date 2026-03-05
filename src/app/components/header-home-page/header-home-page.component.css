@@ -3,17 +3,11 @@
     display: flex;
     background: linear-gradient(to right, rgb(15, 15, 99), rgb(42, 136, 224));
     align-items: center;
+    justify-content: center;
     position: relative;
     height: 6vh;
 }
 
-.logo-container {
-    margin-left: 20px;
-}
-
-.titulo-container {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+h2 {
     color: white;
 }
