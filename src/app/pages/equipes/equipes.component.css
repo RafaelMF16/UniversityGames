@@ -1,0 +1,11 @@
+.title {
+    margin-bottom: 30px
+}
+
+.equipes-container {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}

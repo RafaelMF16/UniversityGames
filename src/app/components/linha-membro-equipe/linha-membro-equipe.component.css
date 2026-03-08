@@ -1,0 +1,46 @@
+:host {
+    display: block;
+}
+
+.membro {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #2e3f57;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.col-nome {
+    flex: 2;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.col-habilidades {
+    flex: 3;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.col-acoes {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+.chip {
+    background-color: #2e3f57;
+    color: #a0aec0;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+}
+
+.icon-edit { color: #a0aec0; }
+.icon-delete { color: #e53e3e; }

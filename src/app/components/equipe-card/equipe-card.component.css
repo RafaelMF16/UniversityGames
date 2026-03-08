@@ -1,0 +1,165 @@
+.card {
+    background-color: #1d283a;
+    border: 1px solid white;
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        strong {
+            color: white;
+            font-size: 16px;
+            display: block;
+        }
+
+        p {
+            color: #a0aec0;
+            font-size: 13px;
+            margin: 0;
+        }
+    }
+
+    .acoes {
+        display: flex;
+        gap: 4px;
+    }
+}
+
+.icon-edit {
+    color: #a0aec0;
+}
+
+.icon-delete {
+    color: #e53e3e;
+}
+
+.tabela {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #2e3f57;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tabela-header {
+    display: flex;
+    padding: 10px 16px;
+    border-bottom: 1px solid #2e3f57;
+    color: #a0aec0;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.col-nome {
+    flex: 2;
+}
+
+.col-habilidades {
+    flex: 3;
+}
+
+.col-acoes {
+    flex: 1;
+    text-align: right;
+}
+
+.botao-adicionar-membro {
+    width: 200px;
+}
+
+.btn-adicionar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #a0aec0;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 8px;
+
+    &:hover {
+        background: rgba(255,255,255,0.05);
+        color: white;
+    }
+}
+
+.form-membro {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid #2e3f57;
+    border-radius: 8px;
+    padding: 20px;
+
+    strong {
+        color: white;
+        font-size: 15px;
+    }
+
+    label {
+        color: white;
+        font-size: 13px;
+        font-weight: 500;
+    }
+}
+
+.habilidades-opcoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    background-color: #2e3f57;
+    color: #a0aec0;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    cursor: pointer;
+
+    &.selecionado {
+        background-color: #2563eb;
+        color: white;
+    }
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.form-acoes {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover { background-color: #1d4ed8; }
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid white;
+}
+
+.expandir-btn {
+    color: white;
+}
