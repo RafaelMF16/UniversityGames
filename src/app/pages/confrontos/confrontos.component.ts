@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { DashboardCardComponent } from "../../components/dashboard-card/dashboard-card.component";
 
 @Component({
   selector: 'app-confrontos',
-  imports: [DashboardCardComponent],
+  imports: [],
   templateUrl: './confrontos.component.html',
   styleUrl: './confrontos.component.css'
 })
