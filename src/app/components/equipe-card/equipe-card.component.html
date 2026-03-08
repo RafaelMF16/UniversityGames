@@ -1,0 +1,68 @@
+<mat-card class="card" appearance="outlined">
+    <div class="header">
+        <div class="info">
+            <button (click)="expandido = !expandido" class="icon-btn expandir-btn">
+                <mat-icon>{{ expandido ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+            <div>
+                <strong>{{ equipe.nome }}</strong>
+                <p>{{ equipe.responsavel }} · {{ equipe.email }} · {{ equipe.membros.length }} membro(s)</p>
+            </div>
+        </div>
+        <div class="acoes">
+            <button (click)="equipeEditada.emit(equipe)" class="icon-btn">
+                <mat-icon class="icon-edit">edit</mat-icon>
+            </button>
+            <button (click)="equipeRemovida.emit(equipe.id)" class="icon-btn">
+                <mat-icon class="icon-delete">delete</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    @if (expandido) {
+    <div class="tabela">
+        <div class="tabela-header">
+            <span class="col-nome">Nome</span>
+            <span class="col-habilidades">Habilidades</span>
+            <span class="col-acoes">Ações</span>
+        </div>
+        @for (membro of equipe.membros; track membro.id) {
+            <app-linha-membro-equipe
+                [membro]="membro"
+                (membroRemovido)="onMembroRemovido($event)">
+            </app-linha-membro-equipe>
+        }
+    </div>
+
+    @if (!adicionandoMembro) {
+        <button class="icon-btn btn-adicionar" (click)="adicionandoMembro = true">
+            <span class="material-icons">person_add</span>
+            Adicionar Membro
+        </button>
+    } @else {
+        <div class="form-membro">
+            <strong>Novo Membro</strong>
+
+            <label>Nome do membro</label>
+            <input class="input" [(ngModel)]="novoNome" placeholder="Nome completo">
+
+            <label>Habilidades</label>
+            <div class="habilidades-opcoes">
+                @for (habilidade of habilidadesDisponiveis; track habilidade) {
+                    <span
+                        class="chip"
+                        [class.selecionado]="novasHabilidades.includes(habilidade)"
+                        (click)="toggleHabilidade(habilidade)">
+                        {{ habilidade }}
+                    </span>
+                }
+            </div>
+
+            <div class="form-acoes">
+                <button mat-flat-button color="primary" (click)="confirmarMembro()">Adicionar</button>
+                <button mat-flat-button class="btn-cancel" (click)="adicionandoMembro = false">Cancelar</button>
+            </div>
+        </div>
+    }
+}
+</mat-card>

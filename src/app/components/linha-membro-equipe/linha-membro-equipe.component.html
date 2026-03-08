@@ -1,0 +1,16 @@
+<div class="membro">
+    <span class="col-nome">{{ membro.nome }}</span>
+    <div class="col-habilidades">
+        @for (hab of membro.habilidades; track hab) {
+            <span class="chip">{{ hab }}</span>
+        }
+    </div>
+    <div class="col-acoes">
+        <button class="icon-btn">
+            <mat-icon class="icon-edit">edit</mat-icon>
+        </button>
+        <button class="icon-btn" (click)="membroRemovido.emit(membro.id)">
+            <mat-icon class="icon-delete">delete</mat-icon>
+        </button>
+    </div>
+</div>

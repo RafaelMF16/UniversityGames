@@ -1,0 +1,21 @@
+.card {
+    background-color: #1d283a;
+    border: 1px solid white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 100%;
+}
+
+.form {
+    display: flex;
+    gap: 24px;
+    padding: 16px 0;
+}
+
+mat-form-field {
+    flex: 1;
+}
+
+button {
+    width: 120px;
+}
