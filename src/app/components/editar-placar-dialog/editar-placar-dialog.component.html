@@ -1,0 +1,25 @@
+<div class="dialog">
+    <div class="dialog-header">
+        <h2>Editar Placar</h2>
+        <button class="icon-btn" (click)="fechar()">
+            <span class="material-icons">close</span>
+        </button>
+    </div>
+
+    <div class="placar">
+        <div class="time">
+            <span class="time-nome">{{ data.equipeA }}</span>
+            <input type="number" [(ngModel)]="golsA" min="0">
+        </div>
+        <span class="x">×</span>
+        <div class="time">
+            <span class="time-nome">{{ data.equipeB }}</span>
+            <input type="number" [(ngModel)]="golsB" min="0">
+        </div>
+    </div>
+
+    <div class="dialog-acoes">
+        <button mat-flat-button class="btn-cancel" (click)="fechar()">Cancelar</button>
+        <button mat-flat-button color="primary" (click)="salvar()">Salvar Placar</button>
+    </div>
+</div>
