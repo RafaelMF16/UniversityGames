@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="placar-linha">
+        <span class="equipe">{{ confronto.equipeA }}</span>
+
+        @if (temPlacar) {
+            <span class="placar">
+                {{ confronto.golsA }} × {{ confronto.golsB }}
+            </span>
+        } @else {
+            <span class="vs">vs</span>
+        }
+
+        <span class="equipe">{{ confronto.equipeB }}</span>
+    </div>
+
+    <div class="info-linha">
+        <span class="info">
+            <span class="material-icons">calendar_today</span>
+            {{ confronto.data }}
+        </span>
+        <span class="info">
+            <span class="material-icons">schedule</span>
+            {{ confronto.horario }}
+        </span>
+        @if (confronto.local) {
+            <span class="info">
+                <span class="material-icons">location_on</span>
+                {{ confronto.local }}
+            </span>
+        }
+    </div>
+</div>

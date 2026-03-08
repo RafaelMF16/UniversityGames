@@ -6,6 +6,7 @@ import { EquipeCardComponent } from "../../components/equipe-card/equipe-card.co
 
 @Component({
   selector: 'app-equipes',
+  standalone: true,
   imports: [
     ContainerPrincipalComponent,
     CadastrarEquipeCardComponent,
