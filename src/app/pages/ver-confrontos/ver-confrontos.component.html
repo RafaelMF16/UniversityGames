@@ -1,0 +1,17 @@
+<app-container-principal>
+    <div class="ver-confrontos-container">
+        <h1 class="title">Ver Confrontos</h1>
+
+        <app-filtros-card [equipes]="equipes" (filtroDataChange)="onFiltroDataChange($event)"
+            (filtroEquipeChange)="onFiltroEquipeChange($event)">
+        </app-filtros-card>
+
+        <div class="confrontos-grid">
+            @for (confronto of confrontosFiltrados; track confronto.id) {
+                <app-confronto-card [confronto]="confronto"></app-confronto-card>
+            } @empty {
+                <p class="vazio">Nenhum confronto encontrado.</p>
+            }
+        </div>
+    </div>
+</app-container-principal>

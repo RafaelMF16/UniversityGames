@@ -5,6 +5,7 @@ import { ProximosConfrontosCardComponent } from "../../components/proximos-confr
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [ContainerPrincipalComponent, DashboardCardComponent, ProximosConfrontosCardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'

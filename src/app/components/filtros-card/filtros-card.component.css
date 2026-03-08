@@ -1,0 +1,55 @@
+.card {
+    background-color: #1d283a;
+    border: 1px solid white;
+    border-radius: 12px;
+    padding: 20px 24px;
+}
+
+.filtros {
+    display: flex;
+    gap: 16px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+        color: #a0aec0;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    input {
+        background-color: #0f1729;
+        border: 1px solid #2e3f57;
+        border-radius: 8px;
+        padding: 10px 12px;
+        color: white;
+        font-size: 14px;
+        outline: none;
+        box-sizing: border-box;
+
+        &:focus {
+            border-color: #2563eb;
+        }
+    }
+}
+
+.custom-select {
+    background-color: #0f1729;
+    border: 1px solid #2e3f57;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: white;
+    width: 200px;
+}
+
+.input-data {
+    height: 47px;
+}

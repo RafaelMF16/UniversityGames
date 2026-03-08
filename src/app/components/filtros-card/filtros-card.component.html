@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="filtros">
+        <div class="field">
+            <label>Filtrar por data</label>
+            <input class="input-data" type="date" [(ngModel)]="filtroData" (ngModelChange)="onDataChange()">
+        </div>
+        <div class="field">
+            <label>Filtrar por equipe</label>
+            <mat-select [(ngModel)]="filtroEquipe" class="custom-select" (ngModelChange)="onEquipeChange()">
+                <mat-option value="">Todas</mat-option>
+                @for (e of equipes; track e.id) {
+                    <mat-option [value]="e.nome">{{ e.nome }}</mat-option>
+                }
+            </mat-select>
+        </div>
+    </div>
+</div>

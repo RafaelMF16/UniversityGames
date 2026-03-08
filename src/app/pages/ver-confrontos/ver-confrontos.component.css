@@ -1,0 +1,39 @@
+.title {
+    margin-bottom: 30px
+}
+
+.ver-confrontos-container {
+    width: 100%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    h1 {
+        color: white;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+        padding: 20px;
+    }
+}
+
+.confrontos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.vazio {
+    color: #a0aec0;
+    font-size: 14px;
+    grid-column: span 2;
+    text-align: center;
+    padding: 40px 0;
+}

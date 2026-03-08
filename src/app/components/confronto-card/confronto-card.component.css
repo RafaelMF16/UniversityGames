@@ -1,0 +1,59 @@
+:host {
+    display: flex;
+}
+
+.card {
+    flex: 1;
+    background-color: #1d283a;
+    border: 1px solid white;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.placar-linha {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.equipe {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.placar {
+    color: #2563eb;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.vs {
+    color: #a0aec0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.info-linha {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #a0aec0;
+    font-size: 13px;
+
+    .material-icons {
+        font-size: 16px;
+        color: #4a5568;
+    }
+}
