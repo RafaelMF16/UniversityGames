@@ -48,12 +48,12 @@
 
             <label>Habilidades</label>
             <div class="habilidades-opcoes">
-                @for (hab of habilidadesDisponiveis; track hab) {
+                @for (habilidade of habilidadesDisponiveis; track habilidade) {
                     <span
                         class="chip"
-                        [class.selecionado]="novasHabilidades.includes(hab)"
-                        (click)="toggleHabilidade(hab)">
-                        {{ hab }}
+                        [class.selecionado]="novasHabilidades.includes(habilidade)"
+                        (click)="toggleHabilidade(habilidade)">
+                        {{ habilidade }}
                     </span>
                 }
             </div>
