@@ -1,0 +1,21 @@
+<mat-card class="card" appearance="outlined">
+    <mat-card-title>
+        <p>Próximos Confrontos</p>
+    </mat-card-title>
+    <mat-card-content class="content">
+        @for (confronto of confrontos; track confrontos) {
+            <div class="confronto-item">
+                <div class="equipes">
+                    <span class="equipe">{{ confronto.equipe1 }}</span>
+                    <span class="vs">vs</span>
+                    <span class="equipe">{{ confronto.equipe2 }}</span>
+                </div>
+                <div class="detalhes">
+                    <span>{{ confronto.data }}</span>
+                    <span>{{ confronto.hora }}</span>
+                    <span>{{ confronto.local }}</span>
+                </div>
+            </div>
+        }
+    </mat-card-content>
+</mat-card>
