@@ -1,0 +1,21 @@
+<app-container-principal>
+    <div class="confrontos-container">
+    <h1 class="title">Confrontos</h1>
+
+    <app-confronto-form-card
+        [equipes]="equipes"
+        [confrontoEditando]="confrontoEditando"
+        (confrontoCriado)="onConfrontoCriado($event)"
+        (confrontoAtualizado)="onConfrontoAtualizado($event)"
+        (cancelarEdicao)="confrontoEditando = null">
+    </app-confronto-form-card>
+
+    <app-confrontos-lista-card
+        [confrontos]="confrontos"
+        [equipes]="equipes"
+        (editarConfrontoClicado)="confrontoEditando = $event"
+        (editarPlacarClicado)="abrirDialogPlacar($event)"
+        (confrontoRemovido)="onConfrontoRemovido($event)">
+    </app-confrontos-lista-card>
+</div>
+</app-container-principal>

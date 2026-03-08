@@ -1,0 +1,89 @@
+.card {
+    background-color: #1d283a;
+    border: 1px solid white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tabela-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid #2e3f57;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.confronto-row {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #2e3f57;
+    color: white;
+    font-size: 14px;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+}
+
+.col-equipe {
+    flex: 2;
+}
+
+.col-placar {
+    flex: 1;
+}
+
+.col-data {
+    flex: 1.5;
+}
+
+.col-horario {
+    flex: 1;
+}
+
+.col-local {
+    flex: 2;
+}
+
+.col-acoes {
+    flex: 1;
+}
+
+.com-placar {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.acoes-btns {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+}
+
+.trophy {
+    color: #d97706;
+    font-size: 20px;
+}
+
+.edit {
+    color: #a0aec0;
+    font-size: 20px;
+}
+
+.delete {
+    color: #e53e3e;
+    font-size: 20px;
+}
+
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none;
+    }
+}

@@ -1,0 +1,49 @@
+<div class="card">
+    <h2 class="card-title">{{ confrontoEditando ? 'Editar Confronto' : 'Criar Confronto' }}</h2>
+
+    <div class="form">
+        <div class="linha">
+            <div class="field">
+                <label>Equipe A</label>
+                <select [(ngModel)]="form.equipeA">
+                    <option value="">Selecionar</option>
+                    @for (equipe of equipes; track equipe.id) {
+                        <option [value]="equipe.nome">{{ equipe.nome }}</option>
+                    }
+                </select>
+            </div>
+            <div class="field">
+                <label>Equipe B</label>
+                <select [(ngModel)]="form.equipeB">
+                    <option value="">Selecionar</option>
+                    @for (equipe of equipes; track equipe.id) {
+                        <option [value]="equipe.nome">{{ equipe.nome }}</option>
+                    }
+                </select>
+            </div>
+            <div class="field">
+                <label>Data</label>
+                <input type="date" [(ngModel)]="form.data">
+            </div>
+        </div>
+
+        <div class="linha">
+            <div class="field">
+                <label>Horário</label>
+                <input type="time" [(ngModel)]="form.horario">
+            </div>
+            <div class="field">
+                <label>Local (opcional)</label>
+                <input type="text" [(ngModel)]="form.local" placeholder="Local">
+            </div>
+            <div class="field acoes">
+                @if (confrontoEditando) {
+                    <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
+                    <button mat-flat-button class="btn-cancel" (click)="cancelarEdicao.emit()">Cancelar</button>
+                } @else {
+                    <button mat-flat-button color="primary" (click)="criar()">Criar Confronto</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
