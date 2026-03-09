@@ -3,6 +3,7 @@ import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
 import { MatButton } from "@angular/material/button";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cadastrar-equipe-card',
@@ -13,7 +14,8 @@ import { MatInputModule } from '@angular/material/input';
     MatCardContent,
     MatButton,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    FormsModule
   ],
   templateUrl: './cadastrar-equipe-card.component.html',
   styleUrl: './cadastrar-equipe-card.component.css'
