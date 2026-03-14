@@ -1,11 +1,19 @@
-<mat-card class="card" appearance="outlined">
-    <mat-card-content class="card-content">
-        <div class="icone-wrapper">
-            <mat-icon>{{ icone }}</mat-icon>
+<article class="card surface-card">
+    <div class="card-copy">
+        <span class="eyebrow">{{ titulo }}</span>
+        <strong class="valor">{{ valor }}</strong>
+
+        <div class="meta">
+            @if (destaque) {
+                <span class="meta-highlight" [class.success]="destaqueTipo === 'success'" [class.warning]="destaqueTipo === 'warning'">
+                    {{ destaque }}
+                </span>
+            }
+            <span class="descricao">{{ descricao }}</span>
         </div>
-        <div class="info">
-            <span class="titulo">{{ titulo }}</span>
-            <span class="valor">{{ valor }}</span>
-        </div>
-    </mat-card-content>
-</mat-card>
+    </div>
+
+    <div class="icone-wrapper">
+        <mat-icon>{{ icone }}</mat-icon>
+    </div>
+</article>

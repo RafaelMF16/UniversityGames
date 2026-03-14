@@ -1,11 +1,42 @@
-.title {
-    margin-bottom: 30px
-}
-
 .equipes-container {
-    padding: 50px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
     width: 100%;
+}
+
+.top-row {
+    align-items: center;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.heading-copy h1 {
+    font-size: clamp(2.7rem, 4vw, 4rem);
+    margin-bottom: 8px;
+}
+
+.heading-copy p {
+    color: var(--text-muted);
+    font-size: clamp(1.05rem, 1.4vw, 1.4rem);
+}
+
+.list-section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.teams-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+@media (max-width: 900px) {
+    .top-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }

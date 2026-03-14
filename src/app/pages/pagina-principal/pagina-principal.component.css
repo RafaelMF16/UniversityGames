@@ -1,12 +1,12 @@
 :host {
     display: block;
-    height: 100vh;
+    min-height: 100vh;
 }
 
-mat-sidenav-container {
-    height: 100vh;
+.shell {
+    min-height: 100vh;
 }
 
-.sidenavbar {
-    background-color: #0c1322;
+.shell-content {
+    min-height: calc(100vh - 92px);
 }

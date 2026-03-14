@@ -1,49 +1,59 @@
-<div class="card">
-    <h2 class="card-title">{{ confrontoEditando ? 'Editar Confronto' : 'Criar Confronto' }}</h2>
+<section class="card surface-card">
+    <div class="card-heading">
+        <div class="heading-icon">
+            <mat-icon>add</mat-icon>
+        </div>
+        <h2>{{ confrontoEditando ? 'Atualizar Partida' : 'Dados do Confronto' }}</h2>
+    </div>
 
-    <div class="form">
-        <div class="linha">
-            <div class="field">
-                <label>Equipe A</label>
-                <select [(ngModel)]="form.equipeA">
-                    <option value="">Selecionar</option>
-                    @for (equipe of equipes; track equipe.id) {
-                        <option [value]="equipe.nome">{{ equipe.nome }}</option>
-                    }
-                </select>
-            </div>
-            <div class="field">
-                <label>Equipe B</label>
-                <select [(ngModel)]="form.equipeB">
-                    <option value="">Selecionar</option>
-                    @for (equipe of equipes; track equipe.id) {
-                        <option [value]="equipe.nome">{{ equipe.nome }}</option>
-                    }
-                </select>
-            </div>
-            <div class="field">
-                <label>Data</label>
-                <input type="date" [(ngModel)]="form.data">
-            </div>
+    <div class="field-group">
+        <label for="equipe-a">Time A (Mandante)</label>
+        <select id="equipe-a" class="app-select" [(ngModel)]="form.equipeA">
+            <option value="">Selecione o primeiro time</option>
+            @for (equipe of equipes; track equipe.id) {
+                <option [value]="equipe.nome">{{ equipe.nome }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="vs-badge">VS</div>
+
+    <div class="field-group">
+        <label for="equipe-b">Time B (Visitante)</label>
+        <select id="equipe-b" class="app-select" [(ngModel)]="form.equipeB">
+            <option value="">Selecione o segundo time</option>
+            @for (equipe of equipes; track equipe.id) {
+                <option [value]="equipe.nome">{{ equipe.nome }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="row-fields">
+        <div class="field-group">
+            <label for="confronto-data">Data</label>
+            <input id="confronto-data" class="app-input" type="date" [(ngModel)]="form.data">
         </div>
 
-        <div class="linha">
-            <div class="field">
-                <label>Horário</label>
-                <input type="time" [(ngModel)]="form.horario">
-            </div>
-            <div class="field">
-                <label>Local (opcional)</label>
-                <input type="text" [(ngModel)]="form.local" placeholder="Local">
-            </div>
-            <div class="field acoes">
-                @if (confrontoEditando) {
-                    <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
-                    <button mat-flat-button class="btn-cancel" (click)="cancelarEdicao.emit()">Cancelar</button>
-                } @else {
-                    <button mat-flat-button color="primary" (click)="criar()">Criar Confronto</button>
-                }
-            </div>
+        <div class="field-group">
+            <label for="confronto-hora">Horario</label>
+            <input id="confronto-hora" class="app-input" type="time" [(ngModel)]="form.horario">
         </div>
     </div>
-</div>
+
+    <div class="field-group">
+        <label for="confronto-local">Localizacao</label>
+        <input id="confronto-local" class="app-input" type="text" [(ngModel)]="form.local" placeholder="Ex: Quadra Principal">
+    </div>
+
+    <div class="actions">
+        @if (confrontoEditando) {
+            <button class="app-button-secondary" type="button" (click)="salvar()">Salvar Alteracoes</button>
+            <button class="app-button-ghost" type="button" (click)="cancelarEdicao.emit(); resetForm()">Cancelar</button>
+        } @else {
+            <button class="app-button" type="button" (click)="criar()">
+                <mat-icon>save</mat-icon>
+                Agendar Partida
+            </button>
+        }
+    </div>
+</section>

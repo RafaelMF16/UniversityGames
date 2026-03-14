@@ -1,35 +1,66 @@
-<div class="card">
-    <div class="tabela-header">
-        <span class="col-equipe">Equipe A</span>
-        <span class="col-equipe">Equipe B</span>
-        <span class="col-placar">Placar</span>
-        <span class="col-data">Data</span>
-        <span class="col-horario hide-mobile">Horário</span>
-        <span class="col-local hide-mobile">Local</span>
-        <span class="col-acoes">Ações</span>
+<section class="card surface-card">
+    <div class="card-top">
+        <h2>Proximas Partidas</h2>
+        <input class="app-input search-input" [(ngModel)]="busca" placeholder="Filtrar por time...">
     </div>
 
-    @for (confronto of confrontos; track confronto.id) {
-        <div class="confronto-row">
-            <span class="col-equipe">{{ confronto.equipeA }}</span>
-            <span class="col-equipe">{{ confronto.equipeB }}</span>
-            <span class="col-placar" [class.com-placar]="temPlacar(confronto)">
-                {{ placar(confronto) }}
-            </span>
-            <span class="col-data">{{ confronto.data }}</span>
-            <span class="col-horario hide-mobile">{{ confronto.horario }}</span>
-            <span class="col-local hide-mobile">{{ confronto.local }}</span>
-            <div class="col-acoes acoes-btns">
-                <button class="icon-btn" (click)="editarPlacarClicado.emit(confronto)" title="Editar placar">
-                    <span class="material-icons trophy">emoji_events</span>
-                </button>
-                <button class="icon-btn" (click)="editarConfrontoClicado.emit(confronto)" title="Editar">
-                    <span class="material-icons edit">edit</span>
-                </button>
-                <button class="icon-btn" (click)="confrontoRemovido.emit(confronto.id)" title="Remover">
-                    <span class="material-icons delete">delete</span>
-                </button>
-            </div>
+    <div class="table-head">
+        <span>Confronto</span>
+        <span>Placar</span>
+        <span>Data/Hora</span>
+        <span>Local</span>
+        <span class="actions-head">Acoes</span>
+    </div>
+
+    <div class="rows">
+        @for (confronto of confrontosFiltrados; track confronto.id) {
+            <article class="row">
+                <div class="confronto-copy">
+                    <strong>{{ confronto.equipeA }}</strong>
+                    <span class="versus">vs</span>
+                    <strong>{{ confronto.equipeB }}</strong>
+                </div>
+
+                <div class="score-column">
+                    <span class="score-badge" [class.finished]="confronto.status === 'encerrado'">{{ placar(confronto) }}</span>
+                    <small>{{ statusLabel(confronto) }}</small>
+                </div>
+
+                <div class="date-column">
+                    <strong>{{ confronto.data }}</strong>
+                    <small>{{ confronto.horario }}</small>
+                </div>
+
+                <div class="location-column">
+                    <mat-icon>location_on</mat-icon>
+                    <span>{{ confronto.local }}</span>
+                </div>
+
+                <div class="actions-column">
+                    @if (confronto.status === 'encerrado') {
+                        <button class="app-button-secondary details-button" type="button" (click)="editarPlacarClicado.emit(confronto)">Ver Detalhes</button>
+                    } @else {
+                        <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar">
+                            <mat-icon>emoji_events</mat-icon>
+                        </button>
+                        <button class="icon-btn" type="button" (click)="editarConfrontoClicado.emit(confronto)" aria-label="Editar confronto">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button class="icon-btn danger" type="button" (click)="confrontoRemovido.emit(confronto.id)" aria-label="Remover confronto">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    }
+                </div>
+            </article>
+        }
+    </div>
+
+    <div class="card-footer">
+        <span>Mostrando {{ confrontosFiltrados.length }} de {{ confrontos.length }} partidas agendadas</span>
+
+        <div class="pager">
+            <button class="app-button-ghost" type="button">Anterior</button>
+            <button class="app-button-secondary" type="button">Proxima</button>
         </div>
-    }
-</div>
+    </div>
+</section>

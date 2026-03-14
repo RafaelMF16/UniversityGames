@@ -1,74 +1,69 @@
 .dialog {
-    background-color: #1d283a;
-    padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 24px;
-    min-width: 300px;
+    min-width: min(520px, 92vw);
+    padding: 28px;
 }
 
 .dialog-header {
+    align-items: flex-start;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+}
 
-    h2 {
-        color: white;
-        font-size: 18px;
-        font-weight: 600;
-        margin: 0;
-    }
+.dialog-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+}
+
+.dialog-header p {
+    color: var(--text-muted);
 }
 
 .placar {
-    display: flex;
     align-items: center;
+    display: flex;
+    gap: 18px;
     justify-content: center;
-    gap: 16px;
 }
 
 .time {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 8px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .time-nome {
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 800;
 }
 
 .x {
-    color: #a0aec0;
-    font-size: 24px;
+    color: var(--text-soft);
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
     font-weight: 700;
-    margin-top: 24px;
 }
 
-input[type="number"] {
-    background-color: #0f1729;
-    border: 1px solid #2e3f57;
-    border-radius: 8px;
-    padding: 16px;
-    color: white;
-    font-size: 28px;
-    font-weight: 700;
-    text-align: center;
-    width: 100px;
+.score-input {
+    background: rgba(37, 51, 77, 0.92);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    height: 88px;
     outline: none;
-
-    &:focus { border-color: #2563eb; }
+    text-align: center;
+    width: 120px;
 }
 
 .dialog-acoes {
     display: flex;
-    justify-content: flex-end;
     gap: 12px;
-}
-
-.btn-cancel {
-    background: transparent;
-    border: 1px solid white;
+    justify-content: flex-end;
 }

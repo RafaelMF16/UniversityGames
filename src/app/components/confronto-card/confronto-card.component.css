@@ -1,59 +1,129 @@
-:host {
-    display: flex;
-}
-
 .card {
-    flex: 1;
-    background-color: #1d283a;
-    border: 1px solid white;
-    border-radius: 12px;
-    padding: 24px;
     display: flex;
     flex-direction: column;
+    gap: 28px;
+    min-height: 320px;
+    padding: 26px;
+}
+
+.card.live {
+    border-color: rgba(36, 144, 255, 0.6);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28), inset 0 3px 0 rgba(36, 144, 255, 0.9);
+}
+
+.card-top,
+.content-row,
+.bottom-row {
     align-items: center;
-    gap: 12px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.placar-linha {
-    display: flex;
+.status-pill {
+    background: rgba(51, 67, 96, 0.82);
+    border-radius: 999px;
+    color: var(--text-muted);
+    font-weight: 800;
+    padding: 8px 14px;
+    text-transform: uppercase;
+}
+
+.status-live {
+    background: rgba(244, 100, 100, 0.12);
+    color: #ff6f6f;
+}
+
+.top-meta {
     align-items: center;
-    gap: 16px;
+    color: var(--text-muted);
+    display: inline-flex;
+    gap: 8px;
 }
 
-.equipe {
-    color: white;
-    font-size: 16px;
-    font-weight: 700;
+.content-row {
+    gap: 22px;
 }
 
-.placar {
-    color: #2563eb;
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.vs {
-    color: #a0aec0;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.info-linha {
+.team {
+    align-items: center;
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    flex: 1;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+}
+
+.team-avatar {
+    align-items: center;
+    background: rgba(53, 70, 100, 0.9);
+    border-radius: 50%;
+    display: flex;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    height: 82px;
     justify-content: center;
+    width: 82px;
 }
 
-.info {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: #a0aec0;
-    font-size: 13px;
+.team-avatar-right {
+    background: rgba(25, 61, 106, 0.96);
+}
 
-    .material-icons {
-        font-size: 16px;
-        color: #4a5568;
+.team strong {
+    font-size: clamp(1.3rem, 1.7vw, 1.9rem);
+}
+
+.center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    min-width: 128px;
+}
+
+.score {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2.3rem, 3vw, 3.3rem);
+    font-weight: 700;
+}
+
+.score.muted {
+    color: var(--text-soft);
+}
+
+.bottom-row {
+    border-top: 1px solid rgba(34, 52, 83, 0.92);
+    padding-top: 18px;
+}
+
+.info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-block strong {
+    font-size: 1.1rem;
+}
+
+.info-block-right {
+    text-align: right;
+}
+
+@media (max-width: 900px) {
+    .card {
+        min-height: unset;
+    }
+
+    .card-top,
+    .content-row,
+    .bottom-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .info-block-right {
+        text-align: left;
     }
 }

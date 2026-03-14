@@ -1,34 +1,25 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { MatCard, MatCardTitle, MatCardContent } from '@angular/material/card';
-import { MatButton } from "@angular/material/button";
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { Equipe } from '../../models/equipe.model';
 
 @Component({
   selector: 'app-cadastrar-equipe-card',
   standalone: true,
-  imports: [
-    MatCard,
-    MatCardTitle,
-    MatCardContent,
-    MatButton,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule
-  ],
+  imports: [FormsModule],
   templateUrl: './cadastrar-equipe-card.component.html',
   styleUrl: './cadastrar-equipe-card.component.css'
 })
 export class CadastrarEquipeCardComponent {
-  @Output() equipeAdicionada = new EventEmitter();
+  @Output() equipeAdicionada = new EventEmitter<Equipe>();
 
   nome = '';
   responsavel = '';
   email = '';
 
   cadastrar() {
-    if (!this.nome || !this.responsavel || !this.email) return;
+    if (!this.nome || !this.responsavel || !this.email) {
+      return;
+    }
 
     this.equipeAdicionada.emit({
       id: Date.now(),

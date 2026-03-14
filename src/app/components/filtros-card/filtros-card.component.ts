@@ -1,28 +1,34 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Equipe } from '../../models/equipe.model';
 import { FormsModule } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+
+export interface VisualizacaoFiltros {
+  data: string;
+  equipe: string;
+  modalidade: string;
+  local: string;
+}
 
 @Component({
   selector: 'app-filtros-card',
   standalone: true,
-  imports: [
-    FormsModule,
-    MatSelectModule,
-    MatOptionModule
-  ],
+  imports: [FormsModule],
   templateUrl: './filtros-card.component.html',
   styleUrl: './filtros-card.component.css'
 })
 export class FiltrosCardComponent {
-  @Input() equipes: Equipe[] = [];
-    @Output() filtroDataChange = new EventEmitter<string>();
-    @Output() filtroEquipeChange = new EventEmitter<string>();
+  @Input() equipes: string[] = [];
+  @Input() modalidades: string[] = [];
+  @Input() locais: string[] = [];
+  @Output() filtrosChange = new EventEmitter<VisualizacaoFiltros>();
 
-    filtroData = '';
-    filtroEquipe = '';
+  filtros: VisualizacaoFiltros = {
+    data: 'Oct 24, 2023',
+    equipe: '',
+    modalidade: '',
+    local: ''
+  };
 
-    onDataChange() { this.filtroDataChange.emit(this.filtroData); }
-    onEquipeChange() { this.filtroEquipeChange.emit(this.filtroEquipe); }
+  emitirFiltros() {
+    this.filtrosChange.emit({ ...this.filtros });
+  }
 }

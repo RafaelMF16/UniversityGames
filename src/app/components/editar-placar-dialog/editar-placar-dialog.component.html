@@ -1,25 +1,31 @@
-<div class="dialog">
+<section class="dialog surface-card">
     <div class="dialog-header">
-        <h2>Editar Placar</h2>
-        <button class="icon-btn" (click)="fechar()">
-            <span class="material-icons">close</span>
+        <div>
+            <h2>Editar Placar</h2>
+            <p>{{ data.equipeA }} x {{ data.equipeB }}</p>
+        </div>
+
+        <button class="icon-btn" type="button" (click)="fechar()" aria-label="Fechar dialogo">
+            <mat-icon>close</mat-icon>
         </button>
     </div>
 
     <div class="placar">
         <div class="time">
             <span class="time-nome">{{ data.equipeA }}</span>
-            <input type="number" [(ngModel)]="golsA" min="0">
+            <input class="score-input" type="number" [(ngModel)]="golsA" min="0">
         </div>
-        <span class="x">×</span>
+
+        <span class="x">x</span>
+
         <div class="time">
             <span class="time-nome">{{ data.equipeB }}</span>
-            <input type="number" [(ngModel)]="golsB" min="0">
+            <input class="score-input" type="number" [(ngModel)]="golsB" min="0">
         </div>
     </div>
 
     <div class="dialog-acoes">
-        <button mat-flat-button class="btn-cancel" (click)="fechar()">Cancelar</button>
-        <button mat-flat-button color="primary" (click)="salvar()">Salvar Placar</button>
+        <button class="app-button-ghost" type="button" (click)="fechar()">Cancelar</button>
+        <button class="app-button-secondary" type="button" (click)="salvar()">Salvar Placar</button>
     </div>
-</div>
+</section>
