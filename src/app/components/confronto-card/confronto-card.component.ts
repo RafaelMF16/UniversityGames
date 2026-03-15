@@ -18,13 +18,13 @@ export class ConfrontoCardComponent {
 
   get statusLabel(): string {
     if (this.confronto.status === 'ao-vivo') {
-      return 'Live';
+      return 'Ao vivo';
     }
 
     if (this.confronto.status === 'encerrado') {
-      return 'Finished';
+      return 'Encerrado';
     }
 
-    return 'Upcoming';
+    return 'Agendado';
   }
 }

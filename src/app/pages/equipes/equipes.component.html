@@ -9,7 +9,12 @@
             <button class="app-button" type="button">+ Novo Registro</button>
         </section>
 
-        <app-cadastrar-equipe-card (equipeAdicionada)="onEquipeAdicionada($event)"></app-cadastrar-equipe-card>
+        <app-cadastrar-equipe-card
+            [equipeEditando]="equipeEditando"
+            (equipeAdicionada)="onEquipeAdicionada($event)"
+            (equipeAtualizada)="onEquipeAtualizada($event)"
+            (cancelarEdicao)="equipeEditando = null">
+        </app-cadastrar-equipe-card>
 
         <section class="list-section">
             <div class="section-heading">
@@ -24,7 +29,7 @@
                 @for (equipe of equipes; track equipe.id) {
                     <app-equipe-card
                         [equipe]="equipe"
-                        (equipeEditada)="onEquipeEditada($event)"
+                        (equipeEditada)="iniciarEdicao($event)"
                         (equipeRemovida)="onEquipeRemovida($event)">
                     </app-equipe-card>
                 }

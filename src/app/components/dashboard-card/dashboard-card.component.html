@@ -3,14 +3,18 @@
         <span class="eyebrow">{{ titulo }}</span>
         <strong class="valor">{{ valor }}</strong>
 
-        <div class="meta">
-            @if (destaque) {
-                <span class="meta-highlight" [class.success]="destaqueTipo === 'success'" [class.warning]="destaqueTipo === 'warning'">
-                    {{ destaque }}
-                </span>
-            }
-            <span class="descricao">{{ descricao }}</span>
-        </div>
+        @if (destaque || descricao) {
+            <div class="meta">
+                @if (destaque) {
+                    <span class="meta-highlight" [class.success]="destaqueTipo === 'success'" [class.warning]="destaqueTipo === 'warning'">
+                        {{ destaque }}
+                    </span>
+                }
+                @if (descricao) {
+                    <span class="descricao">{{ descricao }}</span>
+                }
+            </div>
+        }
     </div>
 
     <div class="icone-wrapper">

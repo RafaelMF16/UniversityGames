@@ -1,8 +1,8 @@
 <section class="card surface-card">
     <div class="card-header">
         <div class="card-title-wrap">
-            <span class="title-icon">+</span>
-            <h2>Cadastrar Equipe</h2>
+            <span class="title-icon">{{ equipeEditando ? '✎' : '+' }}</span>
+            <h2>{{ equipeEditando ? 'Editar Equipe' : 'Cadastrar Equipe' }}</h2>
         </div>
     </div>
 
@@ -24,6 +24,11 @@
     </div>
 
     <div class="actions">
-        <button class="app-button-secondary" type="button" (click)="cadastrar()">Salvar Equipe</button>
+        @if (equipeEditando) {
+            <button class="app-button-secondary" type="button" (click)="salvar()">Atualizar Equipe</button>
+            <button class="app-button-ghost" type="button" (click)="onCancelarEdicao()">Cancelar</button>
+        } @else {
+            <button class="app-button-secondary" type="button" (click)="salvar()">Salvar Equipe</button>
+        }
     </div>
 </section>

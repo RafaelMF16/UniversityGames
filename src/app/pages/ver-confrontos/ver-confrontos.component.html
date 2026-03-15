@@ -1,20 +1,12 @@
 <app-container-principal>
     <div class="ver-confrontos-container">
         <section class="hero-row">
-            <div class="hero-icon">🏆</div>
+            <div class="hero-icon">CJ</div>
             <div>
-                <h1>Match Schedule</h1>
-                <p>Season 2024 • Phase 1</p>
+                <h1>Agenda de Confrontos</h1>
+                <p>Temporada 2024 • Fase 1</p>
             </div>
         </section>
-
-        <div class="tabs-row">
-            @for (aba of abas; track aba.id) {
-                <button class="tab-button" type="button" [class.active]="abaAtiva === aba.id" (click)="abaAtiva = aba.id">
-                    {{ aba.label }}
-                </button>
-            }
-        </div>
 
         <app-filtros-card
             [equipes]="equipes"
@@ -32,7 +24,7 @@
         </div>
 
         <div class="load-more-row">
-            <button class="app-button-secondary" type="button">Load More Matches</button>
+            <button class="app-button-secondary" type="button">Carregar mais confrontos</button>
         </div>
     </div>
 </app-container-principal>

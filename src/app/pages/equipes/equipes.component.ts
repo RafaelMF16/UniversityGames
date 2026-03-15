@@ -16,6 +16,8 @@ import { EquipeCardComponent } from "../../components/equipe-card/equipe-card.co
   styleUrl: './equipes.component.css'
 })
 export class EquipesComponent {
+  equipeEditando: Equipe | null = null;
+
   equipes: Equipe[] = [
     {
       id: 1,
@@ -80,14 +82,22 @@ export class EquipesComponent {
     ];
   }
 
-  onEquipeEditada(equipe: Equipe) {
+  iniciarEdicao(equipe: Equipe) {
+    this.equipeEditando = { ...equipe };
+  }
+
+  onEquipeAtualizada(equipe: Equipe) {
     const index = this.equipes.findIndex((item) => item.id === equipe.id);
     if (index >= 0) {
       this.equipes[index] = { ...equipe };
     }
+    this.equipeEditando = null;
   }
 
   onEquipeRemovida(id: number) {
     this.equipes = this.equipes.filter((item) => item.id !== id);
+    if (this.equipeEditando?.id === id) {
+      this.equipeEditando = null;
+    }
   }
 }

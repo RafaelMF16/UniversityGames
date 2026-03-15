@@ -1,17 +1,18 @@
 <section class="filters-row">
     <div class="filter-item">
-        <span class="filter-label">Date</span>
+        <span class="filter-label">Data</span>
         <select class="app-select" [(ngModel)]="filtros.data" (ngModelChange)="emitirFiltros()">
-            <option value="Oct 24, 2023">Oct 24, 2023</option>
-            <option value="Oct 25, 2023">Oct 25, 2023</option>
-            <option value="Oct 26, 2023">Oct 26, 2023</option>
+            <option value="">Todas as datas</option>
+            <option value="24 out. 2023">24 out. 2023</option>
+            <option value="25 out. 2023">25 out. 2023</option>
+            <option value="26 out. 2023">26 out. 2023</option>
         </select>
     </div>
 
     <div class="filter-item">
-        <span class="filter-label">Team</span>
+        <span class="filter-label">Equipe</span>
         <select class="app-select" [(ngModel)]="filtros.equipe" (ngModelChange)="emitirFiltros()">
-            <option value="">All Teams</option>
+            <option value="">Todas as equipes</option>
             @for (equipe of equipes; track equipe) {
                 <option [value]="equipe">{{ equipe }}</option>
             }
@@ -19,9 +20,9 @@
     </div>
 
     <div class="filter-item">
-        <span class="filter-label">Sport</span>
+        <span class="filter-label">Modalidade</span>
         <select class="app-select" [(ngModel)]="filtros.modalidade" (ngModelChange)="emitirFiltros()">
-            <option value="">All Sports</option>
+            <option value="">Todas as modalidades</option>
             @for (modalidade of modalidades; track modalidade) {
                 <option [value]="modalidade">{{ modalidade }}</option>
             }
@@ -31,7 +32,7 @@
     <div class="filter-item">
         <span class="filter-label">Local</span>
         <select class="app-select" [(ngModel)]="filtros.local" (ngModelChange)="emitirFiltros()">
-            <option value="">All Spaces</option>
+            <option value="">Todos os locais</option>
             @for (local of locais; track local) {
                 <option [value]="local">{{ local }}</option>
             }

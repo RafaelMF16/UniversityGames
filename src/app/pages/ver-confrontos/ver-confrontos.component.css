@@ -16,7 +16,9 @@
     background: rgba(18, 43, 76, 0.92);
     border-radius: 18px;
     display: flex;
-    font-size: 1.8rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
     height: 52px;
     justify-content: center;
     width: 52px;
@@ -30,31 +32,6 @@
 .hero-row p {
     color: var(--text-muted);
     font-size: 1rem;
-}
-
-.tabs-row {
-    border-bottom: 1px solid rgba(34, 52, 83, 0.92);
-    display: flex;
-    gap: 22px;
-    overflow-x: auto;
-    padding-bottom: 8px;
-}
-
-.tab-button {
-    background: transparent;
-    border: 0;
-    border-bottom: 3px solid transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 800;
-    padding: 12px 10px;
-    white-space: nowrap;
-}
-
-.tab-button.active {
-    border-color: var(--primary);
-    color: var(--primary);
 }
 
 .confrontos-grid {

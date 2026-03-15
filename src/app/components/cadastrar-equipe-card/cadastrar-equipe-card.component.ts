@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Equipe } from '../../models/equipe.model';
 
@@ -10,14 +10,38 @@ import { Equipe } from '../../models/equipe.model';
   styleUrl: './cadastrar-equipe-card.component.css'
 })
 export class CadastrarEquipeCardComponent {
+  @Input() equipeEditando: Equipe | null = null;
   @Output() equipeAdicionada = new EventEmitter<Equipe>();
+  @Output() equipeAtualizada = new EventEmitter<Equipe>();
+  @Output() cancelarEdicao = new EventEmitter<void>();
 
   nome = '';
   responsavel = '';
   email = '';
 
-  cadastrar() {
+  ngOnChanges() {
+    if (this.equipeEditando) {
+      this.nome = this.equipeEditando.nome;
+      this.responsavel = this.equipeEditando.responsavel;
+      this.email = this.equipeEditando.email;
+      return;
+    }
+
+    this.limparFormulario();
+  }
+
+  salvar() {
     if (!this.nome || !this.responsavel || !this.email) {
+      return;
+    }
+
+    if (this.equipeEditando) {
+      this.equipeAtualizada.emit({
+        ...this.equipeEditando,
+        nome: this.nome,
+        responsavel: this.responsavel,
+        email: this.email
+      });
       return;
     }
 
@@ -29,6 +53,15 @@ export class CadastrarEquipeCardComponent {
       membros: []
     });
 
+    this.limparFormulario();
+  }
+
+  onCancelarEdicao() {
+    this.limparFormulario();
+    this.cancelarEdicao.emit();
+  }
+
+  private limparFormulario() {
     this.nome = '';
     this.responsavel = '';
     this.email = '';

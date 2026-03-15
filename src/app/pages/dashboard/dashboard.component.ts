@@ -16,17 +16,17 @@ export class DashboardComponent {
       titulo: 'Total de equipes',
       valor: '24',
       icone: 'groups',
-      destaque: '+2',
+      destaque: '',
       destaqueTipo: 'success' as const,
-      descricao: 'desde o ultimo mes'
+      descricao: ''
     },
     {
       titulo: 'Total de confrontos',
       valor: '156',
       icone: 'sports_soccer',
-      destaque: '82%',
+      destaque: '',
       destaqueTipo: 'primary' as const,
-      descricao: 'concluidos da primeira fase'
+      descricao: ''
     }
   ];
 

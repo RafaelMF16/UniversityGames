@@ -22,7 +22,7 @@ export class FiltrosCardComponent {
   @Output() filtrosChange = new EventEmitter<VisualizacaoFiltros>();
 
   filtros: VisualizacaoFiltros = {
-    data: 'Oct 24, 2023',
+    data: '',
     equipe: '',
     modalidade: '',
     local: ''

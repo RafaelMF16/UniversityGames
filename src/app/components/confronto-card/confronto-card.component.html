@@ -17,7 +17,7 @@
             @if (temPlacar) {
                 <span class="score">{{ confronto.golsA }} - {{ confronto.golsB }}</span>
             } @else {
-                <span class="score muted">VS</span>
+                <span class="score muted">x</span>
             }
         </div>
 
@@ -29,12 +29,12 @@
 
     <div class="bottom-row">
         <div class="info-block">
-            <span class="eyebrow">Location</span>
+            <span class="eyebrow">Local</span>
             <strong>{{ confronto.local }}</strong>
         </div>
 
         <div class="info-block info-block-right">
-            <span class="eyebrow">{{ confronto.status === 'ao-vivo' ? 'Current Period' : 'Date' }}</span>
+            <span class="eyebrow">{{ confronto.status === 'ao-vivo' ? 'Periodo atual' : 'Data' }}</span>
             <strong>{{ confronto.periodoAtual || confronto.data }}</strong>
         </div>
     </div>
