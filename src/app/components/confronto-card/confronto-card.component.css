@@ -1,9 +1,9 @@
 .card {
     display: flex;
     flex-direction: column;
-    gap: 28px;
-    min-height: 320px;
-    padding: 26px;
+    gap: 22px;
+    min-height: 260px;
+    padding: 22px;
 }
 
 .card.live {
@@ -61,9 +61,9 @@
     font-family: 'Outfit', sans-serif;
     font-size: 1.2rem;
     font-weight: 700;
-    height: 82px;
+    height: 68px;
     justify-content: center;
-    width: 82px;
+    width: 68px;
 }
 
 .team-avatar-right {
@@ -71,7 +71,7 @@
 }
 
 .team strong {
-    font-size: clamp(1.3rem, 1.7vw, 1.9rem);
+    font-size: clamp(1.05rem, 1.25vw, 1.35rem);
 }
 
 .center {
@@ -83,7 +83,7 @@
 
 .score {
     font-family: 'Outfit', sans-serif;
-    font-size: clamp(2.3rem, 3vw, 3.3rem);
+    font-size: clamp(1.8rem, 2.2vw, 2.4rem);
     font-weight: 700;
 }
 

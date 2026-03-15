@@ -1,13 +1,13 @@
 .container {
     margin: 0 auto;
     max-width: 1480px;
-    min-height: calc(100vh - 92px);
-    padding: 42px 32px 56px;
+    min-height: calc(100vh - 80px);
+    padding: 30px 24px 44px;
     width: 100%;
 }
 
 @media (max-width: 900px) {
     .container {
-        padding: 28px 18px 40px;
+        padding: 24px 16px 34px;
     }
 }

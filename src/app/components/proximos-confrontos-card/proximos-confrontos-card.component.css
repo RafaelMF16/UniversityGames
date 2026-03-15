@@ -1,9 +1,9 @@
 .card {
     display: flex;
     flex-direction: column;
-    gap: 26px;
-    min-height: 244px;
-    padding: 28px 26px 24px;
+    gap: 20px;
+    min-height: 210px;
+    padding: 22px 20px 20px;
 }
 
 .teams-row {
@@ -29,15 +29,15 @@
     border-radius: 50%;
     display: flex;
     font-family: 'Outfit', sans-serif;
-    font-size: 1.4rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    height: 82px;
+    height: 68px;
     justify-content: center;
-    width: 82px;
+    width: 68px;
 }
 
 .team-block strong {
-    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
     line-height: 1.15;
 }
 
@@ -51,13 +51,13 @@
 
 .vs {
     color: var(--primary);
-    font-size: 1.55rem;
+    font-size: 1.2rem;
     font-weight: 800;
 }
 
 .time {
     font-family: 'Outfit', sans-serif;
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 .date {
@@ -74,7 +74,7 @@
     display: flex;
     gap: 16px;
     justify-content: space-between;
-    padding-top: 20px;
+    padding-top: 16px;
 }
 
 .location {

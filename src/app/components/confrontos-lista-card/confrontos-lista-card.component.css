@@ -9,11 +9,11 @@
     display: flex;
     gap: 20px;
     justify-content: space-between;
-    padding: 28px 30px 22px;
+    padding: 22px 24px 18px;
 }
 
 .card-top h2 {
-    font-size: clamp(1.7rem, 2vw, 2.4rem);
+    font-size: clamp(1.4rem, 1.8vw, 1.8rem);
 }
 
 .search-input {
@@ -34,13 +34,13 @@
     font-size: 0.95rem;
     font-weight: 800;
     letter-spacing: 0.04em;
-    padding: 18px 30px;
+    padding: 14px 24px;
     text-transform: uppercase;
 }
 
 .row {
     border-bottom: 1px solid rgba(34, 52, 83, 0.92);
-    padding: 22px 30px;
+    padding: 18px 24px;
 }
 
 .confronto-copy {
@@ -73,11 +73,11 @@
     color: var(--text-muted);
     display: inline-flex;
     font-family: 'Outfit', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     justify-content: center;
-    min-height: 44px;
-    min-width: 106px;
+    min-height: 40px;
+    min-width: 94px;
     padding: 0 18px;
 }
 
@@ -121,7 +121,7 @@
     color: var(--text-muted);
     display: flex;
     justify-content: space-between;
-    padding: 20px 30px 24px;
+    padding: 16px 24px 20px;
 }
 
 .pager {

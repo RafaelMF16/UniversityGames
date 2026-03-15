@@ -8,19 +8,19 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 34px;
+    gap: 26px;
     width: 100%;
 }
 
 .title {
-    font-size: clamp(2.7rem, 4vw, 4rem);
+    font-size: clamp(2.1rem, 3vw, 3rem);
     line-height: 1;
     margin-bottom: 8px;
 }
 
 .hero p {
     color: var(--text-muted);
-    font-size: clamp(1.1rem, 1.4vw, 1.45rem);
+    font-size: clamp(0.98rem, 1.1vw, 1.1rem);
 }
 
 .matches-section {

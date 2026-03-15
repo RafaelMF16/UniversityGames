@@ -38,6 +38,7 @@ body {
         linear-gradient(180deg, #0b1724 0%, var(--bg) 22%, #07111b 100%);
     color: var(--text);
     font-family: 'Manrope', sans-serif;
+    font-size: 15px;
 }
 
 button,
@@ -97,7 +98,7 @@ small {
     border: 1px solid var(--border-strong);
     border-radius: 16px;
     color: var(--text);
-    min-height: 58px;
+    min-height: 52px;
     outline: none;
     padding: 0 18px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
@@ -127,8 +128,8 @@ small {
     font-weight: 800;
     gap: 10px;
     justify-content: center;
-    min-height: 58px;
-    padding: 0 24px;
+    min-height: 52px;
+    padding: 0 20px;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -180,13 +181,13 @@ small {
 }
 
 .section-heading h2 {
-    font-size: clamp(1.6rem, 2vw, 2.1rem);
+    font-size: clamp(1.35rem, 1.7vw, 1.8rem);
     line-height: 1.1;
 }
 
 .section-heading p {
     color: var(--text-muted);
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .pill {

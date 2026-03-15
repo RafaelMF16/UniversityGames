@@ -1,7 +1,7 @@
 .ver-confrontos-container {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 22px;
     width: 100%;
 }
 
@@ -17,19 +17,19 @@
     border-radius: 18px;
     display: flex;
     font-size: 1.8rem;
-    height: 60px;
+    height: 52px;
     justify-content: center;
-    width: 60px;
+    width: 52px;
 }
 
 .hero-row h1 {
-    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-size: clamp(2rem, 3vw, 2.8rem);
     margin-bottom: 6px;
 }
 
 .hero-row p {
     color: var(--text-muted);
-    font-size: 1.15rem;
+    font-size: 1rem;
 }
 
 .tabs-row {

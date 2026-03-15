@@ -1,8 +1,8 @@
 .card {
     display: flex;
     flex-direction: column;
-    gap: 28px;
-    padding: 24px;
+    gap: 22px;
+    padding: 20px;
 }
 
 .summary-row {
@@ -22,15 +22,15 @@
     align-items: center;
     border-radius: 18px;
     display: flex;
-    height: 62px;
+    height: 54px;
     justify-content: center;
-    min-width: 62px;
+    min-width: 54px;
 }
 
 .team-icon span {
     color: #eff7ff;
     font-family: 'Outfit', sans-serif;
-    font-size: 1.15rem;
+    font-size: 1rem;
     font-weight: 800;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .copy h3 {
-    font-size: clamp(1.55rem, 2vw, 2rem);
+    font-size: clamp(1.25rem, 1.6vw, 1.55rem);
 }
 
 .copy p {
@@ -70,7 +70,7 @@
 .members-panel {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
 }
 
 .members-grid {
