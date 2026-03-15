@@ -1,17 +1,41 @@
-<div class="card">
-    <div class="filtros">
-        <div class="field">
-            <label>Filtrar por data</label>
-            <input class="input-data" type="date" [(ngModel)]="filtroData" (ngModelChange)="onDataChange()">
-        </div>
-        <div class="field">
-            <label>Filtrar por equipe</label>
-            <mat-select [(ngModel)]="filtroEquipe" class="custom-select" (ngModelChange)="onEquipeChange()">
-                <mat-option value="">Todas</mat-option>
-                @for (e of equipes; track e.id) {
-                    <mat-option [value]="e.nome">{{ e.nome }}</mat-option>
-                }
-            </mat-select>
-        </div>
+<section class="filters-row">
+    <div class="filter-item">
+        <span class="filter-label">Data</span>
+        <select class="app-select" [(ngModel)]="filtros.data" (ngModelChange)="emitirFiltros()">
+            <option value="">Todas as datas</option>
+            <option value="24 out. 2023">24 out. 2023</option>
+            <option value="25 out. 2023">25 out. 2023</option>
+            <option value="26 out. 2023">26 out. 2023</option>
+        </select>
     </div>
-</div>
+
+    <div class="filter-item">
+        <span class="filter-label">Equipe</span>
+        <select class="app-select" [(ngModel)]="filtros.equipe" (ngModelChange)="emitirFiltros()">
+            <option value="">Todas as equipes</option>
+            @for (equipe of equipes; track equipe) {
+                <option [value]="equipe">{{ equipe }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="filter-item">
+        <span class="filter-label">Modalidade</span>
+        <select class="app-select" [(ngModel)]="filtros.modalidade" (ngModelChange)="emitirFiltros()">
+            <option value="">Todas as modalidades</option>
+            @for (modalidade of modalidades; track modalidade) {
+                <option [value]="modalidade">{{ modalidade }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="filter-item">
+        <span class="filter-label">Local</span>
+        <select class="app-select" [(ngModel)]="filtros.local" (ngModelChange)="emitirFiltros()">
+            <option value="">Todos os locais</option>
+            @for (local of locais; track local) {
+                <option [value]="local">{{ local }}</option>
+            }
+        </select>
+    </div>
+</section>

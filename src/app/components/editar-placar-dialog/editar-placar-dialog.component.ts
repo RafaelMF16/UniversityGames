@@ -1,16 +1,15 @@
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { Confronto } from '../../models/confronto.model';
-import { MatButton, MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-editar-placar-dialog',
   standalone: true,
   imports: [
     FormsModule,
-    MatButton,
-    MatButtonModule
+    MatIcon
   ],
   templateUrl: './editar-placar-dialog.component.html',
   styleUrl: './editar-placar-dialog.component.css'

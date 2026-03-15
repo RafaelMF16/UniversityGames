@@ -1,17 +1,39 @@
 <app-container-principal>
     <div class="equipes-container">
-        <h1 class="title">Equipes</h1>
+        <section class="top-row">
+            <div class="heading-copy">
+                <h1>Gestao de Equipes</h1>
+                <p>Gerencie os participantes dos Jogos Internos FPM 2024.</p>
+            </div>
 
-        <app-cadastrar-equipe-card 
-            (equipeAdicionada)="onEquipeAdicionada($event)">
+            <button class="app-button" type="button">+ Novo Registro</button>
+        </section>
+
+        <app-cadastrar-equipe-card
+            [equipeEditando]="equipeEditando"
+            (equipeAdicionada)="onEquipeAdicionada($event)"
+            (equipeAtualizada)="onEquipeAtualizada($event)"
+            (cancelarEdicao)="equipeEditando = null">
         </app-cadastrar-equipe-card>
 
-        @for (equipe of equipes; track equipe.id) {
-            <app-equipe-card
-                [equipe]="equipe"
-                (equipeEditada)="onEquipeEditada($event)"
-                (equipeRemovida)="onEquipeRemovida($event)">
-            </app-equipe-card>
-        }
+        <section class="list-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Equipes Registradas</h2>
+                </div>
+
+                <span class="pill pill-neutral">{{ equipes.length }} Ativas</span>
+            </div>
+
+            <div class="teams-list">
+                @for (equipe of equipes; track equipe.id) {
+                    <app-equipe-card
+                        [equipe]="equipe"
+                        (equipeEditada)="iniciarEdicao($event)"
+                        (equipeRemovida)="onEquipeRemovida($event)">
+                    </app-equipe-card>
+                }
+            </div>
+        </section>
     </div>
 </app-container-principal>

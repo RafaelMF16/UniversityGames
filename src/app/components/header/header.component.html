@@ -1,6 +1,29 @@
-<mat-toolbar class="header">
-    <button mat-icon-button (click)="menuClick.emit()">
-        <mat-icon class="menu-icon">menu</mat-icon>
-    </button>
-    <span class="title">Jogos Internos FPM</span>
-</mat-toolbar>
+<header class="header">
+    <div class="brand">
+        <a class="brand-link" routerLink="/dashboard">
+            <span class="brand-main">JOGOS INTERNOS</span>
+            <span class="brand-accent">FPM</span>
+        </a>
+    </div>
+
+    <nav class="nav">
+        <a
+            class="nav-link"
+            routerLink="/dashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">
+            Dashboard
+        </a>
+        <a class="nav-link" routerLink="/equipes" routerLinkActive="active">Equipes</a>
+        <a class="nav-link" routerLink="/confrontos" routerLinkActive="active">Confrontos</a>
+        <a class="nav-link" routerLink="/ver-confrontos" routerLinkActive="active">Visualizar Confrontos</a>
+    </nav>
+
+    <div class="actions">
+        <div class="profile-chip">
+            <div class="avatar-ring">
+                <span class="avatar-core">RF</span>
+            </div>
+        </div>
+    </div>
+</header>

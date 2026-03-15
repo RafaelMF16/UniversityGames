@@ -1,21 +1,28 @@
-<mat-card class="card" appearance="outlined">
-    <mat-card-title>
-        <p>Próximos Confrontos</p>
-    </mat-card-title>
-    <mat-card-content class="content">
-        @for (confronto of confrontos; track confrontos) {
-            <div class="confronto-item">
-                <div class="equipes">
-                    <span class="equipe">{{ confronto.equipe1 }}</span>
-                    <span class="vs">vs</span>
-                    <span class="equipe">{{ confronto.equipe2 }}</span>
-                </div>
-                <div class="detalhes">
-                    <span>{{ confronto.data }}</span>
-                    <span>{{ confronto.hora }}</span>
-                    <span>{{ confronto.local }}</span>
-                </div>
-            </div>
-        }
-    </mat-card-content>
-</mat-card>
+<article class="card surface-card">
+    <div class="teams-row">
+        <div class="team-block">
+            <div class="avatar">{{ confronto.siglaA }}</div>
+            <strong>{{ confronto.equipeA }}</strong>
+        </div>
+
+        <div class="center-block">
+            <span class="vs">VS</span>
+            <span class="time">{{ confronto.horario }}</span>
+            <span class="date">{{ confronto.data }}</span>
+        </div>
+
+        <div class="team-block">
+            <div class="avatar">{{ confronto.siglaB }}</div>
+            <strong>{{ confronto.equipeB }}</strong>
+        </div>
+    </div>
+
+    <div class="footer-row">
+        <span class="location">
+            <mat-icon>location_on</mat-icon>
+            {{ confronto.local }}
+        </span>
+
+        <span class="pill pill-neutral">{{ confronto.modalidade }}</span>
+    </div>
+</article>

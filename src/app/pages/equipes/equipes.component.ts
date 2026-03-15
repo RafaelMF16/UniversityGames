@@ -16,39 +16,88 @@ import { EquipeCardComponent } from "../../components/equipe-card/equipe-card.co
   styleUrl: './equipes.component.css'
 })
 export class EquipesComponent {
+  equipeEditando: Equipe | null = null;
+
   equipes: Equipe[] = [
     {
       id: 1,
-      nome: 'Dragões FC',
-      responsavel: 'Carlos Silva',
-      email: 'carlos@email.com',
+      nome: 'Os Galaticos',
+      responsavel: 'Joao Pereira',
+      email: 'joao@fpm.edu.br',
+      sigla: 'OG',
+      cor: 'linear-gradient(180deg, #278eff 0%, #1455b7 100%)',
       membros: [
-        { id: 1, nome: 'João Alves', habilidades: ['Ataque', 'Velocidade'] },
-        { id: 2, nome: 'Ricardo Nunes', habilidades: ['Defesa', 'Liderança'] },
+        { id: 11, nome: 'Joao Pereira', funcao: 'Capitao', habilidades: ['Lideranca', 'Passe'] },
+        { id: 12, nome: 'Ana Carla', funcao: 'Membro', habilidades: ['Velocidade', 'Ataque'] }
       ]
     },
     {
       id: 2,
-      nome: 'Real Madrid',
-      responsavel: 'Florentino Pérez',
-      email: 'perez@email.com',
+      nome: 'Esquadrao Fenix',
+      responsavel: 'Mariana Costa',
+      email: 'mariana@fpm.edu.br',
+      sigla: 'EF',
+      cor: 'linear-gradient(180deg, #ff9736 0%, #a54a04 100%)',
       membros: [
-        { id: 1, nome: 'Mbappe', habilidades: ['Ataque', 'Velocidade'] },
-        { id: 2, nome: 'Ruddiger', habilidades: ['Defesa', 'Resistência'] },
+        { id: 21, nome: 'Mariana Costa', funcao: 'Capitao', habilidades: ['Lideranca', 'Tatica'] },
+        { id: 22, nome: 'Ricardo Alves', funcao: 'Membro', habilidades: ['Defesa', 'Resistencia'] },
+        { id: 23, nome: 'Beatriz Silveira', funcao: 'Membro', habilidades: ['Passe', 'Comunicacao'] },
+        { id: 24, nome: 'Luiz Felipe', funcao: 'Membro', habilidades: ['Ataque', 'Finalizacao'] }
+      ]
+    },
+    {
+      id: 3,
+      nome: 'Relampago FPM',
+      responsavel: 'Carlos Eduardo',
+      email: 'carlos@fpm.edu.br',
+      sigla: 'RF',
+      cor: 'linear-gradient(180deg, #2fd6a6 0%, #0d6b53 100%)',
+      membros: [
+        { id: 31, nome: 'Carlos Eduardo', funcao: 'Capitao', habilidades: ['Velocidade', 'Ataque'] }
+      ]
+    },
+    {
+      id: 4,
+      nome: 'Diamantes Negros',
+      responsavel: 'Fernanda Lima',
+      email: 'fernanda@fpm.edu.br',
+      sigla: 'DN',
+      cor: 'linear-gradient(180deg, #a35cff 0%, #51208f 100%)',
+      membros: [
+        { id: 41, nome: 'Fernanda Lima', funcao: 'Capitao', habilidades: ['Defesa', 'Lideranca'] }
       ]
     }
   ];
 
   onEquipeAdicionada(equipe: Equipe) {
-    this.equipes.push({ ...equipe, id: Date.now(), membros: [] });
+    this.equipes = [
+      {
+        ...equipe,
+        id: Date.now(),
+        sigla: equipe.nome.slice(0, 2).toUpperCase(),
+        cor: 'linear-gradient(180deg, #278eff 0%, #1455b7 100%)',
+        membros: []
+      },
+      ...this.equipes
+    ];
   }
 
-  onEquipeEditada(equipe: Equipe) {
-    const index = this.equipes.findIndex(e => e.id === equipe.id);
-    this.equipes[index] = equipe;
+  iniciarEdicao(equipe: Equipe) {
+    this.equipeEditando = { ...equipe };
+  }
+
+  onEquipeAtualizada(equipe: Equipe) {
+    const index = this.equipes.findIndex((item) => item.id === equipe.id);
+    if (index >= 0) {
+      this.equipes[index] = { ...equipe };
+    }
+    this.equipeEditando = null;
   }
 
   onEquipeRemovida(id: number) {
-    this.equipes = this.equipes.filter(e => e.id !== id);
+    this.equipes = this.equipes.filter((item) => item.id !== id);
+    if (this.equipeEditando?.id === id) {
+      this.equipeEditando = null;
+    }
   }
 }

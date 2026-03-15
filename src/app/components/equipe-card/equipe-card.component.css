@@ -1,165 +1,143 @@
 .card {
-    background-color: #1d283a;
-    border: 1px solid white;
-    border-radius: 12px;
-    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 20px;
+}
+
+.summary-row {
+    align-items: center;
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+}
+
+.identity {
+    align-items: center;
+    display: flex;
+    gap: 18px;
+}
+
+.team-icon {
+    align-items: center;
+    border-radius: 18px;
+    display: flex;
+    height: 54px;
+    justify-content: center;
+    min-width: 54px;
+}
+
+.team-icon span {
+    color: #eff7ff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.copy {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.copy h3 {
+    font-size: clamp(1.25rem, 1.6vw, 1.55rem);
+}
+
+.copy p {
+    color: var(--text-muted);
+}
+
+.actions {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+}
+
+.expand-btn {
+    align-items: center;
+    background: rgba(31, 45, 68, 0.98);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    color: var(--text);
+    cursor: pointer;
+    display: inline-flex;
+    height: 52px;
+    justify-content: center;
+    width: 52px;
+}
+
+.members-panel {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .info {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-
-        strong {
-            color: white;
-            font-size: 16px;
-            display: block;
-        }
-
-        p {
-            color: #a0aec0;
-            font-size: 13px;
-            margin: 0;
-        }
-    }
-
-    .acoes {
-        display: flex;
-        gap: 4px;
-    }
+.members-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.icon-edit {
-    color: #a0aec0;
+.add-member-button {
+    align-self: flex-start;
 }
 
-.icon-delete {
-    color: #e53e3e;
-}
-
-.tabela {
+.member-form {
     display: flex;
     flex-direction: column;
-    border: 1px solid #2e3f57;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.tabela-header {
-    display: flex;
-    padding: 10px 16px;
-    border-bottom: 1px solid #2e3f57;
-    color: #a0aec0;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.col-nome {
-    flex: 2;
-}
-
-.col-habilidades {
-    flex: 3;
-}
-
-.col-acoes {
-    flex: 1;
-    text-align: right;
-}
-
-.botao-adicionar-membro {
-    width: 200px;
-}
-
-.btn-adicionar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #a0aec0;
-    font-size: 14px;
-    padding: 8px 12px;
-    border-radius: 8px;
-
-    &:hover {
-        background: rgba(255,255,255,0.05);
-        color: white;
-    }
-}
-
-.form-membro {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    border: 1px solid #2e3f57;
-    border-radius: 8px;
+    gap: 18px;
     padding: 20px;
-
-    strong {
-        color: white;
-        font-size: 15px;
-    }
-
-    label {
-        color: white;
-        font-size: 13px;
-        font-weight: 500;
-    }
 }
 
-.habilidades-opcoes {
+.skills {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
 }
 
-.chip {
-    background-color: #2e3f57;
-    color: #a0aec0;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
+.skill-chip {
+    background: rgba(29, 43, 66, 0.92);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--text-muted);
     cursor: pointer;
-
-    &.selecionado {
-        background-color: #2563eb;
-        color: white;
-    }
-
-    &:hover {
-        opacity: 0.8;
-    }
+    padding: 10px 14px;
 }
 
-.form-acoes {
+.skill-chip.active {
+    background: rgba(36, 144, 255, 0.12);
+    border-color: rgba(36, 144, 255, 0.42);
+    color: var(--primary);
+}
+
+.member-form-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
 }
 
-.btn-primary {
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 20px;
-    cursor: pointer;
-    font-size: 14px;
-
-    &:hover { background-color: #1d4ed8; }
+@media (max-width: 1200px) {
+    .members-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
-.btn-cancel {
-    background: transparent;
-    border: 1px solid white;
-}
+@media (max-width: 800px) {
+    .summary-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 
-.expandir-btn {
-    color: white;
+    .identity {
+        align-items: flex-start;
+    }
+
+    .members-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        width: 100%;
+    }
 }

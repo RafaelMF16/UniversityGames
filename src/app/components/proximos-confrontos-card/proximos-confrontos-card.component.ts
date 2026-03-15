@@ -1,18 +1,22 @@
-import { Component } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
+import { Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-proximos-confrontos-card',
-  imports: [
-    MatCardModule
-  ],
+  standalone: true,
+  imports: [MatIcon],
   templateUrl: './proximos-confrontos-card.component.html',
   styleUrl: './proximos-confrontos-card.component.css'
 })
 export class ProximosConfrontosCardComponent {
-  confrontos = [
-    { id: 1, equipe1: 'Dragões FC', equipe2: 'Águias United', data: '09/03/2026', hora: '19:00', local: 'Ginásio Central' },
-    { id: 2, equipe1: 'Leões SC', equipe2: 'Falcões FC', data: '11/03/2026', hora: '20:00', local: 'Quadra Norte' },
-    { id: 3, equipe1: 'Dragões FC', equipe2: 'Leões SC', data: '14/03/2026', hora: '18:30', local: 'Ginásio Central' }
-  ];
+  @Input({ required: true }) confronto!: {
+    equipeA: string;
+    equipeB: string;
+    horario: string;
+    data: string;
+    local: string;
+    modalidade: string;
+    siglaA: string;
+    siglaB: string;
+  };
 }

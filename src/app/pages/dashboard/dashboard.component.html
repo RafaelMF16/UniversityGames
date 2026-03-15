@@ -1,12 +1,41 @@
 <app-container-principal>
     <div class="dashboard-container">
-        <h1 class="title">Dashboard</h1>
+        <section class="hero">
+            <div class="section-heading">
+                <div>
+                    <h1 class="title">Painel Geral</h1>
+                    <p>Acompanhe o desempenho e os proximos jogos da temporada.</p>
+                </div>
+            </div>
+        </section>
+
         <div class="card-container">
-            <app-dashboard-card titulo="Total de Equipes" valor="4" icone="groups"></app-dashboard-card>
-            <app-dashboard-card titulo="Total de Confrontos" valor="3" icone="sports_kabaddi"></app-dashboard-card>
-            <app-dashboard-card titulo="Próximos Confrontos" valor="3" icone="event"></app-dashboard-card>
+            @for (metrica of metricas; track metrica.titulo) {
+                <app-dashboard-card
+                    [titulo]="metrica.titulo"
+                    [valor]="metrica.valor"
+                    [icone]="metrica.icone"
+                    [destaque]="metrica.destaque"
+                    [destaqueTipo]="metrica.destaqueTipo"
+                    [descricao]="metrica.descricao">
+                </app-dashboard-card>
+            }
         </div>
-    
-        <app-proximos-confrontos-card></app-proximos-confrontos-card>
+
+        <section class="matches-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Proximos Jogos</h2>
+                </div>
+
+                <button class="app-button-secondary" type="button">Filtrar por Modalidade</button>
+            </div>
+
+            <div class="matches-grid">
+                @for (confronto of proximosJogos; track confronto.equipeA + confronto.equipeB) {
+                    <app-proximos-confrontos-card [confronto]="confronto"></app-proximos-confrontos-card>
+                }
+            </div>
+        </section>
     </div>
 </app-container-principal>

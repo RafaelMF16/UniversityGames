@@ -1,29 +1,20 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatCard, MatCardModule } from "@angular/material/card";
-import { MatIcon, MatIconModule } from "@angular/material/icon";
-import { LinhaMembroEquipeComponent } from "../linha-membro-equipe/linha-membro-equipe.component";
-import { Equipe } from '../../models/equipe.model';
-import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { MatIcon } from "@angular/material/icon";
+import { Equipe } from '../../models/equipe.model';
+import { LinhaMembroEquipeComponent } from "../linha-membro-equipe/linha-membro-equipe.component";
 
 @Component({
   selector: 'app-equipe-card',
-  imports: [
-    MatCard,
-    MatIcon,
-    LinhaMembroEquipeComponent,
-    MatButton,
-    MatIconModule,
-    MatCardModule,
-    FormsModule
-  ],
+  standalone: true,
+  imports: [FormsModule, MatIcon, LinhaMembroEquipeComponent],
   templateUrl: './equipe-card.component.html',
   styleUrl: './equipe-card.component.css'
 })
 export class EquipeCardComponent {
   @Input() equipe!: Equipe;
-  @Output() equipeEditada = new EventEmitter();
-  @Output() equipeRemovida = new EventEmitter();
+  @Output() equipeEditada = new EventEmitter<Equipe>();
+  @Output() equipeRemovida = new EventEmitter<number>();
 
   expandido = false;
   adicionandoMembro = false;
@@ -31,25 +22,28 @@ export class EquipeCardComponent {
   novasHabilidades: string[] = [];
 
   habilidadesDisponiveis = [
-    'Ataque', 'Defesa', 'Velocidade', 'Liderança', 'Goleiro',
-    'Reflexo', 'Passe', 'Drible', 'Finalização', 'Resistência',
-    'Tática', 'Comunicação'
+    'Ataque', 'Defesa', 'Velocidade', 'Lideranca', 'Passe', 'Resistencia',
+    'Tatica', 'Comunicacao', 'Drible', 'Finalizacao'
   ];
 
-  toggleHabilidade(hab: string) {
-    if (this.novasHabilidades.includes(hab)) {
-      this.novasHabilidades = this.novasHabilidades.filter(h => h !== hab);
-    } else {
-      this.novasHabilidades.push(hab);
+  toggleHabilidade(habilidade: string) {
+    if (this.novasHabilidades.includes(habilidade)) {
+      this.novasHabilidades = this.novasHabilidades.filter((item) => item !== habilidade);
+      return;
     }
+
+    this.novasHabilidades.push(habilidade);
   }
 
   confirmarMembro() {
-    if (!this.novoNome) return;
+    if (!this.novoNome) {
+      return;
+    }
 
     this.equipe.membros.push({
       id: Date.now(),
       nome: this.novoNome,
+      funcao: this.equipe.membros.length === 0 ? 'Capitao' : 'Membro',
       habilidades: [...this.novasHabilidades]
     });
 
@@ -59,10 +53,6 @@ export class EquipeCardComponent {
   }
 
   onMembroRemovido(id: number) {
-    this.equipe.membros = this.equipe.membros.filter(m => m.id !== id);
-  }
-
-  adicionarMembro() {
-
+    this.equipe.membros = this.equipe.membros.filter((membro) => membro.id !== id);
   }
 }

@@ -1,17 +1,30 @@
 <app-container-principal>
     <div class="ver-confrontos-container">
-        <h1 class="title">Ver Confrontos</h1>
+        <section class="hero-row">
+            <div class="hero-icon">CJ</div>
+            <div>
+                <h1>Agenda de Confrontos</h1>
+                <p>Temporada 2024 • Fase 1</p>
+            </div>
+        </section>
 
-        <app-filtros-card [equipes]="equipes" (filtroDataChange)="onFiltroDataChange($event)"
-            (filtroEquipeChange)="onFiltroEquipeChange($event)">
+        <app-filtros-card
+            [equipes]="equipes"
+            [modalidades]="modalidades"
+            [locais]="locais"
+            (filtrosChange)="atualizarFiltros($event)">
         </app-filtros-card>
 
         <div class="confrontos-grid">
             @for (confronto of confrontosFiltrados; track confronto.id) {
                 <app-confronto-card [confronto]="confronto"></app-confronto-card>
             } @empty {
-                <p class="vazio">Nenhum confronto encontrado.</p>
+                <p class="vazio">Nenhum confronto encontrado para os filtros atuais.</p>
             }
+        </div>
+
+        <div class="load-more-row">
+            <button class="app-button-secondary" type="button">Carregar mais confrontos</button>
         </div>
     </div>
 </app-container-principal>

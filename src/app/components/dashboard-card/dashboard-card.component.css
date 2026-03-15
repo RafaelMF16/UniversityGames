@@ -4,47 +4,70 @@
 }
 
 .card {
-    flex: 1;
-    background-color: #1d283a;
-    border: 1px solid white;
-    border-radius: 12px;
-    height: 10vh;
-}
-
-.card-content {
+    align-items: flex-start;
     display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
+    flex: 1;
+    justify-content: space-between;
+    min-height: 148px;
+    padding: 22px 24px;
 }
 
 .icone-wrapper {
-    display: flex;
     align-items: center;
-    justify-content: center;
-    background-color: #1e3a5f;
-    border-radius: 8px;
-    width: 48px;
-    height: 48px;
+    background: rgba(20, 58, 106, 0.72);
+    border-radius: 16px;
+    display: flex;
     flex-shrink: 0;
+    height: 54px;
+    justify-content: center;
+    width: 54px;
 }
 
 mat-icon {
-    color: #7eb3f5;
+    color: var(--primary);
 }
 
-.info {
+.card-copy {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-}
-
-.titulo {
-    font-size: 14px;
+    gap: 12px;
 }
 
 .valor {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.9rem, 2.3vw, 2.5rem);
+    line-height: 1;
+}
+
+.meta {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.meta-highlight {
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.meta-highlight.success {
+    color: var(--success);
+}
+
+.meta-highlight.warning {
+    color: var(--warning);
+}
+
+.descricao {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+    .card {
+        min-height: 138px;
+        padding: 20px;
+    }
 }

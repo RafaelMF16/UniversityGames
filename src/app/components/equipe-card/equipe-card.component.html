@@ -1,68 +1,74 @@
-<mat-card class="card" appearance="outlined">
-    <div class="header">
-        <div class="info">
-            <button (click)="expandido = !expandido" class="icon-btn expandir-btn">
-                <mat-icon>{{ expandido ? 'expand_less' : 'expand_more' }}</mat-icon>
-            </button>
-            <div>
-                <strong>{{ equipe.nome }}</strong>
-                <p>{{ equipe.responsavel }} · {{ equipe.email }} · {{ equipe.membros.length }} membro(s)</p>
+<section class="card surface-card" [class.expanded]="expandido">
+    <div class="summary-row">
+        <div class="identity">
+            <div class="team-icon" [style.background]="equipe.cor || 'linear-gradient(180deg, #1a7cff 0%, #1258b9 100%)'">
+                <span>{{ equipe.sigla || equipe.nome.slice(0, 2).toUpperCase() }}</span>
+            </div>
+
+            <div class="copy">
+                <h3>{{ equipe.nome }}</h3>
+                <p>Responsavel: {{ equipe.responsavel }} • {{ equipe.membros.length }} membros</p>
             </div>
         </div>
-        <div class="acoes">
-            <button (click)="equipeEditada.emit(equipe)" class="icon-btn">
-                <mat-icon class="icon-edit">edit</mat-icon>
+
+        <div class="actions">
+            <button class="icon-btn" type="button" (click)="equipeEditada.emit(equipe)" aria-label="Editar equipe">
+                <mat-icon>edit</mat-icon>
             </button>
-            <button (click)="equipeRemovida.emit(equipe.id)" class="icon-btn">
-                <mat-icon class="icon-delete">delete</mat-icon>
+            <button class="icon-btn" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir equipe">
+                <mat-icon>delete</mat-icon>
+            </button>
+            <button class="expand-btn" type="button" (click)="expandido = !expandido" aria-label="Expandir equipe">
+                <mat-icon>{{ expandido ? 'expand_less' : 'expand_more' }}</mat-icon>
             </button>
         </div>
     </div>
 
     @if (expandido) {
-    <div class="tabela">
-        <div class="tabela-header">
-            <span class="col-nome">Nome</span>
-            <span class="col-habilidades">Habilidades</span>
-            <span class="col-acoes">Ações</span>
-        </div>
-        @for (membro of equipe.membros; track membro.id) {
-            <app-linha-membro-equipe
-                [membro]="membro"
-                (membroRemovido)="onMembroRemovido($event)">
-            </app-linha-membro-equipe>
-        }
-    </div>
-
-    @if (!adicionandoMembro) {
-        <button class="icon-btn btn-adicionar" (click)="adicionandoMembro = true">
-            <span class="material-icons">person_add</span>
-            Adicionar Membro
-        </button>
-    } @else {
-        <div class="form-membro">
-            <strong>Novo Membro</strong>
-
-            <label>Nome do membro</label>
-            <input class="input" [(ngModel)]="novoNome" placeholder="Nome completo">
-
-            <label>Habilidades</label>
-            <div class="habilidades-opcoes">
-                @for (habilidade of habilidadesDisponiveis; track habilidade) {
-                    <span
-                        class="chip"
-                        [class.selecionado]="novasHabilidades.includes(habilidade)"
-                        (click)="toggleHabilidade(habilidade)">
-                        {{ habilidade }}
-                    </span>
+        <div class="members-panel">
+            <div class="members-grid">
+                @for (membro of equipe.membros; track membro.id) {
+                    <app-linha-membro-equipe [membro]="membro" (membroRemovido)="onMembroRemovido($event)"></app-linha-membro-equipe>
                 }
             </div>
 
-            <div class="form-acoes">
-                <button mat-flat-button color="primary" (click)="confirmarMembro()">Adicionar</button>
-                <button mat-flat-button class="btn-cancel" (click)="adicionandoMembro = false">Cancelar</button>
-            </div>
+            @if (!adicionandoMembro) {
+                <button class="app-button-ghost add-member-button" type="button" (click)="adicionandoMembro = true">
+                    <mat-icon>person_add</mat-icon>
+                    Adicionar membro
+                </button>
+            } @else {
+                <div class="member-form surface-card">
+                    <div class="field-group">
+                        <label for="novo-membro-{{ equipe.id }}">Nome do membro</label>
+                        <input
+                            id="novo-membro-{{ equipe.id }}"
+                            class="app-input"
+                            [(ngModel)]="novoNome"
+                            placeholder="Nome completo">
+                    </div>
+
+                    <div class="field-group">
+                        <label>Habilidades</label>
+                        <div class="skills">
+                            @for (habilidade of habilidadesDisponiveis; track habilidade) {
+                                <button
+                                    class="skill-chip"
+                                    type="button"
+                                    [class.active]="novasHabilidades.includes(habilidade)"
+                                    (click)="toggleHabilidade(habilidade)">
+                                    {{ habilidade }}
+                                </button>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="member-form-actions">
+                        <button class="app-button-secondary" type="button" (click)="confirmarMembro()">Confirmar membro</button>
+                        <button class="app-button-ghost" type="button" (click)="adicionandoMembro = false">Cancelar</button>
+                    </div>
+                </div>
+            }
         </div>
     }
-}
-</mat-card>
+</section>

@@ -16,7 +16,7 @@ import { EditarPlacarDialogComponent } from '../../components/editar-placar-dial
     ConfrontoFormCardComponent,
     ConfrontosListaCardComponent,
     MatDialogModule
-],
+  ],
   templateUrl: './confrontos.component.html',
   styleUrl: './confrontos.component.css'
 })
@@ -24,14 +24,18 @@ export class ConfrontosComponent {
   confrontoEditando: Confronto | null = null;
 
   equipes: Equipe[] = [
-    { id: 1, nome: 'Dragões FC', responsavel: '', email: '', membros: [] },
-    { id: 2, nome: 'Águias United', responsavel: '', email: '', membros: [] },
-    { id: 3, nome: 'Leões SC', responsavel: '', email: '', membros: [] },
+    { id: 1, nome: 'Engenharia FC', responsavel: '', email: '', membros: [] },
+    { id: 2, nome: 'Marketing United', responsavel: '', email: '', membros: [] },
+    { id: 3, nome: 'Financeiro Titans', responsavel: '', email: '', membros: [] },
+    { id: 4, nome: 'RH Eagles', responsavel: '', email: '', membros: [] },
+    { id: 5, nome: 'Vendas Sharks', responsavel: '', email: '', membros: [] },
+    { id: 6, nome: 'Product Lions', responsavel: '', email: '', membros: [] }
   ];
 
   confrontos: Confronto[] = [
-    { id: 1, equipeA: 'Dragões FC', equipeB: 'Águias United', data: '09/03/2026', horario: '19:00', local: 'Ginásio Central', golsA: 3, golsB: 1 },
-    { id: 2, equipeA: 'Leões SC', equipeB: 'Falcões FC', data: '11/03/2026', horario: '20:00', local: 'Quadra Norte' },
+    { id: 1, equipeA: 'Engenharia FC', equipeB: 'Marketing United', data: '12 Nov, 2024', horario: '19:30', local: 'Quadra A', modalidade: 'Futsal', status: 'agendado' },
+    { id: 2, equipeA: 'Financeiro Titans', equipeB: 'RH Eagles', data: '08 Nov, 2024', horario: '18:00', local: 'Quadra Principal', modalidade: 'Futsal', golsA: 3, golsB: 1, status: 'encerrado' },
+    { id: 3, equipeA: 'Vendas Sharks', equipeB: 'Product Lions', data: '15 Nov, 2024', horario: '20:00', local: 'Arena Tech', modalidade: 'Futsal', status: 'agendado' }
   ];
 
   constructor(private dialog: MatDialog) { }
@@ -39,30 +43,37 @@ export class ConfrontosComponent {
   abrirDialogPlacar(confronto: Confronto) {
     const ref = this.dialog.open(EditarPlacarDialogComponent, {
       data: confronto,
-      width: '440px',
+      width: '540px',
       panelClass: 'dialog-sem-borda'
     });
-    ref.afterClosed().subscribe(resultado => {
-      if (resultado) this.onPlacarAtualizado(resultado);
+
+    ref.afterClosed().subscribe((resultado) => {
+      if (resultado) {
+        this.onPlacarAtualizado(resultado);
+      }
     });
   }
 
-  onConfrontoCriado(c: Confronto) {
-    this.confrontos.push(c);
+  onConfrontoCriado(confronto: Confronto) {
+    this.confrontos = [confronto, ...this.confrontos];
   }
 
-  onConfrontoAtualizado(c: Confronto) {
-    const i = this.confrontos.findIndex(x => x.id === c.id);
-    this.confrontos[i] = c;
+  onConfrontoAtualizado(confronto: Confronto) {
+    const indice = this.confrontos.findIndex((item) => item.id === confronto.id);
+    if (indice >= 0) {
+      this.confrontos[indice] = confronto;
+    }
     this.confrontoEditando = null;
   }
 
   onConfrontoRemovido(id: number) {
-    this.confrontos = this.confrontos.filter(c => c.id !== id);
+    this.confrontos = this.confrontos.filter((item) => item.id !== id);
   }
 
-  onPlacarAtualizado(c: Confronto) {
-    const i = this.confrontos.findIndex(x => x.id === c.id);
-    this.confrontos[i] = c;
+  onPlacarAtualizado(confronto: Confronto) {
+    const indice = this.confrontos.findIndex((item) => item.id === confronto.id);
+    if (indice >= 0) {
+      this.confrontos[indice] = { ...confronto, status: 'encerrado' };
+    }
   }
 }

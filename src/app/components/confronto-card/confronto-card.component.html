@@ -1,32 +1,41 @@
-<div class="card">
-    <div class="placar-linha">
-        <span class="equipe">{{ confronto.equipeA }}</span>
-
-        @if (temPlacar) {
-            <span class="placar">
-                {{ confronto.golsA }} × {{ confronto.golsB }}
-            </span>
-        } @else {
-            <span class="vs">vs</span>
-        }
-
-        <span class="equipe">{{ confronto.equipeB }}</span>
+<article class="card surface-card" [class.live]="confronto.status === 'ao-vivo'">
+    <div class="card-top">
+        <span class="status-pill" [class.status-live]="confronto.status === 'ao-vivo'">{{ statusLabel }}</span>
+        <span class="top-meta">
+            <mat-icon>{{ confronto.status === 'ao-vivo' ? 'timer' : 'schedule' }}</mat-icon>
+            {{ confronto.duracao || confronto.horario }}
+        </span>
     </div>
 
-    <div class="info-linha">
-        <span class="info">
-            <span class="material-icons">calendar_today</span>
-            {{ confronto.data }}
-        </span>
-        <span class="info">
-            <span class="material-icons">schedule</span>
-            {{ confronto.horario }}
-        </span>
-        @if (confronto.local) {
-            <span class="info">
-                <span class="material-icons">location_on</span>
-                {{ confronto.local }}
-            </span>
-        }
+    <div class="content-row">
+        <div class="team">
+            <div class="team-avatar">{{ confronto.equipeA.slice(0, 2).toUpperCase() }}</div>
+            <strong>{{ confronto.equipeA }}</strong>
+        </div>
+
+        <div class="center">
+            @if (temPlacar) {
+                <span class="score">{{ confronto.golsA }} - {{ confronto.golsB }}</span>
+            } @else {
+                <span class="score muted">x</span>
+            }
+        </div>
+
+        <div class="team">
+            <div class="team-avatar team-avatar-right">{{ confronto.equipeB.slice(0, 2).toUpperCase() }}</div>
+            <strong>{{ confronto.equipeB }}</strong>
+        </div>
     </div>
-</div>
+
+    <div class="bottom-row">
+        <div class="info-block">
+            <span class="eyebrow">Local</span>
+            <strong>{{ confronto.local }}</strong>
+        </div>
+
+        <div class="info-block info-block-right">
+            <span class="eyebrow">{{ confronto.status === 'ao-vivo' ? 'Periodo atual' : 'Data' }}</span>
+            <strong>{{ confronto.periodoAtual || confronto.data }}</strong>
+        </div>
+    </div>
+</article>

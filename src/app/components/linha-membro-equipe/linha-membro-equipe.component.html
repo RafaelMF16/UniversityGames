@@ -1,16 +1,16 @@
-<div class="membro">
-    <span class="col-nome">{{ membro.nome }}</span>
-    <div class="col-habilidades">
-        @for (hab of membro.habilidades; track hab) {
-            <span class="chip">{{ hab }}</span>
-        }
+<article class="membro-card">
+    <div class="member-copy">
+        <span class="eyebrow">{{ membro.funcao || 'Membro' }}</span>
+        <strong>{{ membro.nome }}</strong>
+
+        <div class="chips">
+            @for (hab of membro.habilidades; track hab) {
+                <span class="chip">{{ hab }}</span>
+            }
+        </div>
     </div>
-    <div class="col-acoes">
-        <button class="icon-btn">
-            <mat-icon class="icon-edit">edit</mat-icon>
-        </button>
-        <button class="icon-btn" (click)="membroRemovido.emit(membro.id)">
-            <mat-icon class="icon-delete">delete</mat-icon>
-        </button>
-    </div>
-</div>
+
+    <button class="icon-btn" type="button" (click)="membroRemovido.emit(membro.id)" aria-label="Remover membro">
+        <mat-icon>delete</mat-icon>
+    </button>
+</article>
