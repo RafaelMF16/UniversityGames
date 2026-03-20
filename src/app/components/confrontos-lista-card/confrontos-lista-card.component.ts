@@ -12,21 +12,31 @@ import { Confronto } from '../../models/confronto.model';
 })
 export class ConfrontosListaCardComponent {
   @Input() confrontos: Confronto[] = [];
+  @Input() equipes: string[] = [];
+  @Input() locais: string[] = [];
+  @Input() modalidades: string[] = [];
   @Output() editarConfrontoClicado = new EventEmitter<Confronto>();
   @Output() editarPlacarClicado = new EventEmitter<Confronto>();
   @Output() confrontoRemovido = new EventEmitter<number>();
 
   busca = '';
+  equipeSelecionada = '';
+  modalidadeSelecionada = '';
+  localSelecionado = '';
+  statusSelecionado = '';
 
   get confrontosFiltrados(): Confronto[] {
     const termo = this.busca.trim().toLowerCase();
-    if (!termo) {
-      return this.confrontos;
-    }
 
-    return this.confrontos.filter((confronto) =>
-      `${confronto.equipeA} ${confronto.equipeB}`.toLowerCase().includes(termo)
-    );
+    return this.confrontos.filter((confronto) => {
+      const bateBusca = !termo || `${confronto.equipeA} ${confronto.equipeB}`.toLowerCase().includes(termo);
+      const bateEquipe = !this.equipeSelecionada || confronto.equipeA === this.equipeSelecionada || confronto.equipeB === this.equipeSelecionada;
+      const bateModalidade = !this.modalidadeSelecionada || confronto.modalidade === this.modalidadeSelecionada;
+      const bateLocal = !this.localSelecionado || confronto.local === this.localSelecionado;
+      const bateStatus = !this.statusSelecionado || confronto.status === this.statusSelecionado;
+
+      return bateBusca && bateEquipe && bateModalidade && bateLocal && bateStatus;
+    });
   }
 
   placar(confronto: Confronto) {

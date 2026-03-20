@@ -1,25 +1,22 @@
 <app-container-principal>
     <div class="confrontos-container">
         <section class="page-copy">
-            <h1>Criar Nova Partida</h1>
-            <p>Gerencie os confrontos e horarios do torneio oficial.</p>
+            <div>
+                <h1>Confrontos</h1>
+                <p>Gerencie toda a agenda de partidas em uma unica tela.</p>
+            </div>
+
+            <button class="app-button" type="button" (click)="abrirModalConfronto()">Cadastrar confronto</button>
         </section>
 
-        <section class="layout-grid">
-            <app-confronto-form-card
-                [equipes]="equipes"
-                [confrontoEditando]="confrontoEditando"
-                (confrontoCriado)="onConfrontoCriado($event)"
-                (confrontoAtualizado)="onConfrontoAtualizado($event)"
-                (cancelarEdicao)="confrontoEditando = null">
-            </app-confronto-form-card>
-
-            <app-confrontos-lista-card
-                [confrontos]="confrontos"
-                (editarConfrontoClicado)="confrontoEditando = $event"
-                (editarPlacarClicado)="abrirDialogPlacar($event)"
-                (confrontoRemovido)="onConfrontoRemovido($event)">
-            </app-confrontos-lista-card>
-        </section>
+        <app-confrontos-lista-card
+            [confrontos]="confrontos"
+            [equipes]="nomesEquipes"
+            [modalidades]="modalidades"
+            [locais]="locais"
+            (editarConfrontoClicado)="abrirModalConfronto($event)"
+            (editarPlacarClicado)="abrirDialogPlacar($event)"
+            (confrontoRemovido)="onConfrontoRemovido($event)">
+        </app-confrontos-lista-card>
     </div>
 </app-container-principal>

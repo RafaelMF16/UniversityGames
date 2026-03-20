@@ -1,13 +1,9 @@
 <section class="card surface-card" [class.expanded]="expandido">
     <div class="summary-row">
         <div class="identity">
-            <div class="team-icon" [style.background]="equipe.cor || 'linear-gradient(180deg, #1a7cff 0%, #1258b9 100%)'">
-                <span>{{ equipe.sigla || equipe.nome.slice(0, 2).toUpperCase() }}</span>
-            </div>
-
             <div class="copy">
                 <h3>{{ equipe.nome }}</h3>
-                <p>Responsavel: {{ equipe.responsavel }} • {{ equipe.membros.length }} membros</p>
+                <p>{{ equipe.modalidade }} • Responsavel: {{ equipe.responsavel }} • {{ equipe.membros.length }} membros</p>
             </div>
         </div>
 
@@ -15,7 +11,7 @@
             <button class="icon-btn" type="button" (click)="equipeEditada.emit(equipe)" aria-label="Editar equipe">
                 <mat-icon>edit</mat-icon>
             </button>
-            <button class="icon-btn" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir equipe">
+            <button class="icon-btn danger" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir equipe">
                 <mat-icon>delete</mat-icon>
             </button>
             <button class="expand-btn" type="button" (click)="expandido = !expandido" aria-label="Expandir equipe">

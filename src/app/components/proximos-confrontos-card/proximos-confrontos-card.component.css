@@ -18,22 +18,8 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     text-align: center;
-}
-
-.avatar {
-    align-items: center;
-    background: radial-gradient(circle at top, rgba(94, 126, 170, 0.5), rgba(25, 40, 63, 0.9));
-    border: 1px solid rgba(111, 136, 179, 0.24);
-    border-radius: 50%;
-    display: flex;
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    height: 68px;
-    justify-content: center;
-    width: 68px;
 }
 
 .team-block strong {
@@ -96,6 +82,11 @@ mat-icon {
     .teams-row,
     .footer-row {
         flex-direction: column;
+    }
+
+    .team-block {
+        align-items: center;
+        text-align: center;
     }
 
     .center-block {

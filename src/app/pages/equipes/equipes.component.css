@@ -6,7 +6,7 @@
 }
 
 .top-row {
-    align-items: center;
+    align-items: flex-start;
     display: flex;
     gap: 20px;
     justify-content: space-between;
@@ -36,7 +36,6 @@
 
 @media (max-width: 900px) {
     .top-row {
-        align-items: flex-start;
         flex-direction: column;
     }
 }

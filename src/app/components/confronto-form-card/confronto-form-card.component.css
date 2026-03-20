@@ -1,59 +1,51 @@
 .card {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     min-width: 0;
-    padding: 24px;
+    padding: 24px 26px;
 }
 
 .card-heading {
-    align-items: center;
     display: flex;
-    gap: 14px;
-    margin-bottom: 8px;
-}
-
-.heading-icon {
-    align-items: center;
-    background: rgba(36, 144, 255, 0.12);
-    border-radius: 14px;
-    color: var(--primary);
-    display: flex;
-    height: 42px;
-    justify-content: center;
-    width: 42px;
 }
 
 .card h2 {
-    font-size: clamp(1.35rem, 1.7vw, 1.7rem);
+    font-size: clamp(1.3rem, 1.7vw, 1.65rem);
 }
 
-.vs-badge {
-    align-self: center;
-    background: rgba(33, 47, 72, 0.98);
-    border: 1px solid var(--border-strong);
-    border-radius: 999px;
+.card p {
     color: var(--text-muted);
-    font-family: 'Outfit', sans-serif;
-    font-weight: 700;
-    padding: 8px 18px;
+    margin-top: 6px;
 }
 
-.row-fields {
+.form-grid {
     display: grid;
-    gap: 16px;
+    gap: 16px 18px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.full-width {
+    grid-column: 1 / -1;
 }
 
 .actions {
     display: flex;
-    flex-direction: column;
     gap: 10px;
-    margin-top: 8px;
+    justify-content: flex-end;
+    margin-top: 4px;
 }
 
 @media (max-width: 900px) {
-    .row-fields {
+    .form-grid {
         grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
     }
 }

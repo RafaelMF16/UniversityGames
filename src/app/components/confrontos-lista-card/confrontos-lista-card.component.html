@@ -1,11 +1,61 @@
 <section class="card surface-card">
     <div class="card-top">
-        <h2>Proximas Partidas</h2>
-        <input class="app-input search-input" [(ngModel)]="busca" placeholder="Filtrar por time...">
+        <div>
+            <h2>Lista de confrontos</h2>
+            <p>Consulte, filtre e atualize os confrontos em um unico lugar.</p>
+        </div>
+    </div>
+
+    <div class="filters-grid">
+        <div class="filter-field">
+            <label for="busca-confronto">Buscar</label>
+            <input id="busca-confronto" class="app-input" [(ngModel)]="busca" placeholder="Buscar por equipe...">
+        </div>
+
+        <div class="filter-field">
+            <label for="filtro-equipe">Equipe</label>
+            <select id="filtro-equipe" class="app-select" [(ngModel)]="equipeSelecionada">
+                <option value="">Todas as equipes</option>
+                @for (equipe of equipes; track equipe) {
+                    <option [value]="equipe">{{ equipe }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="filter-field">
+            <label for="filtro-modalidade">Modalidade</label>
+            <select id="filtro-modalidade" class="app-select" [(ngModel)]="modalidadeSelecionada">
+                <option value="">Todas as modalidades</option>
+                @for (modalidade of modalidades; track modalidade) {
+                    <option [value]="modalidade">{{ modalidade }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="filter-field">
+            <label for="filtro-local">Local</label>
+            <select id="filtro-local" class="app-select" [(ngModel)]="localSelecionado">
+                <option value="">Todos os locais</option>
+                @for (local of locais; track local) {
+                    <option [value]="local">{{ local }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="filter-field">
+            <label for="filtro-status">Status</label>
+            <select id="filtro-status" class="app-select" [(ngModel)]="statusSelecionado">
+                <option value="">Todos os status</option>
+                <option value="agendado">Agendado</option>
+                <option value="ao-vivo">Ao vivo</option>
+                <option value="encerrado">Encerrado</option>
+            </select>
+        </div>
     </div>
 
     <div class="table-head">
         <span>Confronto</span>
+        <span>Modalidade</span>
         <span>Placar</span>
         <span>Data/Hora</span>
         <span>Local</span>
@@ -16,51 +66,56 @@
         @for (confronto of confrontosFiltrados; track confronto.id) {
             <article class="row">
                 <div class="confronto-copy">
+                    <span class="mobile-label">Confronto</span>
                     <strong>{{ confronto.equipeA }}</strong>
                     <span class="versus">vs</span>
                     <strong>{{ confronto.equipeB }}</strong>
                 </div>
 
+                <div class="modalidade-cell">
+                    <span class="mobile-label">Modalidade</span>
+                    <span class="pill pill-neutral modalidade-pill">{{ confronto.modalidade || 'Nao informada' }}</span>
+                </div>
+
                 <div class="score-column">
+                    <span class="mobile-label">Placar</span>
                     <span class="score-badge" [class.finished]="confronto.status === 'encerrado'">{{ placar(confronto) }}</span>
                     <small>{{ statusLabel(confronto) }}</small>
                 </div>
 
                 <div class="date-column">
+                    <span class="mobile-label">Data e hora</span>
                     <strong>{{ confronto.data }}</strong>
                     <small>{{ confronto.horario }}</small>
                 </div>
 
                 <div class="location-column">
+                    <span class="mobile-label">Local</span>
                     <mat-icon>location_on</mat-icon>
                     <span>{{ confronto.local }}</span>
                 </div>
 
                 <div class="actions-column">
-                    @if (confronto.status === 'encerrado') {
-                        <button class="app-button-secondary details-button" type="button" (click)="editarPlacarClicado.emit(confronto)">Ver Detalhes</button>
-                    } @else {
-                        <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar">
-                            <mat-icon>emoji_events</mat-icon>
-                        </button>
-                        <button class="icon-btn" type="button" (click)="editarConfrontoClicado.emit(confronto)" aria-label="Editar confronto">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button class="icon-btn danger" type="button" (click)="confrontoRemovido.emit(confronto.id)" aria-label="Remover confronto">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    }
+                    <span class="mobile-label">Acoes</span>
+                    <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar">
+                        <mat-icon>emoji_events</mat-icon>
+                    </button>
+                    <button class="icon-btn" type="button" (click)="editarConfrontoClicado.emit(confronto)" aria-label="Editar confronto">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="icon-btn danger" type="button" (click)="confrontoRemovido.emit(confronto.id)" aria-label="Remover confronto">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </div>
             </article>
+        } @empty {
+            <div class="empty-state">
+                Nenhum confronto encontrado para os filtros informados.
+            </div>
         }
     </div>
 
     <div class="card-footer">
-        <span>Mostrando {{ confrontosFiltrados.length }} de {{ confrontos.length }} partidas agendadas</span>
-
-        <div class="pager">
-            <button class="app-button-ghost" type="button">Anterior</button>
-            <button class="app-button-secondary" type="button">Proxima</button>
-        </div>
+        <span>{{ confrontosFiltrados.length }} confronto(s) exibido(s)</span>
     </div>
 </section>

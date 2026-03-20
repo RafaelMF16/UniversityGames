@@ -14,7 +14,7 @@ export class DashboardComponent {
   metricas = [
     {
       titulo: 'Total de equipes',
-      valor: '24',
+      valor: '12',
       icone: 'groups',
       destaque: '',
       destaqueTipo: 'success' as const,
@@ -22,7 +22,7 @@ export class DashboardComponent {
     },
     {
       titulo: 'Total de confrontos',
-      valor: '156',
+      valor: '18',
       icone: 'sports_soccer',
       destaque: '',
       destaqueTipo: 'primary' as const,
@@ -37,9 +37,7 @@ export class DashboardComponent {
       horario: '14:00',
       data: '22 OUT',
       local: 'Quadra Poliesportiva Central',
-      modalidade: 'Futsal',
-      siglaA: 'ES',
-      siglaB: 'DL'
+      modalidade: 'Futsal'
     },
     {
       equipeA: 'Medicina Wolves',
@@ -47,9 +45,7 @@ export class DashboardComponent {
       horario: '15:30',
       data: '22 OUT',
       local: 'Ginasio de Esportes 02',
-      modalidade: 'Volei',
-      siglaA: 'MW',
-      siglaB: 'TF'
+      modalidade: 'Volei'
     },
     {
       equipeA: 'Adm Bulls',
@@ -57,9 +53,7 @@ export class DashboardComponent {
       horario: '19:00',
       data: '23 OUT',
       local: 'Arena Principal',
-      modalidade: 'Basquete',
-      siglaA: 'AB',
-      siglaB: 'PP'
+      modalidade: 'Basquete'
     },
     {
       equipeA: 'Contabeis Titans',
@@ -67,9 +61,7 @@ export class DashboardComponent {
       horario: '20:30',
       data: '23 OUT',
       local: 'Arena Principal',
-      modalidade: 'Handebol',
-      siglaA: 'CT',
-      siglaB: 'MH'
+      modalidade: 'Atletismo'
     }
   ];
 }
