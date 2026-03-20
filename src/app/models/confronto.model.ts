@@ -1,3 +1,7 @@
+import { ModalidadeEquipe } from './equipe.model';
+
+export type StatusConfronto = 'agendado' | 'ao-vivo' | 'encerrado';
+
 export interface Confronto {
     id: number;
     equipeA: string;
@@ -7,8 +11,8 @@ export interface Confronto {
     local: string;
     golsA?: number;
     golsB?: number;
-    modalidade?: string;
-    status?: 'agendado' | 'ao-vivo' | 'encerrado';
+    modalidade: ModalidadeEquipe;
+    status: StatusConfronto;
     destaque?: boolean;
     periodoAtual?: string;
     duracao?: string;
