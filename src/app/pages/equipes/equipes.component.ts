@@ -24,6 +24,7 @@ export class EquipesComponent {
       nome: 'Os Galaticos',
       responsavel: 'Joao Pereira',
       email: 'joao@fpm.edu.br',
+      modalidade: 'Futsal',
       sigla: 'OG',
       cor: 'linear-gradient(180deg, #278eff 0%, #1455b7 100%)',
       membros: [
@@ -36,6 +37,7 @@ export class EquipesComponent {
       nome: 'Esquadrao Fenix',
       responsavel: 'Mariana Costa',
       email: 'mariana@fpm.edu.br',
+      modalidade: 'Volei',
       sigla: 'EF',
       cor: 'linear-gradient(180deg, #ff9736 0%, #a54a04 100%)',
       membros: [
@@ -50,6 +52,7 @@ export class EquipesComponent {
       nome: 'Relampago FPM',
       responsavel: 'Carlos Eduardo',
       email: 'carlos@fpm.edu.br',
+      modalidade: 'Basquete',
       sigla: 'RF',
       cor: 'linear-gradient(180deg, #2fd6a6 0%, #0d6b53 100%)',
       membros: [
@@ -61,6 +64,7 @@ export class EquipesComponent {
       nome: 'Diamantes Negros',
       responsavel: 'Fernanda Lima',
       email: 'fernanda@fpm.edu.br',
+      modalidade: 'Atletismo',
       sigla: 'DN',
       cor: 'linear-gradient(180deg, #a35cff 0%, #51208f 100%)',
       membros: [
@@ -75,7 +79,6 @@ export class EquipesComponent {
         ...equipe,
         id: Date.now(),
         sigla: equipe.nome.slice(0, 2).toUpperCase(),
-        cor: 'linear-gradient(180deg, #278eff 0%, #1455b7 100%)',
         membros: []
       },
       ...this.equipes

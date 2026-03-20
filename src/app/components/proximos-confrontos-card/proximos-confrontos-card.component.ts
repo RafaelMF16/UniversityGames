@@ -16,7 +16,5 @@ export class ProximosConfrontosCardComponent {
     data: string;
     local: string;
     modalidade: string;
-    siglaA: string;
-    siglaB: string;
   };
 }

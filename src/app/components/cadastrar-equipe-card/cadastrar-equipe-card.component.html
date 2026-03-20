@@ -1,34 +1,58 @@
 <section class="card surface-card">
     <div class="card-header">
         <div class="card-title-wrap">
-            <span class="title-icon">{{ equipeEditando ? '✎' : '+' }}</span>
-            <h2>{{ equipeEditando ? 'Editar Equipe' : 'Cadastrar Equipe' }}</h2>
+            <div>
+                <h2>{{ equipeEditando ? 'Editar equipe' : 'Cadastrar equipe' }}</h2>
+                <p>Preencha os dados principais da equipe e a modalidade praticada.</p>
+            </div>
         </div>
     </div>
 
-    <div class="form-grid">
+    <form class="form-grid" [formGroup]="form">
         <div class="field-group">
             <label for="nome-equipe">Nome da equipe</label>
-            <input id="nome-equipe" class="app-input" [(ngModel)]="nome" placeholder="Ex: Time Alfa" type="text">
+            <input id="nome-equipe" class="app-input" [class.invalid]="isInvalid('nome')" formControlName="nome" placeholder="Ex: Time Alfa" type="text">
+            @if (isInvalid('nome')) {
+                <small class="field-error">{{ getErrorMessage('nome') }}</small>
+            }
         </div>
 
         <div class="field-group">
             <label for="responsavel-equipe">Responsavel</label>
-            <input id="responsavel-equipe" class="app-input" [(ngModel)]="responsavel" placeholder="Nome completo" type="text">
+            <input id="responsavel-equipe" class="app-input" [class.invalid]="isInvalid('responsavel')" formControlName="responsavel" placeholder="Nome completo" type="text">
+            @if (isInvalid('responsavel')) {
+                <small class="field-error">{{ getErrorMessage('responsavel') }}</small>
+            }
         </div>
 
         <div class="field-group">
             <label for="email-equipe">E-mail de contato</label>
-            <input id="email-equipe" class="app-input" [(ngModel)]="email" placeholder="contato@equipe.com" type="email">
+            <input id="email-equipe" class="app-input" [class.invalid]="isInvalid('email')" formControlName="email" placeholder="contato@equipe.com" type="email">
+            @if (isInvalid('email')) {
+                <small class="field-error">{{ getErrorMessage('email') }}</small>
+            }
         </div>
-    </div>
+
+        <div class="field-group">
+            <label for="modalidade-equipe">Modalidade</label>
+            <select id="modalidade-equipe" class="app-select" [class.invalid]="isInvalid('modalidade')" formControlName="modalidade">
+                <option value="">Selecione a modalidade</option>
+                @for (modalidade of modalidades; track modalidade) {
+                    <option [value]="modalidade">{{ modalidade }}</option>
+                }
+            </select>
+            @if (isInvalid('modalidade')) {
+                <small class="field-error">{{ getErrorMessage('modalidade') }}</small>
+            }
+        </div>
+    </form>
 
     <div class="actions">
         @if (equipeEditando) {
-            <button class="app-button-secondary" type="button" (click)="salvar()">Atualizar Equipe</button>
+            <button class="app-button-secondary" type="button" (click)="salvar()">Atualizar equipe</button>
             <button class="app-button-ghost" type="button" (click)="onCancelarEdicao()">Cancelar</button>
         } @else {
-            <button class="app-button-secondary" type="button" (click)="salvar()">Salvar Equipe</button>
+            <button class="app-button-secondary" type="button" (click)="salvar()">Salvar equipe</button>
         }
     </div>
 </section>

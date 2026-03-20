@@ -1,3 +1,5 @@
+export type ModalidadeEquipe = 'Futsal' | 'Volei' | 'Basquete' | 'Natacao' | 'Atletismo';
+
 export interface Membro {
     id: number;
     nome: string;
@@ -10,6 +12,7 @@ export interface Equipe {
     nome: string;
     responsavel: string;
     email: string;
+    modalidade: ModalidadeEquipe;
     membros: Membro[];
     icone?: string;
     cor?: string;

@@ -8,19 +8,19 @@
     display: flex;
     flex: 1;
     justify-content: space-between;
-    min-height: 148px;
-    padding: 22px 24px;
+    min-height: 136px;
+    padding: 24px;
 }
 
 .icone-wrapper {
     align-items: center;
-    background: rgba(20, 58, 106, 0.72);
+    background: rgba(36, 144, 255, 0.1);
     border-radius: 16px;
     display: flex;
     flex-shrink: 0;
-    height: 54px;
+    height: 48px;
     justify-content: center;
-    width: 54px;
+    width: 48px;
 }
 
 mat-icon {
