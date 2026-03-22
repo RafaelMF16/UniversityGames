@@ -85,9 +85,13 @@
     </form>
 
     <div class="actions">
-        <button class="app-button-ghost" type="button" (click)="cancelar()">Cancelar</button>
-        <button class="app-button-secondary" type="button" (click)="salvar()">
-            {{ confrontoEditando ? 'Salvar alteracoes' : 'Cadastrar confronto' }}
+        <button class="app-button-ghost" type="button" (click)="cancelar()" [disabled]="salvando()">Cancelar</button>
+        <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando()">
+            @if (salvando()) {
+                <app-loading-indicator [inline]="true" [small]="true" [label]="confrontoEditando ? 'Salvando...' : 'Cadastrando...'"></app-loading-indicator>
+            } @else {
+                {{ confrontoEditando ? 'Salvar alteracoes' : 'Cadastrar confronto' }}
+            }
         </button>
     </div>
 </section>

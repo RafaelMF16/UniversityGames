@@ -3,17 +3,21 @@ import { FormsModule } from '@angular/forms';
 import { MatIcon } from "@angular/material/icon";
 import { Equipe } from '../../models/equipe.model';
 import { LinhaMembroEquipeComponent } from "../linha-membro-equipe/linha-membro-equipe.component";
+import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
   selector: 'app-equipe-card',
   standalone: true,
-  imports: [FormsModule, MatIcon, LinhaMembroEquipeComponent],
+  imports: [FormsModule, MatIcon, LinhaMembroEquipeComponent, LoadingIndicatorComponent],
   templateUrl: './equipe-card.component.html',
   styleUrl: './equipe-card.component.css'
 })
 export class EquipeCardComponent {
   @Input() equipe!: Equipe;
+  @Input() salvando = false;
+  @Input() removendo = false;
   @Output() equipeEditada = new EventEmitter<Equipe>();
+  @Output() equipeAtualizada = new EventEmitter<Equipe>();
   @Output() equipeRemovida = new EventEmitter<number>();
 
   expandido = false;
@@ -36,16 +40,21 @@ export class EquipeCardComponent {
   }
 
   confirmarMembro() {
-    if (!this.novoNome) {
+    if (!this.novoNome || this.salvando) {
       return;
     }
 
-    this.equipe.membros.push({
-      id: Date.now(),
-      nome: this.novoNome,
-      funcao: this.equipe.membros.length === 0 ? 'Capitao' : 'Membro',
-      habilidades: [...this.novasHabilidades]
-    });
+    const membrosAtualizados = [
+      ...this.equipe.membros,
+      {
+        id: Date.now(),
+        nome: this.novoNome,
+        funcao: this.equipe.membros.length === 0 ? 'Capitao' : 'Membro',
+        habilidades: [...this.novasHabilidades]
+      }
+    ];
+
+    this.equipeAtualizada.emit({ ...this.equipe, membros: membrosAtualizados });
 
     this.novoNome = '';
     this.novasHabilidades = [];
@@ -53,6 +62,9 @@ export class EquipeCardComponent {
   }
 
   onMembroRemovido(id: number) {
-    this.equipe.membros = this.equipe.membros.filter((membro) => membro.id !== id);
+    this.equipeAtualizada.emit({
+      ...this.equipe,
+      membros: this.equipe.membros.filter((membro) => membro.id !== id)
+    });
   }
 }

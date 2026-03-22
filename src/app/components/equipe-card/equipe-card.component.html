@@ -8,13 +8,21 @@
         </div>
 
         <div class="actions">
-            <button class="icon-btn" type="button" (click)="equipeEditada.emit(equipe)" aria-label="Editar equipe">
-                <mat-icon>edit</mat-icon>
+            <button class="icon-btn" type="button" (click)="equipeEditada.emit(equipe)" aria-label="Editar equipe" [disabled]="salvando || removendo">
+                @if (salvando) {
+                    <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                } @else {
+                    <mat-icon>edit</mat-icon>
+                }
             </button>
-            <button class="icon-btn danger" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir equipe">
-                <mat-icon>delete</mat-icon>
+            <button class="icon-btn danger" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir equipe" [disabled]="salvando || removendo">
+                @if (removendo) {
+                    <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                } @else {
+                    <mat-icon>delete</mat-icon>
+                }
             </button>
-            <button class="expand-btn" type="button" (click)="expandido = !expandido" aria-label="Expandir equipe">
+            <button class="expand-btn" type="button" (click)="expandido = !expandido" aria-label="Expandir equipe" [disabled]="salvando || removendo">
                 <mat-icon>{{ expandido ? 'expand_less' : 'expand_more' }}</mat-icon>
             </button>
         </div>
@@ -60,8 +68,14 @@
                     </div>
 
                     <div class="member-form-actions">
-                        <button class="app-button-secondary" type="button" (click)="confirmarMembro()">Confirmar membro</button>
-                        <button class="app-button-ghost" type="button" (click)="adicionandoMembro = false">Cancelar</button>
+                        <button class="app-button-secondary" type="button" (click)="confirmarMembro()" [disabled]="salvando">
+                            @if (salvando) {
+                                <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
+                            } @else {
+                                Confirmar membro
+                            }
+                        </button>
+                        <button class="app-button-ghost" type="button" (click)="adicionandoMembro = false" [disabled]="salvando">Cancelar</button>
                     </div>
                 </div>
             }

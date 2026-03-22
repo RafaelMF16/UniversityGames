@@ -1,46 +1,47 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { Confronto } from '../../models/confronto.model';
+import { Confronto, ConfrontosFiltros, StatusConfronto } from '../../models/confronto.model';
+import { ModalidadeEquipe } from '../../models/equipe.model';
+import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
   selector: 'app-confrontos-lista-card',
   standalone: true,
-  imports: [FormsModule, MatIcon],
+  imports: [FormsModule, MatIcon, LoadingIndicatorComponent],
   templateUrl: './confrontos-lista-card.component.html',
   styleUrl: './confrontos-lista-card.component.css'
 })
 export class ConfrontosListaCardComponent {
   @Input() confrontos: Confronto[] = [];
   @Input() equipes: string[] = [];
-  @Input() locais: string[] = [];
   @Input() modalidades: string[] = [];
+  @Input() carregando = false;
+  @Input() removendoId: number | null = null;
+  @Input() placarSalvandoId: number | null = null;
   @Output() editarConfrontoClicado = new EventEmitter<Confronto>();
   @Output() editarPlacarClicado = new EventEmitter<Confronto>();
   @Output() confrontoRemovido = new EventEmitter<number>();
+  @Output() filtrosAlterados = new EventEmitter<ConfrontosFiltros>();
 
-  busca = '';
   equipeSelecionada = '';
-  modalidadeSelecionada = '';
-  localSelecionado = '';
-  statusSelecionado = '';
+  modalidadeSelecionada: ModalidadeEquipe | '' = '';
+  statusSelecionado: StatusConfronto | '' = '';
 
-  get confrontosFiltrados(): Confronto[] {
-    const termo = this.busca.trim().toLowerCase();
+  onFiltroAlterado() {
+    this.emitirFiltros();
+  }
 
-    return this.confrontos.filter((confronto) => {
-      const bateBusca = !termo || `${confronto.equipeA} ${confronto.equipeB}`.toLowerCase().includes(termo);
-      const bateEquipe = !this.equipeSelecionada || confronto.equipeA === this.equipeSelecionada || confronto.equipeB === this.equipeSelecionada;
-      const bateModalidade = !this.modalidadeSelecionada || confronto.modalidade === this.modalidadeSelecionada;
-      const bateLocal = !this.localSelecionado || confronto.local === this.localSelecionado;
-      const bateStatus = !this.statusSelecionado || confronto.status === this.statusSelecionado;
-
-      return bateBusca && bateEquipe && bateModalidade && bateLocal && bateStatus;
+  private emitirFiltros() {
+    this.filtrosAlterados.emit({
+      equipe: this.equipeSelecionada,
+      modalidade: this.modalidadeSelecionada,
+      status: this.statusSelecionado
     });
   }
 
   placar(confronto: Confronto) {
-    if (confronto.golsA === undefined || confronto.golsB === undefined) {
+    if (confronto.golsA === undefined || confronto.golsA === null || confronto.golsB === undefined || confronto.golsB === null) {
       return '- : -';
     }
 

@@ -6,14 +6,23 @@
                 <p>Gerencie toda a agenda de partidas em uma unica tela.</p>
             </div>
 
-            <button class="app-button" type="button" (click)="abrirModalConfronto()">Cadastrar confronto</button>
+            <button class="app-button" type="button" (click)="abrirModalConfronto()" [disabled]="loading()">
+                Cadastrar confronto
+            </button>
         </section>
 
+        @if (error()) {
+            <div class="pill pill-warning feedback-pill">{{ error() }}</div>
+        }
+
         <app-confrontos-lista-card
-            [confrontos]="confrontos"
-            [equipes]="nomesEquipes"
+            [confrontos]="confrontos()"
+            [equipes]="nomesEquipes()"
             [modalidades]="modalidades"
-            [locais]="locais"
+            [carregando]="loading()"
+            [removendoId]="removendoId()"
+            [placarSalvandoId]="placarSalvandoId()"
+            (filtrosAlterados)="onFiltrosAlterados($event)"
             (editarConfrontoClicado)="abrirModalConfronto($event)"
             (editarPlacarClicado)="abrirDialogPlacar($event)"
             (confrontoRemovido)="onConfrontoRemovido($event)">

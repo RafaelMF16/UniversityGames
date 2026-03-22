@@ -49,10 +49,22 @@
 
     <div class="actions">
         @if (equipeEditando) {
-            <button class="app-button-secondary" type="button" (click)="salvar()">Atualizar equipe</button>
-            <button class="app-button-ghost" type="button" (click)="onCancelarEdicao()">Cancelar</button>
+            <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando">
+                @if (salvando) {
+                    <app-loading-indicator [inline]="true" [small]="true" label="Atualizando..."></app-loading-indicator>
+                } @else {
+                    Atualizar equipe
+                }
+            </button>
+            <button class="app-button-ghost" type="button" (click)="onCancelarEdicao()" [disabled]="salvando">Cancelar</button>
         } @else {
-            <button class="app-button-secondary" type="button" (click)="salvar()">Salvar equipe</button>
+            <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando">
+                @if (salvando) {
+                    <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
+                } @else {
+                    Salvar equipe
+                }
+            </button>
         }
     </div>
 </section>
