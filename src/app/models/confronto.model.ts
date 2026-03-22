@@ -9,12 +9,21 @@ export interface Confronto {
     data: string;
     horario: string;
     local: string;
-    golsA?: number;
-    golsB?: number;
+    golsA?: number | null;
+    golsB?: number | null;
     modalidade: ModalidadeEquipe;
     status: StatusConfronto;
     destaque?: boolean;
     periodoAtual?: string;
     duracao?: string;
     fase?: string;
+}
+
+export type ConfrontoPayload = Omit<Confronto, 'id'>;
+
+export interface ConfrontosFiltros {
+    busca?: string;
+    equipe?: string;
+    modalidade?: ModalidadeEquipe | '' | undefined;
+    status?: StatusConfronto | '' | undefined;
 }

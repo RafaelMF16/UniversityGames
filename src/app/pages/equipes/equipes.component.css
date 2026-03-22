@@ -5,6 +5,10 @@
     width: 100%;
 }
 
+.feedback-pill {
+    align-self: flex-start;
+}
+
 .top-row {
     align-items: flex-start;
     display: flex;

@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
 import { ConfrontoFormCardComponent } from '../../components/confronto-form-card/confronto-form-card.component';
 import { ConfrontosListaCardComponent } from '../../components/confrontos-lista-card/confrontos-lista-card.component';
 import { EditarPlacarDialogComponent } from '../../components/editar-placar-dialog/editar-placar-dialog.component';
-import { Confronto } from '../../models/confronto.model';
-import { Equipe } from '../../models/equipe.model';
+import { Confronto, ConfrontosFiltros } from '../../models/confronto.model';
+import { MODALIDADES_EQUIPE } from '../../models/equipe.model';
+import { ConfrontosStateService } from '../../services/confrontos-state.service';
+import { EquipesStateService } from '../../services/equipes-state.service';
 
 @Component({
   selector: 'app-confrontos',
@@ -19,93 +21,48 @@ import { Equipe } from '../../models/equipe.model';
   styleUrl: './confrontos.component.css'
 })
 export class ConfrontosComponent {
-  equipes: Equipe[] = [
-    { id: 1, nome: 'Engenharia FC', responsavel: '', email: '', modalidade: 'Futsal', membros: [] },
-    { id: 2, nome: 'Marketing United', responsavel: '', email: '', modalidade: 'Futsal', membros: [] },
-    { id: 3, nome: 'Financeiro Titans', responsavel: '', email: '', modalidade: 'Basquete', membros: [] },
-    { id: 4, nome: 'RH Eagles', responsavel: '', email: '', modalidade: 'Basquete', membros: [] },
-    { id: 5, nome: 'Vendas Sharks', responsavel: '', email: '', modalidade: 'Volei', membros: [] },
-    { id: 6, nome: 'Product Lions', responsavel: '', email: '', modalidade: 'Natacao', membros: [] }
-  ];
+  private readonly dialog = inject(MatDialog);
+  private readonly confrontosState = inject(ConfrontosStateService);
+  private readonly equipesState = inject(EquipesStateService);
 
-  confrontos: Confronto[] = [
-    { id: 1, equipeA: 'Engenharia FC', equipeB: 'Marketing United', data: '2026-03-22', horario: '19:30', local: 'Quadra A', modalidade: 'Futsal', status: 'agendado' },
-    { id: 2, equipeA: 'Financeiro Titans', equipeB: 'RH Eagles', data: '2026-03-20', horario: '18:00', local: 'Quadra Principal', modalidade: 'Basquete', golsA: 3, golsB: 1, status: 'encerrado' },
-    { id: 3, equipeA: 'Vendas Sharks', equipeB: 'Product Lions', data: '2026-03-24', horario: '20:00', local: 'Arena Tech', modalidade: 'Volei', status: 'ao-vivo' }
-  ];
+  readonly confrontos = this.confrontosState.confrontos.asReadonly();
+  readonly equipes = this.equipesState.equipes.asReadonly();
+  readonly loading = computed(() => this.confrontosState.loading() || this.equipesState.loading());
+  readonly error = computed(() => this.confrontosState.error() ?? this.equipesState.error());
+  readonly nomesEquipes = computed(() => this.equipes().map((equipe) => equipe.nome));
+  readonly modalidades = MODALIDADES_EQUIPE;
+  readonly removendoId = this.confrontosState.deletingId.asReadonly();
+  readonly placarSalvandoId = this.confrontosState.placarSavingId.asReadonly();
 
-  constructor(private readonly dialog: MatDialog) {}
-
-  get nomesEquipes(): string[] {
-    return this.equipes.map((equipe) => equipe.nome);
-  }
-
-  get modalidades(): string[] {
-    return Array.from(new Set(this.confrontos.map((confronto) => confronto.modalidade).filter(Boolean) as string[]));
-  }
-
-  get locais(): string[] {
-    return Array.from(new Set(this.confrontos.map((confronto) => confronto.local)));
+  constructor() {
+    void this.equipesState.loadEquipes();
   }
 
   abrirModalConfronto(confronto?: Confronto) {
-    const ref = this.dialog.open(ConfrontoFormCardComponent, {
+    this.dialog.open(ConfrontoFormCardComponent, {
       width: '720px',
       maxWidth: '94vw',
       panelClass: 'dialog-sem-borda',
       data: {
-        equipes: this.equipes,
+        equipes: this.equipes(),
         confronto: confronto ?? null
       }
-    });
-
-    ref.afterClosed().subscribe((resultado) => {
-      if (!resultado) {
-        return;
-      }
-
-      if (confronto) {
-        this.onConfrontoAtualizado(resultado);
-        return;
-      }
-
-      this.onConfrontoCriado(resultado);
     });
   }
 
   abrirDialogPlacar(confronto: Confronto) {
-    const ref = this.dialog.open(EditarPlacarDialogComponent, {
+    this.dialog.open(EditarPlacarDialogComponent, {
       data: confronto,
       width: '540px',
       panelClass: 'dialog-sem-borda'
     });
-
-    ref.afterClosed().subscribe((resultado) => {
-      if (resultado) {
-        this.onPlacarAtualizado(resultado);
-      }
-    });
   }
 
-  onConfrontoCriado(confronto: Confronto) {
-    this.confrontos = [confronto, ...this.confrontos];
+  async onConfrontoRemovido(id: number) {
+    await this.confrontosState.deleteConfronto(id);
   }
 
-  onConfrontoAtualizado(confronto: Confronto) {
-    const indice = this.confrontos.findIndex((item) => item.id === confronto.id);
-    if (indice >= 0) {
-      this.confrontos[indice] = confronto;
-    }
-  }
-
-  onConfrontoRemovido(id: number) {
-    this.confrontos = this.confrontos.filter((item) => item.id !== id);
-  }
-
-  onPlacarAtualizado(confronto: Confronto) {
-    const indice = this.confrontos.findIndex((item) => item.id === confronto.id);
-    if (indice >= 0) {
-      this.confrontos[indice] = { ...confronto, status: 'encerrado' };
-    }
+  onFiltrosAlterados(filtros: ConfrontosFiltros) {
+    this.confrontosState.setFiltros(filtros);
   }
 }

@@ -1,18 +1,20 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Equipe, ModalidadeEquipe } from '../../models/equipe.model';
+import { Equipe, EquipePayload, ModalidadeEquipe } from '../../models/equipe.model';
+import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
   selector: 'app-cadastrar-equipe-card',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LoadingIndicatorComponent],
   templateUrl: './cadastrar-equipe-card.component.html',
   styleUrl: './cadastrar-equipe-card.component.css'
 })
 export class CadastrarEquipeCardComponent implements OnChanges {
   @Input() equipeEditando: Equipe | null = null;
-  @Output() equipeAdicionada = new EventEmitter<Equipe>();
-  @Output() equipeAtualizada = new EventEmitter<Equipe>();
+  @Input() salvando = false;
+  @Output() equipeAdicionada = new EventEmitter<EquipePayload>();
+  @Output() equipeAtualizada = new EventEmitter<EquipePayload>();
   @Output() cancelarEdicao = new EventEmitter<void>();
 
   private readonly formBuilder = inject(FormBuilder);
@@ -25,6 +27,7 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     email: ['', [Validators.required, Validators.email]],
     modalidade: ['' as '' | ModalidadeEquipe, Validators.required]
   });
+
   ngOnChanges(_: SimpleChanges) {
     if (this.equipeEditando) {
       this.form.patchValue({
@@ -40,34 +43,39 @@ export class CadastrarEquipeCardComponent implements OnChanges {
   }
 
   salvar() {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.salvando) {
       this.form.markAllAsTouched();
       return;
     }
 
     const values = this.form.getRawValue();
-    const modalidade = values.modalidade as ModalidadeEquipe;
+    const payload: EquipePayload = {
+      nome: values.nome,
+      responsavel: values.responsavel,
+      email: values.email,
+      modalidade: values.modalidade as ModalidadeEquipe,
+      membros: this.equipeEditando?.membros.map((membro) => ({
+        id: membro.id,
+        nome: membro.nome,
+        habilidades: membro.habilidades,
+        funcao: membro.funcao
+      })) ?? []
+    };
 
     if (this.equipeEditando) {
-      this.equipeAtualizada.emit({
-        ...this.equipeEditando,
-        ...values,
-        modalidade
-      });
+      this.equipeAtualizada.emit(payload);
       return;
     }
 
-    this.equipeAdicionada.emit({
-      id: Date.now(),
-      ...values,
-      modalidade,
-      membros: []
-    });
-
+    this.equipeAdicionada.emit(payload);
     this.limparFormulario();
   }
 
   onCancelarEdicao() {
+    if (this.salvando) {
+      return;
+    }
+
     this.limparFormulario();
     this.cancelarEdicao.emit();
   }

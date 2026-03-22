@@ -15,7 +15,7 @@ export interface ApiRequestOptions {
 })
 export class ApiRequestService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '';
+  private readonly baseUrl = 'http://127.0.0.1:8000/api/v1';
 
   get<T>(endpoint: string, options?: ApiRequestOptions): Observable<T> {
     return this.http.get<T>(this.resolveUrl(endpoint), this.createOptions(options));

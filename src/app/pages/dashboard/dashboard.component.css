@@ -13,6 +13,10 @@
     width: 100%;
 }
 
+.feedback-pill {
+    align-self: flex-start;
+}
+
 .title {
     font-size: clamp(2.1rem, 3vw, 3rem);
     line-height: 1;

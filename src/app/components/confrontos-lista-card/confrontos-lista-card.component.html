@@ -4,17 +4,16 @@
             <h2>Lista de confrontos</h2>
             <p>Consulte, filtre e atualize os confrontos em um unico lugar.</p>
         </div>
+
+        @if (carregando) {
+            <app-loading-indicator [inline]="true" label="Atualizando lista..."></app-loading-indicator>
+        }
     </div>
 
     <div class="filters-grid">
         <div class="filter-field">
-            <label for="busca-confronto">Buscar</label>
-            <input id="busca-confronto" class="app-input" [(ngModel)]="busca" placeholder="Buscar por equipe...">
-        </div>
-
-        <div class="filter-field">
             <label for="filtro-equipe">Equipe</label>
-            <select id="filtro-equipe" class="app-select" [(ngModel)]="equipeSelecionada">
+            <select id="filtro-equipe" class="app-select" [(ngModel)]="equipeSelecionada" (ngModelChange)="onFiltroAlterado()">
                 <option value="">Todas as equipes</option>
                 @for (equipe of equipes; track equipe) {
                     <option [value]="equipe">{{ equipe }}</option>
@@ -24,7 +23,7 @@
 
         <div class="filter-field">
             <label for="filtro-modalidade">Modalidade</label>
-            <select id="filtro-modalidade" class="app-select" [(ngModel)]="modalidadeSelecionada">
+            <select id="filtro-modalidade" class="app-select" [(ngModel)]="modalidadeSelecionada" (ngModelChange)="onFiltroAlterado()">
                 <option value="">Todas as modalidades</option>
                 @for (modalidade of modalidades; track modalidade) {
                     <option [value]="modalidade">{{ modalidade }}</option>
@@ -33,18 +32,8 @@
         </div>
 
         <div class="filter-field">
-            <label for="filtro-local">Local</label>
-            <select id="filtro-local" class="app-select" [(ngModel)]="localSelecionado">
-                <option value="">Todos os locais</option>
-                @for (local of locais; track local) {
-                    <option [value]="local">{{ local }}</option>
-                }
-            </select>
-        </div>
-
-        <div class="filter-field">
             <label for="filtro-status">Status</label>
-            <select id="filtro-status" class="app-select" [(ngModel)]="statusSelecionado">
+            <select id="filtro-status" class="app-select" [(ngModel)]="statusSelecionado" (ngModelChange)="onFiltroAlterado()">
                 <option value="">Todos os status</option>
                 <option value="agendado">Agendado</option>
                 <option value="ao-vivo">Ao vivo</option>
@@ -63,7 +52,12 @@
     </div>
 
     <div class="rows">
-        @for (confronto of confrontosFiltrados; track confronto.id) {
+        @if (carregando && !confrontos.length) {
+            <div class="empty-state">
+                <app-loading-indicator label="Carregando confrontos..." [inline]="true"></app-loading-indicator>
+            </div>
+        } @else {
+        @for (confronto of confrontos; track confronto.id) {
             <article class="row">
                 <div class="confronto-copy">
                     <span class="mobile-label">Confronto</span>
@@ -97,14 +91,22 @@
 
                 <div class="actions-column">
                     <span class="mobile-label">Acoes</span>
-                    <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar">
-                        <mat-icon>emoji_events</mat-icon>
+                    <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
+                        @if (placarSalvandoId === confronto.id) {
+                            <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                        } @else {
+                            <mat-icon>emoji_events</mat-icon>
+                        }
                     </button>
-                    <button class="icon-btn" type="button" (click)="editarConfrontoClicado.emit(confronto)" aria-label="Editar confronto">
+                    <button class="icon-btn" type="button" (click)="editarConfrontoClicado.emit(confronto)" aria-label="Editar confronto" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button class="icon-btn danger" type="button" (click)="confrontoRemovido.emit(confronto.id)" aria-label="Remover confronto">
-                        <mat-icon>delete</mat-icon>
+                    <button class="icon-btn danger" type="button" (click)="confrontoRemovido.emit(confronto.id)" aria-label="Remover confronto" [disabled]="removendoId === confronto.id">
+                        @if (removendoId === confronto.id) {
+                            <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                        } @else {
+                            <mat-icon>delete</mat-icon>
+                        }
                     </button>
                 </div>
             </article>
@@ -113,9 +115,10 @@
                 Nenhum confronto encontrado para os filtros informados.
             </div>
         }
+        }
     </div>
 
     <div class="card-footer">
-        <span>{{ confrontosFiltrados.length }} confronto(s) exibido(s)</span>
+        <span>{{ confrontos.length }} confronto(s) exibido(s)</span>
     </div>
 </section>

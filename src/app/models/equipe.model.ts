@@ -1,4 +1,5 @@
 export type ModalidadeEquipe = 'Futsal' | 'Volei' | 'Basquete' | 'Natacao' | 'Atletismo';
+export const MODALIDADES_EQUIPE: ModalidadeEquipe[] = ['Futsal', 'Volei', 'Basquete', 'Natacao', 'Atletismo'];
 
 export interface Membro {
     id: number;
@@ -15,6 +16,7 @@ export interface Equipe {
     modalidade: ModalidadeEquipe;
     membros: Membro[];
     icone?: string;
-    cor?: string;
-    sigla?: string;
 }
+
+export type MembroPayload = Omit<Membro, 'id'> & { id?: number };
+export type EquipePayload = Omit<Equipe, 'id' | 'membros'> & { membros: MembroPayload[] };

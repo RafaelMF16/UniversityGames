@@ -9,32 +9,42 @@
             </div>
         </section>
 
-        <div class="card-container">
-            @for (metrica of metricas; track metrica.titulo) {
-                <app-dashboard-card
-                    [titulo]="metrica.titulo"
-                    [valor]="metrica.valor"
-                    [icone]="metrica.icone"
-                    [destaque]="metrica.destaque"
-                    [destaqueTipo]="metrica.destaqueTipo"
-                    [descricao]="metrica.descricao">
-                </app-dashboard-card>
-            }
-        </div>
+        @if (error()) {
+            <div class="pill pill-warning feedback-pill">{{ error() }}</div>
+        }
 
-        <section class="matches-section">
-            <div class="section-heading">
-                <div>
-                    <h2>Proximos Jogos</h2>
-                    <p>Visao rapida das partidas mais proximas do cronograma.</p>
-                </div>
-            </div>
-
-            <div class="matches-grid">
-                @for (confronto of proximosJogos; track confronto.equipeA + confronto.equipeB) {
-                    <app-proximos-confrontos-card [confronto]="confronto"></app-proximos-confrontos-card>
+        @if (loading() && !proximosJogos().length) {
+            <app-loading-indicator label="Carregando dashboard..."></app-loading-indicator>
+        } @else {
+            <div class="card-container">
+                @for (metrica of metricas(); track metrica.titulo) {
+                    <app-dashboard-card
+                        [titulo]="metrica.titulo"
+                        [valor]="metrica.valor"
+                        [icone]="metrica.icone"
+                        [destaque]="metrica.destaque"
+                        [destaqueTipo]="metrica.destaqueTipo"
+                        [descricao]="metrica.descricao">
+                    </app-dashboard-card>
                 }
             </div>
-        </section>
+
+            <section class="matches-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Proximos Jogos</h2>
+                        <p>Visao rapida das partidas mais proximas do cronograma.</p>
+                    </div>
+                </div>
+
+                <div class="matches-grid">
+                    @for (confronto of proximosJogos(); track confronto.id) {
+                        <app-proximos-confrontos-card [confronto]="confronto"></app-proximos-confrontos-card>
+                    } @empty {
+                        <app-loading-indicator label="Nenhum confronto disponivel." [inline]="true"></app-loading-indicator>
+                    }
+                </div>
+            </section>
+        }
     </div>
 </app-container-principal>
