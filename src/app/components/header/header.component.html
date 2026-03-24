@@ -19,8 +19,27 @@
     </nav>
 
     <div class="actions">
-        <button class="profile-button" type="button" aria-label="Perfil do usuario">
+        <button class="profile-button" type="button" aria-label="Perfil do usuario" (click)="toggleMenu($event)">
             <mat-icon>person</mat-icon>
         </button>
+
+        @if (menuAberto()) {
+            <div class="profile-menu surface-card">
+                <div class="profile-copy">
+                    <strong>{{ nomeUsuario() }}</strong>
+                    <span>Perfil: {{ perfilLabel() }}</span>
+                </div>
+
+                @if (podeGerenciarUsuarios()) {
+                    <a class="menu-link" routerLink="/usuarios" (click)="fecharMenu()">Gerenciar usuarios</a>
+                }
+
+                @if (isVisitor()) {
+                    <button class="menu-link" type="button" (click)="entrar()">Entrar</button>
+                } @else {
+                    <button class="menu-link danger-link" type="button" (click)="sair()">Sair</button>
+                }
+            </div>
+        }
     </div>
 </header>

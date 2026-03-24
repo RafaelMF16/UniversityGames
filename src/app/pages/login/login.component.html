@@ -1,0 +1,52 @@
+<section class="login-shell">
+    <div class="login-hero">
+        <span class="eyebrow">Portal dos Jogos</span>
+        <h1>Entre para operar o evento ou acompanhe tudo como visitante.</h1>
+        <p>Admins, juizes e capitaes usam login. O publico geral pode acessar o sistema em modo leitura.</p>
+    </div>
+
+    <section class="login-card surface-card">
+        <div class="section-heading">
+            <div>
+                <h2>Login</h2>
+                <p>Use suas credenciais para acessar as funcoes administrativas.</p>
+            </div>
+        </div>
+
+        <form class="login-form" [formGroup]="form">
+            <div class="field-group">
+                <label for="login-email">E-mail</label>
+                <input id="login-email" class="app-input" [class.invalid]="isInvalid('email')" formControlName="email" placeholder="seuemail@faculdade.com" type="email">
+                @if (isInvalid('email')) {
+                    <small class="field-error">{{ getErrorMessage('email') }}</small>
+                }
+            </div>
+
+            <div class="field-group">
+                <label for="login-senha">Senha</label>
+                <input id="login-senha" class="app-input" [class.invalid]="isInvalid('senha')" formControlName="senha" placeholder="Digite sua senha" type="password">
+                @if (isInvalid('senha')) {
+                    <small class="field-error">{{ getErrorMessage('senha') }}</small>
+                }
+            </div>
+        </form>
+
+        @if (error()) {
+            <div class="pill pill-warning error-pill">{{ error() }}</div>
+        }
+
+        <div class="login-actions">
+            <button class="app-button" type="button" (click)="entrar()" [disabled]="loading()">
+                @if (loading()) {
+                    <app-loading-indicator [inline]="true" [small]="true" label="Entrando..."></app-loading-indicator>
+                } @else {
+                    Entrar
+                }
+            </button>
+
+            <button class="app-button-ghost" type="button" (click)="entrarComoVisitante()" [disabled]="loading()">
+                Entrar como visitante
+            </button>
+        </div>
+    </section>
+</section>

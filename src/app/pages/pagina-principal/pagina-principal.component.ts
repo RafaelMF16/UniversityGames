@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "../../components/header/header.component";
+import { AuthStateService } from '../../services/auth-state.service';
 
 @Component({
   selector: 'app-pagina-principal',
@@ -13,5 +14,9 @@ import { HeaderComponent } from "../../components/header/header.component";
   styleUrl: './pagina-principal.component.css'
 })
 export class PaginaPrincipalComponent {
+  private readonly authState = inject(AuthStateService);
 
+  constructor() {
+    void this.authState.ensureInitialized();
+  }
 }

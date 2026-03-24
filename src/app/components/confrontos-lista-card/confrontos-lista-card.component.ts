@@ -17,6 +17,7 @@ export class ConfrontosListaCardComponent {
   @Input() equipes: string[] = [];
   @Input() modalidades: string[] = [];
   @Input() carregando = false;
+  @Input() podeGerenciar = false;
   @Input() removendoId: number | null = null;
   @Input() placarSalvandoId: number | null = null;
   @Output() editarConfrontoClicado = new EventEmitter<Confronto>();

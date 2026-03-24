@@ -1,0 +1,111 @@
+.usuarios-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.page-copy p {
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+.form-card,
+.list-card {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 24px;
+}
+
+.form-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.toggle-row {
+    align-items: center;
+    color: var(--text-muted);
+    display: flex;
+    gap: 10px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.user-row {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr) auto;
+    padding: 18px;
+}
+
+.user-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.user-copy span {
+    color: var(--text-muted);
+}
+
+.user-meta {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.row-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.row-actions .icon-btn {
+    min-width: 96px;
+    padding: 0 14px;
+}
+
+.danger {
+    color: var(--danger);
+}
+
+.empty-state {
+    color: var(--text-muted);
+}
+
+.sr-only {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .user-row {
+        grid-template-columns: 1fr;
+    }
+
+    .row-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .row-actions .icon-btn {
+        width: 100%;
+    }
+}

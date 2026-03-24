@@ -42,13 +42,15 @@
         </div>
     </div>
 
-    <div class="table-head">
+    <div class="table-head" [class.readonly]="!podeGerenciar">
         <span>Confronto</span>
         <span>Modalidade</span>
         <span>Placar</span>
         <span>Data/Hora</span>
         <span>Local</span>
-        <span class="actions-head">Acoes</span>
+        @if (podeGerenciar) {
+            <span class="actions-head">Acoes</span>
+        }
     </div>
 
     <div class="rows">
@@ -58,7 +60,7 @@
             </div>
         } @else {
         @for (confronto of confrontos; track confronto.id) {
-            <article class="row">
+            <article class="row" [class.readonly]="!podeGerenciar">
                 <div class="confronto-copy">
                     <span class="mobile-label">Confronto</span>
                     <strong>{{ confronto.equipeA }}</strong>
@@ -89,26 +91,28 @@
                     <span>{{ confronto.local }}</span>
                 </div>
 
-                <div class="actions-column">
-                    <span class="mobile-label">Acoes</span>
-                    <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
-                        @if (placarSalvandoId === confronto.id) {
-                            <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
-                        } @else {
-                            <mat-icon>emoji_events</mat-icon>
-                        }
-                    </button>
-                    <button class="icon-btn" type="button" (click)="editarConfrontoClicado.emit(confronto)" aria-label="Editar confronto" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <button class="icon-btn danger" type="button" (click)="confrontoRemovido.emit(confronto.id)" aria-label="Remover confronto" [disabled]="removendoId === confronto.id">
-                        @if (removendoId === confronto.id) {
-                            <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
-                        } @else {
-                            <mat-icon>delete</mat-icon>
-                        }
-                    </button>
-                </div>
+                @if (podeGerenciar) {
+                    <div class="actions-column">
+                        <span class="mobile-label">Acoes</span>
+                        <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
+                            @if (placarSalvandoId === confronto.id) {
+                                <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                            } @else {
+                                <mat-icon>emoji_events</mat-icon>
+                            }
+                        </button>
+                        <button class="icon-btn" type="button" (click)="editarConfrontoClicado.emit(confronto)" aria-label="Editar confronto" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button class="icon-btn danger" type="button" (click)="confrontoRemovido.emit(confronto.id)" aria-label="Remover confronto" [disabled]="removendoId === confronto.id">
+                            @if (removendoId === confronto.id) {
+                                <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                            } @else {
+                                <mat-icon>delete</mat-icon>
+                            }
+                        </button>
+                    </div>
+                }
             </article>
         } @empty {
             <div class="empty-state">

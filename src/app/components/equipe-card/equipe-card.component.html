@@ -8,20 +8,24 @@
         </div>
 
         <div class="actions">
-            <button class="icon-btn" type="button" (click)="equipeEditada.emit(equipe)" aria-label="Editar equipe" [disabled]="salvando || removendo">
-                @if (salvando) {
-                    <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
-                } @else {
-                    <mat-icon>edit</mat-icon>
-                }
-            </button>
-            <button class="icon-btn danger" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir equipe" [disabled]="salvando || removendo">
-                @if (removendo) {
-                    <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
-                } @else {
-                    <mat-icon>delete</mat-icon>
-                }
-            </button>
+            @if (podeEditar) {
+                <button class="icon-btn" type="button" (click)="equipeEditada.emit(equipe)" aria-label="Editar equipe" [disabled]="salvando || removendo">
+                    @if (salvando) {
+                        <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                    } @else {
+                        <mat-icon>edit</mat-icon>
+                    }
+                </button>
+            }
+            @if (podeExcluir) {
+                <button class="icon-btn danger" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir equipe" [disabled]="salvando || removendo">
+                    @if (removendo) {
+                        <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                    } @else {
+                        <mat-icon>delete</mat-icon>
+                    }
+                </button>
+            }
             <button class="expand-btn" type="button" (click)="expandido = !expandido" aria-label="Expandir equipe" [disabled]="salvando || removendo">
                 <mat-icon>{{ expandido ? 'expand_less' : 'expand_more' }}</mat-icon>
             </button>
@@ -32,16 +36,16 @@
         <div class="members-panel">
             <div class="members-grid">
                 @for (membro of equipe.membros; track membro.id) {
-                    <app-linha-membro-equipe [membro]="membro" (membroRemovido)="onMembroRemovido($event)"></app-linha-membro-equipe>
+                    <app-linha-membro-equipe [membro]="membro" [podeRemover]="podeGerenciarMembros" (membroRemovido)="onMembroRemovido($event)"></app-linha-membro-equipe>
                 }
             </div>
 
-            @if (!adicionandoMembro) {
+            @if (!adicionandoMembro && podeGerenciarMembros) {
                 <button class="app-button-ghost add-member-button" type="button" (click)="adicionandoMembro = true">
                     <mat-icon>person_add</mat-icon>
                     Adicionar membro
                 </button>
-            } @else {
+            } @else if (adicionandoMembro && podeGerenciarMembros) {
                 <div class="member-form surface-card">
                     <div class="field-group">
                         <label for="novo-membro-{{ equipe.id }}">Nome do membro</label>

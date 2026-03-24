@@ -10,7 +10,9 @@
         </div>
     </div>
 
-    <button class="icon-btn" type="button" (click)="membroRemovido.emit(membro.id)" aria-label="Remover membro">
-        <mat-icon>delete</mat-icon>
-    </button>
+    @if (podeRemover) {
+        <button class="icon-btn" type="button" (click)="membroRemovido.emit(membro.id)" aria-label="Remover membro">
+            <mat-icon>delete</mat-icon>
+        </button>
+    }
 </article>
