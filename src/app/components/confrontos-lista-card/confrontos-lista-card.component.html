@@ -2,7 +2,7 @@
     <div class="card-top">
         <div>
             <h2>Lista de confrontos</h2>
-            <p>Consulte, filtre e atualize os confrontos em um unico lugar.</p>
+            <p>Consulte, filtre e atualize os confrontos em um único lugar.</p>
         </div>
 
         @if (carregando) {
@@ -49,7 +49,7 @@
         <span>Data/Hora</span>
         <span>Local</span>
         @if (podeGerenciar) {
-            <span class="actions-head">Acoes</span>
+            <span class="actions-head">Ações</span>
         }
     </div>
 
@@ -70,7 +70,7 @@
 
                 <div class="modalidade-cell">
                     <span class="mobile-label">Modalidade</span>
-                    <span class="pill pill-neutral modalidade-pill">{{ confronto.modalidade || 'Nao informada' }}</span>
+                    <span class="pill pill-neutral modalidade-pill">{{ confronto.modalidade || 'Não informada' }}</span>
                 </div>
 
                 <div class="score-column">
@@ -93,7 +93,7 @@
 
                 @if (podeGerenciar) {
                     <div class="actions-column">
-                        <span class="mobile-label">Acoes</span>
+                        <span class="mobile-label">Ações</span>
                         <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
                             @if (placarSalvandoId === confronto.id) {
                                 <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>

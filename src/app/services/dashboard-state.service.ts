@@ -23,7 +23,7 @@ export class DashboardStateService {
       const resumo = await firstValueFrom(this.api.get<ResumoDashboard>('/dashboard/resumo'));
       this.resumo.set(resumo);
     } catch {
-      this.error.set('Nao foi possivel carregar o dashboard.');
+      this.error.set('Não foi possível carregar o dashboard.');
     } finally {
       this.loading.set(false);
     }

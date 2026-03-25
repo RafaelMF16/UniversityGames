@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
@@ -31,7 +32,7 @@ export class UsuariosComponent {
   readonly roles: { value: ManagedUserRole; label: string; }[] = [
     { value: 'admin', label: 'Admin' },
     { value: 'juiz', label: 'Juiz' },
-    { value: 'capitao', label: 'Capitao' }
+    { value: 'capitao', label: 'Capitão' }
   ];
 
   readonly form = this.formBuilder.nonNullable.group({
@@ -39,11 +40,23 @@ export class UsuariosComponent {
     email: ['', [Validators.required, Validators.email]],
     senha: ['', [Validators.minLength(6)]],
     role: ['admin' as ManagedUserRole, Validators.required],
-    equipeId: [''],
+    equipeId: [{ value: '', disabled: true }],
     ativo: [true]
   });
 
   constructor() {
+    this.form.controls.role.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe((role) => {
+        if (role === 'capitao') {
+          this.form.controls.equipeId.enable({ emitEvent: false });
+          return;
+        }
+
+        this.form.controls.equipeId.reset('', { emitEvent: false });
+        this.form.controls.equipeId.disable({ emitEvent: false });
+      });
+
     void this.usuariosState.loadUsuarios();
     void this.equipesState.loadEquipes();
   }
@@ -130,7 +143,7 @@ export class UsuariosComponent {
     }
 
     if (role === 'capitao') {
-      return 'Capitao';
+      return 'Capitão';
     }
 
     return 'Visitante';
@@ -150,19 +163,19 @@ export class UsuariosComponent {
     const control = this.form.controls[controlName];
 
     if (controlName === 'equipeId' && this.requerEquipe && !control.value) {
-      return 'Selecione a equipe do capitao.';
+      return 'Selecione a equipe do capitão.';
     }
 
     if (control.hasError('required')) {
-      return 'Este campo e obrigatorio.';
+      return 'Este campo é obrigatório.';
     }
 
     if (controlName === 'senha' && !this.usuarioEditando() && !control.value) {
-      return 'Informe a senha inicial do usuario.';
+      return 'Informe a senha inicial do usuário.';
     }
 
     if (control.hasError('email')) {
-      return 'Informe um e-mail valido.';
+      return 'Informe um e-mail válido.';
     }
 
     if (control.hasError('minlength')) {

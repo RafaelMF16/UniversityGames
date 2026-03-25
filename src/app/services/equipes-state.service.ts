@@ -24,7 +24,7 @@ export class EquipesStateService {
       const equipes = await firstValueFrom(this.api.get<Equipe[]>('/equipes'));
       this.equipes.set(equipes);
     } catch {
-      this.error.set('Nao foi possivel carregar as equipes.');
+      this.error.set('Não foi possível carregar as equipes.');
     } finally {
       this.loading.set(false);
     }
@@ -39,7 +39,7 @@ export class EquipesStateService {
       this.equipes.update((atual) => [equipe, ...atual]);
       return equipe;
     } catch {
-      this.error.set('Nao foi possivel cadastrar a equipe.');
+      this.error.set('Não foi possível cadastrar a equipe.');
       return null;
     } finally {
       this.formSaving.set(false);
@@ -55,7 +55,7 @@ export class EquipesStateService {
       this.equipes.update((atual) => atual.map((item) => item.id === equipeId ? equipe : item));
       return equipe;
     } catch {
-      this.error.set('Nao foi possivel atualizar a equipe.');
+      this.error.set('Não foi possível atualizar a equipe.');
       return null;
     } finally {
       this.updatingId.set(null);
@@ -71,7 +71,7 @@ export class EquipesStateService {
       this.equipes.update((atual) => atual.filter((item) => item.id !== equipeId));
       return true;
     } catch {
-      this.error.set('Nao foi possivel remover a equipe.');
+      this.error.set('Não foi possível remover a equipe.');
       return false;
     } finally {
       this.deletingId.set(null);

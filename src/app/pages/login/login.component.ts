@@ -49,11 +49,11 @@ export class LoginComponent {
     const control = this.form.controls[controlName];
 
     if (control.hasError('required')) {
-      return 'Este campo e obrigatorio.';
+      return 'Este campo é obrigatório.';
     }
 
     if (control.hasError('email')) {
-      return 'Informe um e-mail valido.';
+      return 'Informe um e-mail válido.';
     }
 
     if (control.hasError('minlength')) {

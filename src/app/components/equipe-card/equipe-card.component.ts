@@ -52,7 +52,7 @@ export class EquipeCardComponent {
       {
         id: Date.now(),
         nome: this.novoNome,
-        funcao: this.equipe.membros.length === 0 ? 'Capitao' : 'Membro',
+      funcao: this.equipe.membros.length === 0 ? 'Capitão' : 'Membro',
         habilidades: [...this.novasHabilidades]
       }
     ];

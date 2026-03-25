@@ -42,7 +42,7 @@ export class ConfrontosStateService {
       const confrontos = await firstValueFrom(this.api.get<Confronto[]>('/confrontos', { params: { ...filtros } }));
       this.confrontos.set(confrontos);
     } catch {
-      this.error.set('Nao foi possivel carregar os confrontos.');
+      this.error.set('Não foi possível carregar os confrontos.');
     } finally {
       this.loading.set(false);
     }
@@ -57,7 +57,7 @@ export class ConfrontosStateService {
       await this.loadConfrontos();
       return confronto;
     } catch {
-      this.error.set('Nao foi possivel cadastrar o confronto.');
+      this.error.set('Não foi possível cadastrar o confronto.');
       return null;
     } finally {
       this.formSaving.set(false);
@@ -77,7 +77,7 @@ export class ConfrontosStateService {
       await this.loadConfrontos();
       return confronto;
     } catch {
-      this.error.set(scoreOnly ? 'Nao foi possivel atualizar o placar.' : 'Nao foi possivel atualizar o confronto.');
+      this.error.set(scoreOnly ? 'Não foi possível atualizar o placar.' : 'Não foi possível atualizar o confronto.');
       return null;
     } finally {
       if (scoreOnly) {
@@ -97,7 +97,7 @@ export class ConfrontosStateService {
       await this.loadConfrontos();
       return true;
     } catch {
-      this.error.set('Nao foi possivel remover o confronto.');
+      this.error.set('Não foi possível remover o confronto.');
       return false;
     } finally {
       this.deletingId.set(null);

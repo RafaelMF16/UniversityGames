@@ -51,7 +51,7 @@ export class AuthStateService {
       await this.router.navigateByUrl('/dashboard');
       return true;
     } catch {
-      this.error.set('Nao foi possivel fazer login com as credenciais informadas.');
+      this.error.set('Não foi possível fazer login com as credenciais informadas.');
       return false;
     } finally {
       this.loading.set(false);
@@ -98,7 +98,7 @@ export class AuthStateService {
     }
 
     if (role === 'capitao') {
-      return 'Capitao';
+      return 'Capitão';
     }
 
     return 'Visitante';

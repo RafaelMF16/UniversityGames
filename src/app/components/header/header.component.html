@@ -19,7 +19,7 @@
     </nav>
 
     <div class="actions">
-        <button class="profile-button" type="button" aria-label="Perfil do usuario" (click)="toggleMenu($event)">
+        <button class="profile-button" type="button" aria-label="Perfil do usuário" (click)="toggleMenu($event)">
             <mat-icon>person</mat-icon>
         </button>
 
@@ -31,7 +31,7 @@
                 </div>
 
                 @if (podeGerenciarUsuarios()) {
-                    <a class="menu-link" routerLink="/usuarios" (click)="fecharMenu()">Gerenciar usuarios</a>
+                    <a class="menu-link" routerLink="/usuarios" (click)="fecharMenu()">Gerenciar usuários</a>
                 }
 
                 @if (isVisitor()) {

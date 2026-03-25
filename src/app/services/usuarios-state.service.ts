@@ -24,7 +24,7 @@ export class UsuariosStateService {
       const usuarios = await firstValueFrom(this.api.get<Usuario[]>('/usuarios'));
       this.usuarios.set(usuarios);
     } catch {
-      this.error.set('Nao foi possivel carregar os usuarios.');
+      this.error.set('Não foi possível carregar os usuários.');
     } finally {
       this.loading.set(false);
     }
@@ -39,7 +39,7 @@ export class UsuariosStateService {
       this.usuarios.update((atual) => [usuario, ...atual]);
       return usuario;
     } catch {
-      this.error.set('Nao foi possivel cadastrar o usuario.');
+      this.error.set('Não foi possível cadastrar o usuário.');
       return null;
     } finally {
       this.formSaving.set(false);
@@ -55,7 +55,7 @@ export class UsuariosStateService {
       this.usuarios.update((atual) => atual.map((item) => item.id === usuarioId ? usuario : item));
       return usuario;
     } catch {
-      this.error.set('Nao foi possivel atualizar o usuario.');
+      this.error.set('Não foi possível atualizar o usuário.');
       return null;
     } finally {
       this.updatingId.set(null);
@@ -71,7 +71,7 @@ export class UsuariosStateService {
       this.usuarios.update((atual) => atual.filter((item) => item.id !== usuarioId));
       return true;
     } catch {
-      this.error.set('Nao foi possivel remover o usuario.');
+      this.error.set('Não foi possível remover o usuário.');
       return false;
     } finally {
       this.deletingId.set(null);
