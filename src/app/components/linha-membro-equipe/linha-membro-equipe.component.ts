@@ -11,5 +11,6 @@ import { Membro } from '../../models/equipe.model';
 })
 export class LinhaMembroEquipeComponent {
   @Input() membro!: Membro;
+  @Input() podeRemover = false;
   @Output() membroRemovido = new EventEmitter<number>();
 }

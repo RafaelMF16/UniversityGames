@@ -16,6 +16,9 @@ export class EquipeCardComponent {
   @Input() equipe!: Equipe;
   @Input() salvando = false;
   @Input() removendo = false;
+  @Input() podeEditar = false;
+  @Input() podeExcluir = false;
+  @Input() podeGerenciarMembros = false;
   @Output() equipeEditada = new EventEmitter<Equipe>();
   @Output() equipeAtualizada = new EventEmitter<Equipe>();
   @Output() equipeRemovida = new EventEmitter<number>();
@@ -40,7 +43,7 @@ export class EquipeCardComponent {
   }
 
   confirmarMembro() {
-    if (!this.novoNome || this.salvando) {
+    if (!this.novoNome || this.salvando || !this.podeGerenciarMembros) {
       return;
     }
 
@@ -49,7 +52,7 @@ export class EquipeCardComponent {
       {
         id: Date.now(),
         nome: this.novoNome,
-        funcao: this.equipe.membros.length === 0 ? 'Capitao' : 'Membro',
+      funcao: this.equipe.membros.length === 0 ? 'Capitão' : 'Membro',
         habilidades: [...this.novasHabilidades]
       }
     ];
@@ -62,6 +65,10 @@ export class EquipeCardComponent {
   }
 
   onMembroRemovido(id: number) {
+    if (!this.podeGerenciarMembros) {
+      return;
+    }
+
     this.equipeAtualizada.emit({
       ...this.equipe,
       membros: this.equipe.membros.filter((membro) => membro.id !== id)

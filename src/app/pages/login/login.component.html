@@ -1,0 +1,44 @@
+<section class="login-shell">
+    <section class="login-card surface-card">
+        <div class="brand-copy">
+            <h1>Jogos internos <span>FPM</span></h1>
+            <p>Entre com suas credenciais para acessar as funções administrativas.</p>
+        </div>
+
+        <form class="login-form" [formGroup]="form">
+            <div class="field-group">
+                <label for="login-username">Usuário</label>
+                <input id="login-username" class="app-input" [class.invalid]="isInvalid('username')" formControlName="username" placeholder="Digite seu usuário" type="text" autocomplete="username">
+                @if (isInvalid('username')) {
+                    <small class="field-error">{{ getErrorMessage('username') }}</small>
+                }
+            </div>
+
+            <div class="field-group">
+                <label for="login-senha">Senha</label>
+                <input id="login-senha" class="app-input" [class.invalid]="isInvalid('senha')" formControlName="senha" placeholder="Digite sua senha" type="password" autocomplete="current-password">
+                @if (isInvalid('senha')) {
+                    <small class="field-error">{{ getErrorMessage('senha') }}</small>
+                }
+            </div>
+        </form>
+
+        @if (error()) {
+            <div class="pill pill-warning error-pill">{{ error() }}</div>
+        }
+
+        <div class="login-actions">
+            <button class="app-button" type="button" (click)="entrar()" [disabled]="loading()">
+                @if (loading()) {
+                    <app-loading-indicator [inline]="true" [small]="true" label="Entrando..."></app-loading-indicator>
+                } @else {
+                    Entrar
+                }
+            </button>
+
+            <button class="app-button-ghost" type="button" (click)="entrarComoVisitante()" [disabled]="loading()">
+                Entrar como visitante
+            </button>
+        </div>
+    </section>
+</section>

@@ -2,7 +2,7 @@
     <div class="equipes-container">
         <section class="top-row">
             <div class="heading-copy">
-                <h1>Gestao de equipes</h1>
+                <h1>Gestão de equipes</h1>
                 <p>Cadastre equipes, organize membros e mantenha as modalidades atualizadas.</p>
             </div>
         </section>
@@ -11,13 +11,15 @@
             <div class="pill pill-warning feedback-pill">{{ error() }}</div>
         }
 
-        <app-cadastrar-equipe-card
-            [equipeEditando]="equipeEditando()"
-            [salvando]="formSaving() || (equipeEditando() !== null && updatingId() === equipeEditando()?.id)"
-            (equipeAdicionada)="onEquipeAdicionada($event)"
-            (equipeAtualizada)="onEquipeAtualizada($event)"
-            (cancelarEdicao)="cancelarEdicao()">
-        </app-cadastrar-equipe-card>
+        @if (mostrarFormulario()) {
+            <app-cadastrar-equipe-card
+                [equipeEditando]="equipeEditando()"
+                [salvando]="formSaving() || (equipeEditando() !== null && updatingId() === equipeEditando()?.id)"
+                (equipeAdicionada)="onEquipeAdicionada($event)"
+                (equipeAtualizada)="onEquipeAtualizada($event)"
+                (cancelarEdicao)="cancelarEdicao()">
+            </app-cadastrar-equipe-card>
+        }
 
         <section class="list-section">
             <div class="section-heading">
@@ -37,6 +39,9 @@
                             [equipe]="equipe"
                             [salvando]="updatingId() === equipe.id"
                             [removendo]="deletingId() === equipe.id"
+                            [podeEditar]="podeEditarEquipe(equipe)"
+                            [podeExcluir]="podeExcluirEquipe()"
+                            [podeGerenciarMembros]="podeGerenciarMembros(equipe)"
                             (equipeEditada)="iniciarEdicao($event)"
                             (equipeAtualizada)="onEquipeCardAtualizada($event)"
                             (equipeRemovida)="onEquipeRemovida($event)">

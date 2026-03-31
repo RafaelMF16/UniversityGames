@@ -29,6 +29,11 @@
     grid-template-columns: minmax(220px, 2.2fr) minmax(140px, 1fr) minmax(150px, 1fr) minmax(140px, 1fr) minmax(170px, 1.2fr) minmax(120px, auto);
 }
 
+.table-head.readonly,
+.row.readonly {
+    grid-template-columns: minmax(220px, 2.4fr) minmax(140px, 1fr) minmax(150px, 1fr) minmax(140px, 1fr) minmax(170px, 1.2fr);
+}
+
 .filters-grid {
     align-items: end;
     gap: 14px;

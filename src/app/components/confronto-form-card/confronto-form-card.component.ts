@@ -108,7 +108,7 @@ export class ConfrontoFormCardComponent {
     const control = this.form.controls[controlName];
 
     if (control.hasError('required')) {
-      return 'Este campo e obrigatorio.';
+      return 'Este campo é obrigatório.';
     }
 
     if (control.hasError('minlength')) {

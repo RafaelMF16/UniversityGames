@@ -6,9 +6,11 @@
                 <p>Gerencie toda a agenda de partidas em uma unica tela.</p>
             </div>
 
-            <button class="app-button" type="button" (click)="abrirModalConfronto()" [disabled]="loading()">
-                Cadastrar confronto
-            </button>
+            @if (podeGerenciarConfrontos()) {
+                <button class="app-button" type="button" (click)="abrirModalConfronto()" [disabled]="loading()">
+                    Cadastrar confronto
+                </button>
+            }
         </section>
 
         @if (error()) {
@@ -20,6 +22,7 @@
             [equipes]="nomesEquipes()"
             [modalidades]="modalidades"
             [carregando]="loading()"
+            [podeGerenciar]="podeGerenciarConfrontos()"
             [removendoId]="removendoId()"
             [placarSalvandoId]="placarSalvandoId()"
             (filtrosAlterados)="onFiltrosAlterados($event)"

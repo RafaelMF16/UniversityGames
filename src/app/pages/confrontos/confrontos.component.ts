@@ -6,6 +6,7 @@ import { ConfrontosListaCardComponent } from '../../components/confrontos-lista-
 import { EditarPlacarDialogComponent } from '../../components/editar-placar-dialog/editar-placar-dialog.component';
 import { Confronto, ConfrontosFiltros } from '../../models/confronto.model';
 import { MODALIDADES_EQUIPE } from '../../models/equipe.model';
+import { AuthStateService } from '../../services/auth-state.service';
 import { ConfrontosStateService } from '../../services/confrontos-state.service';
 import { EquipesStateService } from '../../services/equipes-state.service';
 
@@ -24,6 +25,7 @@ export class ConfrontosComponent {
   private readonly dialog = inject(MatDialog);
   private readonly confrontosState = inject(ConfrontosStateService);
   private readonly equipesState = inject(EquipesStateService);
+  private readonly authState = inject(AuthStateService);
 
   readonly confrontos = this.confrontosState.confrontos.asReadonly();
   readonly equipes = this.equipesState.equipes.asReadonly();
@@ -33,12 +35,17 @@ export class ConfrontosComponent {
   readonly modalidades = MODALIDADES_EQUIPE;
   readonly removendoId = this.confrontosState.deletingId.asReadonly();
   readonly placarSalvandoId = this.confrontosState.placarSavingId.asReadonly();
+  readonly podeGerenciarConfrontos = computed(() => this.authState.canManageConfrontos());
 
   constructor() {
     void this.equipesState.loadEquipes();
   }
 
   abrirModalConfronto(confronto?: Confronto) {
+    if (!this.authState.canManageConfrontos()) {
+      return;
+    }
+
     this.dialog.open(ConfrontoFormCardComponent, {
       width: '720px',
       maxWidth: '94vw',
@@ -51,6 +58,10 @@ export class ConfrontosComponent {
   }
 
   abrirDialogPlacar(confronto: Confronto) {
+    if (!this.authState.canManageConfrontos()) {
+      return;
+    }
+
     this.dialog.open(EditarPlacarDialogComponent, {
       data: confronto,
       width: '540px',
@@ -59,7 +70,9 @@ export class ConfrontosComponent {
   }
 
   async onConfrontoRemovido(id: number) {
-    await this.confrontosState.deleteConfronto(id);
+    if (this.authState.canManageConfrontos()) {
+      await this.confrontosState.deleteConfronto(id);
+    }
   }
 
   onFiltrosAlterados(filtros: ConfrontosFiltros) {

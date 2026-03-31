@@ -1,0 +1,141 @@
+<app-container-principal>
+    <div class="usuarios-container">
+        <section class="page-copy">
+            <div>
+                <h1>Usuários e permissões</h1>
+                <p>Cadastre acessos administrativos, vincule capitães às equipes e organize as permissões do sistema.</p>
+            </div>
+        </section>
+
+        @if (error()) {
+            <div class="pill pill-warning feedback-pill">{{ error() }}</div>
+        }
+
+        <section class="surface-card form-card">
+            <div class="section-heading">
+                <div>
+                    <h2>{{ usuarioEditando() ? 'Editar usuário' : 'Novo usuário' }}</h2>
+                    <p>Somente o admin pode criar e ajustar perfis autenticados.</p>
+                </div>
+            </div>
+
+            <form class="form-grid" [formGroup]="form">
+                <div class="field-group">
+                    <label for="usuario-nome">Nome</label>
+                    <input id="usuario-nome" class="app-input" [class.invalid]="isInvalid('nome')" formControlName="nome" placeholder="Nome completo">
+                    @if (isInvalid('nome')) {
+                        <small class="field-error">{{ getErrorMessage('nome') }}</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="usuario-username">Usuário</label>
+                    <input id="usuario-username" class="app-input" [class.invalid]="isInvalid('username')" formControlName="username" placeholder="nome.usuario" type="text" autocomplete="off">
+                    @if (isInvalid('username')) {
+                        <small class="field-error">{{ getErrorMessage('username') }}</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="usuario-senha">{{ usuarioEditando() ? 'Nova senha' : 'Senha' }}</label>
+                    <input id="usuario-senha" class="app-input" [class.invalid]="isInvalid('senha')" formControlName="senha" placeholder="{{ usuarioEditando() ? 'Deixe em branco para manter' : 'Senha inicial' }}" type="password">
+                    @if (isInvalid('senha')) {
+                        <small class="field-error">{{ getErrorMessage('senha') }}</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="usuario-role">Perfil</label>
+                    <select id="usuario-role" class="app-select" [class.invalid]="isInvalid('role')" formControlName="role">
+                        @for (role of roles; track role.value) {
+                            <option [value]="role.value">{{ role.label }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label for="usuario-equipe">Equipe vinculada</label>
+                    <select id="usuario-equipe" class="app-select" [class.invalid]="isInvalid('equipeId')" formControlName="equipeId">
+                        <option value="">{{ requerEquipe ? 'Selecione a equipe' : 'Não se aplica' }}</option>
+                        @for (equipe of equipes(); track equipe.id) {
+                            <option [value]="equipe.id">{{ equipe.nome }}</option>
+                        }
+                    </select>
+                    @if (isInvalid('equipeId')) {
+                        <small class="field-error">{{ getErrorMessage('equipeId') }}</small>
+                    }
+                </div>
+
+                <label class="toggle-row">
+                    <input type="checkbox" formControlName="ativo">
+                    <span>Usuário ativo</span>
+                </label>
+            </form>
+
+            <div class="form-actions">
+                <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="formSaving()">
+                    @if (formSaving()) {
+                        <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
+                    } @else {
+                        {{ usuarioEditando() ? 'Atualizar usuário' : 'Salvar usuário' }}
+                    }
+                </button>
+                @if (usuarioEditando()) {
+                    <button class="app-button-ghost" type="button" (click)="cancelarEdicao()" [disabled]="formSaving()">Cancelar</button>
+                }
+            </div>
+        </section>
+
+        <section class="surface-card list-card">
+            <div class="section-heading">
+                <div>
+                    <h2>Usuários cadastrados</h2>
+                    <p>Perfis autenticados criados pelo administrador.</p>
+                </div>
+
+                <span class="pill pill-neutral">{{ usuarios().length }} usuário(s)</span>
+            </div>
+
+            @if (loading() && !usuarios().length) {
+                <app-loading-indicator label="Carregando usuários..."></app-loading-indicator>
+            } @else {
+                <div class="users-list">
+                    @for (usuario of usuarios(); track usuario.id) {
+                        <article class="user-row">
+                            <div class="user-copy">
+                                <strong>{{ usuario.nome }}</strong>
+                                <span>{{ usuario.username }}</span>
+                            </div>
+
+                            <div class="user-meta">
+                                <span class="pill pill-primary">{{ roleLabel(usuario.role) }}</span>
+                                <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
+                                    {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+                                </span>
+                                <span class="pill pill-neutral">
+                                    {{ usuario.equipeId ? ('Equipe #' + usuario.equipeId) : 'Sem equipe' }}
+                                </span>
+                            </div>
+
+                            <div class="row-actions">
+                                <button class="icon-btn" type="button" (click)="iniciarEdicao(usuario)" [disabled]="deletingId() === usuario.id">
+                                    <span class="sr-only">Editar usuário</span>
+                                    Editar
+                                </button>
+                                <button class="icon-btn danger" type="button" (click)="remover(usuario.id)" [disabled]="deletingId() === usuario.id">
+                                    @if (deletingId() === usuario.id) {
+                                        <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                                    } @else {
+                                        Remover
+                                    }
+                                </button>
+                            </div>
+                        </article>
+                    } @empty {
+                        <div class="empty-state">Nenhum usuário administrativo cadastrado ainda.</div>
+                    }
+                </div>
+            }
+        </section>
+    </div>
+</app-container-principal>

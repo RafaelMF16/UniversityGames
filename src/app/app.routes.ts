@@ -2,23 +2,46 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EquipesComponent } from './pages/equipes/equipes.component';
 import { ConfrontosComponent } from './pages/confrontos/confrontos.component';
+import { PaginaPrincipalComponent } from './pages/pagina-principal/pagina-principal.component';
+import { LoginComponent } from './pages/login/login.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { adminGuard } from './guards/admin.guard';
+import { appAccessGuard } from './guards/app-access.guard';
+import { loginGuard } from './guards/login.guard';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: "dashboard",
+        redirectTo: 'login',
         pathMatch: 'full'
     },
     {
-        path: "dashboard",
-        component: DashboardComponent
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [loginGuard]
     },
     {
-        path: "equipes",
-        component: EquipesComponent
-    },
-    {
-        path: "confrontos",
-        component: ConfrontosComponent
+        path: '',
+        component: PaginaPrincipalComponent,
+        canActivate: [appAccessGuard],
+        children: [
+            {
+                path: 'dashboard',
+                component: DashboardComponent
+            },
+            {
+                path: 'equipes',
+                component: EquipesComponent
+            },
+            {
+                path: 'confrontos',
+                component: ConfrontosComponent
+            },
+            {
+                path: 'usuarios',
+                component: UsuariosComponent,
+                canActivate: [adminGuard]
+            }
+        ]
     }
 ];
