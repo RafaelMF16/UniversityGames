@@ -17,7 +17,7 @@ export class LoginComponent {
   readonly loading = this.authState.loading.asReadonly();
   readonly error = this.authState.error.asReadonly();
   readonly form = this.formBuilder.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
     senha: ['', [Validators.required, Validators.minLength(6)]]
   });
 
@@ -29,7 +29,7 @@ export class LoginComponent {
 
     const values = this.form.getRawValue();
     await this.authState.login({
-      email: values.email,
+      username: values.username,
       senha: values.senha
     });
   }
@@ -40,20 +40,24 @@ export class LoginComponent {
     }
   }
 
-  isInvalid(controlName: 'email' | 'senha') {
+  isInvalid(controlName: 'username' | 'senha') {
     const control = this.form.controls[controlName];
     return control.invalid && (control.touched || control.dirty);
   }
 
-  getErrorMessage(controlName: 'email' | 'senha') {
+  getErrorMessage(controlName: 'username' | 'senha') {
     const control = this.form.controls[controlName];
 
     if (control.hasError('required')) {
       return 'Este campo é obrigatório.';
     }
 
-    if (control.hasError('email')) {
-      return 'Informe um e-mail válido.';
+    if (controlName === 'username' && control.hasError('minlength')) {
+      return 'Informe pelo menos 3 caracteres.';
+    }
+
+    if (controlName === 'username' && control.hasError('pattern')) {
+      return 'Use apenas letras, números, ponto, hífen ou sublinhado.';
     }
 
     if (control.hasError('minlength')) {

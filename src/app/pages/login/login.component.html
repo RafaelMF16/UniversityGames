@@ -7,16 +7,16 @@
 
         <form class="login-form" [formGroup]="form">
             <div class="field-group">
-                <label for="login-email">E-mail</label>
-                <input id="login-email" class="app-input" [class.invalid]="isInvalid('email')" formControlName="email" placeholder="seuemail@faculdade.com" type="email">
-                @if (isInvalid('email')) {
-                    <small class="field-error">{{ getErrorMessage('email') }}</small>
+                <label for="login-username">Usuário</label>
+                <input id="login-username" class="app-input" [class.invalid]="isInvalid('username')" formControlName="username" placeholder="Digite seu usuário" type="text" autocomplete="username">
+                @if (isInvalid('username')) {
+                    <small class="field-error">{{ getErrorMessage('username') }}</small>
                 }
             </div>
 
             <div class="field-group">
                 <label for="login-senha">Senha</label>
-                <input id="login-senha" class="app-input" [class.invalid]="isInvalid('senha')" formControlName="senha" placeholder="Digite sua senha" type="password">
+                <input id="login-senha" class="app-input" [class.invalid]="isInvalid('senha')" formControlName="senha" placeholder="Digite sua senha" type="password" autocomplete="current-password">
                 @if (isInvalid('senha')) {
                     <small class="field-error">{{ getErrorMessage('senha') }}</small>
                 }

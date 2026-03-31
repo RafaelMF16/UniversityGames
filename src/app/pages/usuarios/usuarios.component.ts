@@ -37,7 +37,7 @@ export class UsuariosComponent {
 
   readonly form = this.formBuilder.nonNullable.group({
     nome: ['', [Validators.required, Validators.minLength(3)]],
-    email: ['', [Validators.required, Validators.email]],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
     senha: ['', [Validators.minLength(6)]],
     role: ['admin' as ManagedUserRole, Validators.required],
     equipeId: [{ value: '', disabled: true }],
@@ -84,7 +84,7 @@ export class UsuariosComponent {
     const values = this.form.getRawValue();
     const payload: UsuarioPayload = {
       nome: values.nome,
-      email: values.email,
+      username: values.username.trim().toLowerCase(),
       role: values.role,
       equipeId: values.role === 'capitao' ? Number(values.equipeId) : null,
       ativo: values.ativo,
@@ -105,7 +105,7 @@ export class UsuariosComponent {
     this.usuarioEditando.set(usuario);
     this.form.reset({
       nome: usuario.nome,
-      email: usuario.email,
+      username: usuario.username,
       senha: '',
       role: usuario.role === 'visitante' ? 'admin' : usuario.role,
       equipeId: usuario.equipeId ? String(usuario.equipeId) : '',
@@ -125,7 +125,7 @@ export class UsuariosComponent {
     this.usuarioEditando.set(null);
     this.form.reset({
       nome: '',
-      email: '',
+      username: '',
       senha: '',
       role: 'admin',
       equipeId: '',
@@ -149,7 +149,7 @@ export class UsuariosComponent {
     return 'Visitante';
   }
 
-  isInvalid(controlName: 'nome' | 'email' | 'senha' | 'role' | 'equipeId') {
+  isInvalid(controlName: 'nome' | 'username' | 'senha' | 'role' | 'equipeId') {
     const control = this.form.controls[controlName];
 
     if (controlName === 'equipeId' && this.requerEquipe) {
@@ -159,7 +159,7 @@ export class UsuariosComponent {
     return control.invalid && (control.touched || control.dirty);
   }
 
-  getErrorMessage(controlName: 'nome' | 'email' | 'senha' | 'role' | 'equipeId') {
+  getErrorMessage(controlName: 'nome' | 'username' | 'senha' | 'role' | 'equipeId') {
     const control = this.form.controls[controlName];
 
     if (controlName === 'equipeId' && this.requerEquipe && !control.value) {
@@ -174,8 +174,8 @@ export class UsuariosComponent {
       return 'Informe a senha inicial do usuário.';
     }
 
-    if (control.hasError('email')) {
-      return 'Informe um e-mail válido.';
+    if (controlName === 'username' && control.hasError('pattern')) {
+      return 'Use apenas letras, números, ponto, hífen ou sublinhado.';
     }
 
     if (control.hasError('minlength')) {

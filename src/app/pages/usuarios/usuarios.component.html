@@ -29,10 +29,10 @@
                 </div>
 
                 <div class="field-group">
-                    <label for="usuario-email">E-mail</label>
-                    <input id="usuario-email" class="app-input" [class.invalid]="isInvalid('email')" formControlName="email" placeholder="usuario@faculdade.com" type="email">
-                    @if (isInvalid('email')) {
-                        <small class="field-error">{{ getErrorMessage('email') }}</small>
+                    <label for="usuario-username">Usuário</label>
+                    <input id="usuario-username" class="app-input" [class.invalid]="isInvalid('username')" formControlName="username" placeholder="nome.usuario" type="text" autocomplete="off">
+                    @if (isInvalid('username')) {
+                        <small class="field-error">{{ getErrorMessage('username') }}</small>
                     }
                 </div>
 
@@ -104,7 +104,7 @@
                         <article class="user-row">
                             <div class="user-copy">
                                 <strong>{{ usuario.nome }}</strong>
-                                <span>{{ usuario.email }}</span>
+                                <span>{{ usuario.username }}</span>
                             </div>
 
                             <div class="user-meta">
