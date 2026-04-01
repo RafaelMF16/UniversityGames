@@ -23,7 +23,7 @@ export class DashboardComponent {
 
     return [
       {
-        titulo: 'Total de equipes',
+        titulo: 'Total de inscrições',
         valor: String(resumo?.totalEquipes ?? 0),
         icone: 'groups',
         destaque: '',

@@ -2,39 +2,108 @@
     <section class="login-card surface-card">
         <div class="brand-copy">
             <h1>Jogos internos <span>FPM</span></h1>
-            <p>Entre com suas credenciais para acessar as funções administrativas.</p>
+            <p>Acesse sua conta ou crie um cadastro de visitante para se inscrever nos esportes individuais.</p>
         </div>
 
-        <form class="login-form" [formGroup]="form">
-            <div class="field-group">
-                <label for="login-username">Usuário</label>
-                <input id="login-username" class="app-input" [class.invalid]="isInvalid('username')" formControlName="username" placeholder="Digite seu usuário" type="text" autocomplete="username">
-                @if (isInvalid('username')) {
-                    <small class="field-error">{{ getErrorMessage('username') }}</small>
-                }
-            </div>
+        <div class="mode-tabs">
+            <button class="mode-tab" type="button" [class.active]="modo() === 'login'" (click)="selecionarModo('login')">Entrar</button>
+            <button class="mode-tab" type="button" [class.active]="modo() === 'cadastro'" (click)="selecionarModo('cadastro')">Criar conta visitante</button>
+        </div>
 
-            <div class="field-group">
-                <label for="login-senha">Senha</label>
-                <input id="login-senha" class="app-input" [class.invalid]="isInvalid('senha')" formControlName="senha" placeholder="Digite sua senha" type="password" autocomplete="current-password">
-                @if (isInvalid('senha')) {
-                    <small class="field-error">{{ getErrorMessage('senha') }}</small>
-                }
-            </div>
-        </form>
+        @if (modo() === 'login') {
+            <form class="login-form" [formGroup]="loginForm">
+                <div class="field-group">
+                    <label for="login-username">Usuário</label>
+                    <input id="login-username" class="app-input" [class.invalid]="isInvalid('login', 'username')" formControlName="username" placeholder="Digite seu usuário" type="text" autocomplete="username">
+                    @if (isInvalid('login', 'username')) {
+                        <small class="field-error">{{ getErrorMessage('login', 'username') }}</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="login-senha">Senha</label>
+                    <input id="login-senha" class="app-input" [class.invalid]="isInvalid('login', 'senha')" formControlName="senha" placeholder="Digite sua senha" type="password" autocomplete="current-password">
+                    @if (isInvalid('login', 'senha')) {
+                        <small class="field-error">{{ getErrorMessage('login', 'senha') }}</small>
+                    }
+                </div>
+            </form>
+        } @else {
+            <form class="login-form" [formGroup]="cadastroForm">
+                <div class="field-group">
+                    <label for="cadastro-nome">Nome completo</label>
+                    <input id="cadastro-nome" class="app-input" [class.invalid]="isInvalid('cadastro', 'nome')" formControlName="nome" placeholder="Digite seu nome" type="text" autocomplete="name">
+                    @if (isInvalid('cadastro', 'nome')) {
+                        <small class="field-error">{{ getErrorMessage('cadastro', 'nome') }}</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="cadastro-username">Usuário</label>
+                    <input id="cadastro-username" class="app-input" [class.invalid]="isInvalid('cadastro', 'username')" formControlName="username" placeholder="Crie seu usuário" type="text" autocomplete="username">
+                    @if (isInvalid('cadastro', 'username')) {
+                        <small class="field-error">{{ getErrorMessage('cadastro', 'username') }}</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="cadastro-senha">Senha</label>
+                    <input id="cadastro-senha" class="app-input" [class.invalid]="isInvalid('cadastro', 'senha')" formControlName="senha" placeholder="Crie sua senha" type="password" autocomplete="new-password">
+                    @if (isInvalid('cadastro', 'senha')) {
+                        <small class="field-error">{{ getErrorMessage('cadastro', 'senha') }}</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="cadastro-curso">Curso</label>
+                    <select id="cadastro-curso" class="app-select" [class.invalid]="isInvalid('cadastro', 'curso')" formControlName="curso">
+                        <option value="">Selecione o curso</option>
+                        @for (curso of cursos; track curso) {
+                            <option [value]="curso">{{ curso }}</option>
+                        }
+                    </select>
+                    @if (isInvalid('cadastro', 'curso')) {
+                        <small class="field-error">{{ getErrorMessage('cadastro', 'curso') }}</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="cadastro-periodo">Período</label>
+                    <select id="cadastro-periodo" class="app-select" [class.invalid]="isInvalid('cadastro', 'periodo')" formControlName="periodo">
+                        <option value="">Selecione o período</option>
+                        @for (periodo of periodos; track periodo) {
+                            <option [value]="periodo">{{ periodo }}</option>
+                        }
+                    </select>
+                    @if (isInvalid('cadastro', 'periodo')) {
+                        <small class="field-error">{{ getErrorMessage('cadastro', 'periodo') }}</small>
+                    }
+                </div>
+            </form>
+        }
 
         @if (error()) {
             <div class="pill pill-warning error-pill">{{ error() }}</div>
         }
 
         <div class="login-actions">
-            <button class="app-button" type="button" (click)="entrar()" [disabled]="loading()">
-                @if (loading()) {
-                    <app-loading-indicator [inline]="true" [small]="true" label="Entrando..."></app-loading-indicator>
-                } @else {
-                    Entrar
-                }
-            </button>
+            @if (modo() === 'login') {
+                <button class="app-button" type="button" (click)="entrar()" [disabled]="loading()">
+                    @if (loading()) {
+                        <app-loading-indicator [inline]="true" [small]="true" label="Entrando..."></app-loading-indicator>
+                    } @else {
+                        Entrar
+                    }
+                </button>
+            } @else {
+                <button class="app-button" type="button" (click)="cadastrarVisitante()" [disabled]="loading()">
+                    @if (loading()) {
+                        <app-loading-indicator [inline]="true" [small]="true" label="Cadastrando..."></app-loading-indicator>
+                    } @else {
+                        Criar conta e entrar
+                    }
+                </button>
+            }
 
             <button class="app-button-ghost" type="button" (click)="entrarComoVisitante()" [disabled]="loading()">
                 Entrar como visitante

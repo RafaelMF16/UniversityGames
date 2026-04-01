@@ -12,9 +12,9 @@
 
     <div class="filters-grid">
         <div class="filter-field">
-            <label for="filtro-equipe">Equipe</label>
+            <label for="filtro-equipe">Participante</label>
             <select id="filtro-equipe" class="app-select" [(ngModel)]="equipeSelecionada" (ngModelChange)="onFiltroAlterado()">
-                <option value="">Todas as equipes</option>
+                <option value="">Todos os participantes</option>
                 @for (equipe of equipes; track equipe) {
                     <option [value]="equipe">{{ equipe }}</option>
                 }
@@ -25,8 +25,8 @@
             <label for="filtro-modalidade">Modalidade</label>
             <select id="filtro-modalidade" class="app-select" [(ngModel)]="modalidadeSelecionada" (ngModelChange)="onFiltroAlterado()">
                 <option value="">Todas as modalidades</option>
-                @for (modalidade of modalidades; track modalidade) {
-                    <option [value]="modalidade">{{ modalidade }}</option>
+                @for (modalidade of modalidades; track modalidade.valor) {
+                    <option [value]="modalidade.valor">{{ modalidade.label }}</option>
                 }
             </select>
         </div>
@@ -70,7 +70,7 @@
 
                 <div class="modalidade-cell">
                     <span class="mobile-label">Modalidade</span>
-                    <span class="pill pill-neutral modalidade-pill">{{ confronto.modalidade || 'Não informada' }}</span>
+                    <span class="pill pill-neutral modalidade-pill">{{ confronto.modalidade ? modalidadeLabel(confronto.modalidade) : 'Não informada' }}</span>
                 </div>
 
                 <div class="score-column">

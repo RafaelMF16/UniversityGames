@@ -3,13 +3,18 @@
         <div class="identity">
             <div class="copy">
                 <h3>{{ equipe.nome }}</h3>
-                <p>{{ equipe.modalidade }} • Responsavel: {{ equipe.responsavel }} • {{ equipe.membros.length }} membros</p>
+                <p>
+                    {{ subtitulo }}
+                    @if (membrosHabilitados) {
+                        • {{ equipe.membros.length }} membros
+                    }
+                </p>
             </div>
         </div>
 
         <div class="actions">
             @if (podeEditar) {
-                <button class="icon-btn" type="button" (click)="equipeEditada.emit(equipe)" aria-label="Editar equipe" [disabled]="salvando || removendo">
+                <button class="icon-btn" type="button" (click)="equipeEditada.emit(equipe)" aria-label="Editar cadastro" [disabled]="salvando || removendo">
                     @if (salvando) {
                         <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
                     } @else {
@@ -18,7 +23,7 @@
                 </button>
             }
             @if (podeExcluir) {
-                <button class="icon-btn danger" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir equipe" [disabled]="salvando || removendo">
+                <button class="icon-btn danger" type="button" (click)="equipeRemovida.emit(equipe.id)" aria-label="Excluir cadastro" [disabled]="salvando || removendo">
                     @if (removendo) {
                         <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
                     } @else {
@@ -26,7 +31,7 @@
                     }
                 </button>
             }
-            <button class="expand-btn" type="button" (click)="expandido = !expandido" aria-label="Expandir equipe" [disabled]="salvando || removendo">
+            <button class="expand-btn" type="button" (click)="expandido = !expandido" aria-label="Expandir cadastro" [disabled]="salvando || removendo">
                 <mat-icon>{{ expandido ? 'expand_less' : 'expand_more' }}</mat-icon>
             </button>
         </div>
@@ -34,54 +39,58 @@
 
     @if (expandido) {
         <div class="members-panel">
-            <div class="members-grid">
-                @for (membro of equipe.membros; track membro.id) {
-                    <app-linha-membro-equipe [membro]="membro" [podeRemover]="podeGerenciarMembros" (membroRemovido)="onMembroRemovido($event)"></app-linha-membro-equipe>
-                }
-            </div>
+            @if (membrosHabilitados) {
+                <div class="members-grid">
+                    @for (membro of equipe.membros; track membro.id) {
+                        <app-linha-membro-equipe [membro]="membro" [podeRemover]="podeGerenciarMembrosDaEquipe" (membroRemovido)="onMembroRemovido($event)"></app-linha-membro-equipe>
+                    }
+                </div>
 
-            @if (!adicionandoMembro && podeGerenciarMembros) {
-                <button class="app-button-ghost add-member-button" type="button" (click)="adicionandoMembro = true">
-                    <mat-icon>person_add</mat-icon>
-                    Adicionar membro
-                </button>
-            } @else if (adicionandoMembro && podeGerenciarMembros) {
-                <div class="member-form surface-card">
-                    <div class="field-group">
-                        <label for="novo-membro-{{ equipe.id }}">Nome do membro</label>
-                        <input
-                            id="novo-membro-{{ equipe.id }}"
-                            class="app-input"
-                            [(ngModel)]="novoNome"
-                            placeholder="Nome completo">
-                    </div>
+                @if (!adicionandoMembro && podeGerenciarMembrosDaEquipe) {
+                    <button class="app-button-ghost add-member-button" type="button" (click)="adicionandoMembro = true">
+                        <mat-icon>person_add</mat-icon>
+                        Adicionar membro
+                    </button>
+                } @else if (adicionandoMembro && podeGerenciarMembrosDaEquipe) {
+                    <div class="member-form surface-card">
+                        <div class="field-group">
+                            <label for="novo-membro-{{ equipe.id }}">Nome do membro</label>
+                            <input
+                                id="novo-membro-{{ equipe.id }}"
+                                class="app-input"
+                                [(ngModel)]="novoNome"
+                                placeholder="Nome completo">
+                        </div>
 
-                    <div class="field-group">
-                        <label>Habilidades</label>
-                        <div class="skills">
-                            @for (habilidade of habilidadesDisponiveis; track habilidade) {
-                                <button
-                                    class="skill-chip"
-                                    type="button"
-                                    [class.active]="novasHabilidades.includes(habilidade)"
-                                    (click)="toggleHabilidade(habilidade)">
-                                    {{ habilidade }}
-                                </button>
-                            }
+                        <div class="field-group">
+                            <label>Habilidades</label>
+                            <div class="skills">
+                                @for (habilidade of habilidadesDisponiveis; track habilidade) {
+                                    <button
+                                        class="skill-chip"
+                                        type="button"
+                                        [class.active]="novasHabilidades.includes(habilidade)"
+                                        (click)="toggleHabilidade(habilidade)">
+                                        {{ habilidade }}
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="member-form-actions">
+                            <button class="app-button-secondary" type="button" (click)="confirmarMembro()" [disabled]="salvando">
+                                @if (salvando) {
+                                    <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
+                                } @else {
+                                    Confirmar membro
+                                }
+                            </button>
+                            <button class="app-button-ghost" type="button" (click)="adicionandoMembro = false" [disabled]="salvando">Cancelar</button>
                         </div>
                     </div>
-
-                    <div class="member-form-actions">
-                        <button class="app-button-secondary" type="button" (click)="confirmarMembro()" [disabled]="salvando">
-                            @if (salvando) {
-                                <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
-                            } @else {
-                                Confirmar membro
-                            }
-                        </button>
-                        <button class="app-button-ghost" type="button" (click)="adicionandoMembro = false" [disabled]="salvando">Cancelar</button>
-                    </div>
-                </div>
+                }
+            } @else {
+                <div class="empty-state">Modalidade individual: este cadastro representa um atleta e não possui membros.</div>
             }
         </div>
     }

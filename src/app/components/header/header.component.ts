@@ -17,7 +17,7 @@ export class HeaderComponent {
   readonly menuAberto = signal(false);
   readonly nomeUsuario = this.authState.displayName;
   readonly roleAtual = this.authState.currentRole;
-  readonly isVisitor = this.authState.isVisitor;
+  readonly isVisitor = this.authState.isAnonymousVisitor;
 
   toggleMenu(event: MouseEvent) {
     event.stopPropagation();

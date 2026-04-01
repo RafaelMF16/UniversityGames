@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Equipe, EquipePayload, ModalidadeEquipe } from '../../models/equipe.model';
+import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
+import { CategoriaEsporte, Equipe, EquipePayload, ModalidadeEquipe, ModalidadeEsporteConfig } from '../../models/equipe.model';
+import { Usuario } from '../../models/usuario.model';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
@@ -13,27 +15,36 @@ import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicato
 export class CadastrarEquipeCardComponent implements OnChanges {
   @Input() equipeEditando: Equipe | null = null;
   @Input() salvando = false;
+  @Input() categoria: CategoriaEsporte = 'coletivo';
+  @Input() modalidadesDisponiveis: ModalidadeEsporteConfig[] = [];
+  @Input() usuarioAtual: Usuario | null = null;
+  @Input() individualAutopreenchido = false;
+  @Input() modalidadesIndividuaisBloqueadas: ModalidadeEquipe[] = [];
   @Output() equipeAdicionada = new EventEmitter<EquipePayload>();
   @Output() equipeAtualizada = new EventEmitter<EquipePayload>();
   @Output() cancelarEdicao = new EventEmitter<void>();
 
   private readonly formBuilder = inject(FormBuilder);
+  readonly periodosDisponiveis = PERIODOS_DISPONIVEIS;
+  readonly cursosDisponiveis = CURSOS_DISPONIVEIS;
 
-  readonly modalidades: ModalidadeEquipe[] = ['Futsal', 'Volei', 'Basquete', 'Natacao', 'Atletismo'];
-
-  readonly form = this.formBuilder.nonNullable.group({
+  readonly form = this.formBuilder.group({
     nome: ['', [Validators.required, Validators.minLength(3)]],
-    responsavel: ['', [Validators.required, Validators.minLength(3)]],
-    email: ['', [Validators.required, Validators.email]],
+    curso: ['', [Validators.required, Validators.minLength(2)]],
+    periodo: ['', [Validators.required, Validators.minLength(1)]],
     modalidade: ['' as '' | ModalidadeEquipe, Validators.required]
   });
 
-  ngOnChanges(_: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['modalidadesDisponiveis'] && !this.equipeEditando) {
+      this.garantirModalidadeValida();
+    }
+
     if (this.equipeEditando) {
       this.form.patchValue({
         nome: this.equipeEditando.nome,
-        responsavel: this.equipeEditando.responsavel,
-        email: this.equipeEditando.email,
+        curso: this.equipeEditando.curso,
+        periodo: this.equipeEditando.periodo,
         modalidade: this.equipeEditando.modalidade
       });
       return;
@@ -42,18 +53,61 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     this.limparFormulario();
   }
 
+  get titulo() {
+    if (this.equipeEditando) {
+      return this.ehColetivo ? 'Editar equipe' : 'Editar inscrição individual';
+    }
+
+    return this.ehColetivo ? 'Cadastrar equipe' : 'Confirmar inscrição individual';
+  }
+
+  get descricao() {
+    if (this.ehColetivo) {
+      return 'Preencha os dados principais da equipe e selecione a modalidade esportiva.';
+    }
+
+    if (this.individualAutopreenchido) {
+      return 'Seus dados serão usados automaticamente no cadastro da modalidade individual.';
+    }
+
+    return 'Cadastre o atleta com os dados completos para a modalidade individual.';
+  }
+
+  get ehColetivo() {
+    return this.categoria === 'coletivo';
+  }
+
+  get individualUsaDadosDaConta() {
+    return !this.ehColetivo && this.individualAutopreenchido && !!this.usuarioAtual;
+  }
+
+  get modalidadeBloqueada() {
+    const modalidade = this.form.controls.modalidade.value;
+    if (!modalidade) {
+      return false;
+    }
+
+    if (this.equipeEditando?.modalidade === modalidade) {
+      return false;
+    }
+
+    return this.modalidadesIndividuaisBloqueadas.includes(modalidade);
+  }
+
   salvar() {
-    if (this.form.invalid || this.salvando) {
+    if (this.form.invalid || this.salvando || this.modalidadeBloqueada) {
       this.form.markAllAsTouched();
       return;
     }
 
     const values = this.form.getRawValue();
     const payload: EquipePayload = {
-      nome: values.nome,
-      responsavel: values.responsavel,
-      email: values.email,
+      nome: this.individualUsaDadosDaConta ? this.usuarioAtual?.nome ?? '' : values.nome?.trim() ?? '',
+      responsavel: this.ehColetivo ? this.equipeEditando?.responsavel ?? null : null,
+      curso: this.individualUsaDadosDaConta ? this.usuarioAtual?.curso ?? '' : values.curso?.trim() ?? '',
+      periodo: this.individualUsaDadosDaConta ? this.usuarioAtual?.periodo ?? '' : values.periodo?.trim() ?? '',
       modalidade: values.modalidade as ModalidadeEquipe,
+      usuarioId: !this.ehColetivo && this.usuarioAtual?.role === 'visitante' ? this.usuarioAtual.id : this.equipeEditando?.usuarioId ?? null,
       membros: this.equipeEditando?.membros.map((membro) => ({
         id: membro.id,
         nome: membro.nome,
@@ -80,24 +134,22 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     this.cancelarEdicao.emit();
   }
 
-  isInvalid(controlName: 'nome' | 'responsavel' | 'email' | 'modalidade') {
+  isInvalid(controlName: 'nome' | 'curso' | 'periodo' | 'modalidade') {
     const control = this.form.controls[controlName];
     return control.invalid && (control.touched || control.dirty);
   }
 
-  getErrorMessage(controlName: 'nome' | 'responsavel' | 'email' | 'modalidade') {
+  getErrorMessage(controlName: 'nome' | 'curso' | 'periodo' | 'modalidade') {
     const control = this.form.controls[controlName];
 
     if (control.hasError('required')) {
       return 'Este campo é obrigatório.';
     }
 
-    if (control.hasError('email')) {
-      return 'Informe um e-mail válido.';
-    }
-
     if (control.hasError('minlength')) {
-      return 'Informe pelo menos 3 caracteres.';
+      return controlName === 'periodo'
+        ? 'Informe um período válido.'
+        : 'Informe pelo menos 2 caracteres.';
     }
 
     return '';
@@ -105,10 +157,22 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   private limparFormulario() {
     this.form.reset({
-      nome: '',
-      responsavel: '',
-      email: '',
+      nome: this.individualUsaDadosDaConta ? this.usuarioAtual?.nome ?? '' : '',
+      curso: this.individualUsaDadosDaConta ? this.usuarioAtual?.curso ?? '' : '',
+      periodo: this.individualUsaDadosDaConta ? this.usuarioAtual?.periodo ?? '' : '',
       modalidade: ''
     });
+  }
+
+  private garantirModalidadeValida() {
+    const modalidadeAtual = this.form.controls.modalidade.value;
+    if (!modalidadeAtual) {
+      return;
+    }
+
+    const existe = this.modalidadesDisponiveis.some((item) => item.valor === modalidadeAtual);
+    if (!existe) {
+      this.form.controls.modalidade.setValue('');
+    }
   }
 }

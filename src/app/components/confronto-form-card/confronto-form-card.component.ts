@@ -1,8 +1,14 @@
-import { Component, Inject, Optional, inject, signal } from '@angular/core';
+import { Component, Inject, Optional, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Confronto, ConfrontoPayload } from '../../models/confronto.model';
-import { Equipe, MODALIDADES_EQUIPE } from '../../models/equipe.model';
+import {
+  CategoriaEsporte,
+  Equipe,
+  MODALIDADES_CONFIG,
+  ModalidadeEquipe,
+  getModalidadeConfig
+} from '../../models/equipe.model';
 import { ConfrontosStateService } from '../../services/confrontos-state.service';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
@@ -24,8 +30,28 @@ export class ConfrontoFormCardComponent {
 
   readonly equipes: Equipe[];
   readonly confrontoEditando: Confronto | null;
-  readonly modalidadesDisponiveis = MODALIDADES_EQUIPE;
   readonly salvando = signal(false);
+  readonly categoriaSelecionada = signal<CategoriaEsporte>('coletivo');
+  readonly modalidadesDisponiveis = computed(() =>
+    MODALIDADES_CONFIG.filter((modalidade) => modalidade.categoria === this.categoriaSelecionada())
+  );
+  readonly participantesDisponiveis = computed(() => {
+    const modalidade = this.form.controls.modalidade.value;
+    const categoria = this.categoriaSelecionada();
+
+    return this.equipes.filter((item) => {
+      const config = getModalidadeConfig(item.modalidade);
+      if (!config || config.categoria !== categoria) {
+        return false;
+      }
+
+      if (modalidade) {
+        return item.modalidade === modalidade;
+      }
+
+      return true;
+    });
+  });
 
   readonly form = this.formBuilder.nonNullable.group({
     equipeA: ['', Validators.required],
@@ -33,7 +59,7 @@ export class ConfrontoFormCardComponent {
     data: ['', Validators.required],
     horario: ['', Validators.required],
     local: ['', [Validators.required, Validators.minLength(3)]],
-    modalidade: ['', Validators.required],
+    modalidade: ['' as '' | ModalidadeEquipe, Validators.required],
     status: ['' as '' | NonNullable<Confronto['status']>, Validators.required]
   });
 
@@ -45,6 +71,8 @@ export class ConfrontoFormCardComponent {
     this.confrontoEditando = data?.confronto ?? null;
 
     if (this.confrontoEditando) {
+      const config = getModalidadeConfig(this.confrontoEditando.modalidade);
+      this.categoriaSelecionada.set(config?.categoria ?? 'coletivo');
       this.form.patchValue({
         equipeA: this.confrontoEditando.equipeA,
         equipeB: this.confrontoEditando.equipeB,
@@ -55,6 +83,42 @@ export class ConfrontoFormCardComponent {
         status: this.confrontoEditando.status
       });
     }
+
+    this.form.controls.modalidade.valueChanges.subscribe(() => {
+      this.form.controls.equipeA.setValue('');
+      this.form.controls.equipeB.setValue('');
+    });
+  }
+
+  get titulo() {
+    return this.confrontoEditando ? 'Editar confronto' : 'Cadastrar confronto';
+  }
+
+  get subtitulo() {
+    return this.categoriaSelecionada() === 'coletivo'
+      ? 'Defina equipes, horário, local e modalidade da partida coletiva.'
+      : 'Defina atletas, horário, local e modalidade da disputa individual.';
+  }
+
+  get labelParticipanteA() {
+    return this.categoriaSelecionada() === 'coletivo' ? 'Equipe A' : 'Atleta A';
+  }
+
+  get labelParticipanteB() {
+    return this.categoriaSelecionada() === 'coletivo' ? 'Equipe B' : 'Atleta B';
+  }
+
+  selecionarCategoria(categoria: CategoriaEsporte) {
+    if (this.categoriaSelecionada() === categoria) {
+      return;
+    }
+
+    this.categoriaSelecionada.set(categoria);
+    this.form.patchValue({
+      equipeA: '',
+      equipeB: '',
+      modalidade: ''
+    });
   }
 
   async salvar() {
@@ -63,9 +127,15 @@ export class ConfrontoFormCardComponent {
       return;
     }
 
+    const values = this.form.getRawValue();
+    if (values.equipeA === values.equipeB) {
+      this.form.controls.equipeB.setErrors({ duplicate: true });
+      this.form.controls.equipeB.markAsTouched();
+      return;
+    }
+
     this.salvando.set(true);
 
-    const values = this.form.getRawValue();
     const payload: ConfrontoPayload = {
       equipeA: values.equipeA,
       equipeB: values.equipeB,
@@ -113,6 +183,10 @@ export class ConfrontoFormCardComponent {
 
     if (control.hasError('minlength')) {
       return 'Informe pelo menos 3 caracteres.';
+    }
+
+    if (control.hasError('duplicate')) {
+      return 'Selecione participantes diferentes.';
     }
 
     return '';

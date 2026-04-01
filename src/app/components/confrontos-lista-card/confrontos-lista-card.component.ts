@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { Confronto, ConfrontosFiltros, StatusConfronto } from '../../models/confronto.model';
-import { ModalidadeEquipe } from '../../models/equipe.model';
+import { ModalidadeEsporteConfig, ModalidadeEquipe, getModalidadeLabel } from '../../models/equipe.model';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
@@ -15,7 +15,7 @@ import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicato
 export class ConfrontosListaCardComponent {
   @Input() confrontos: Confronto[] = [];
   @Input() equipes: string[] = [];
-  @Input() modalidades: string[] = [];
+  @Input() modalidades: ModalidadeEsporteConfig[] = [];
   @Input() carregando = false;
   @Input() podeGerenciar = false;
   @Input() removendoId: number | null = null;
@@ -31,6 +31,10 @@ export class ConfrontosListaCardComponent {
 
   onFiltroAlterado() {
     this.emitirFiltros();
+  }
+
+  modalidadeLabel(modalidade: string) {
+    return getModalidadeLabel(modalidade);
   }
 
   private emitirFiltros() {

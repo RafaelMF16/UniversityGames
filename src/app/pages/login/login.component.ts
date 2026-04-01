@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
+import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
 import { AuthStateService } from '../../services/auth-state.service';
 
 @Component({
@@ -16,21 +17,54 @@ export class LoginComponent {
 
   readonly loading = this.authState.loading.asReadonly();
   readonly error = this.authState.error.asReadonly();
-  readonly form = this.formBuilder.nonNullable.group({
+  readonly cursos = CURSOS_DISPONIVEIS;
+  readonly periodos = PERIODOS_DISPONIVEIS;
+  readonly modo = signal<'login' | 'cadastro'>('login');
+
+  readonly loginForm = this.formBuilder.nonNullable.group({
     username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
     senha: ['', [Validators.required, Validators.minLength(6)]]
   });
 
+  readonly cadastroForm = this.formBuilder.nonNullable.group({
+    nome: ['', [Validators.required, Validators.minLength(3), nomeCompletoValidator()]],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
+    senha: ['', [Validators.required, Validators.minLength(6)]],
+    curso: ['', Validators.required],
+    periodo: ['', Validators.required]
+  });
+
+  selecionarModo(modo: 'login' | 'cadastro') {
+    this.modo.set(modo);
+    this.authState.error.set(null);
+  }
+
   async entrar() {
-    if (this.form.invalid || this.loading()) {
-      this.form.markAllAsTouched();
+    if (this.loginForm.invalid || this.loading()) {
+      this.loginForm.markAllAsTouched();
       return;
     }
 
-    const values = this.form.getRawValue();
+    const values = this.loginForm.getRawValue();
     await this.authState.login({
       username: values.username,
       senha: values.senha
+    });
+  }
+
+  async cadastrarVisitante() {
+    if (this.cadastroForm.invalid || this.loading()) {
+      this.cadastroForm.markAllAsTouched();
+      return;
+    }
+
+    const values = this.cadastroForm.getRawValue();
+    await this.authState.registerVisitor({
+      nome: values.nome.trim(),
+      username: values.username.trim().toLowerCase(),
+      senha: values.senha,
+      curso: values.curso,
+      periodo: values.periodo
     });
   }
 
@@ -40,20 +74,24 @@ export class LoginComponent {
     }
   }
 
-  isInvalid(controlName: 'username' | 'senha') {
-    const control = this.form.controls[controlName];
+  isInvalid(formName: 'login' | 'cadastro', controlName: string) {
+    const control = formName === 'login'
+      ? this.loginForm.controls[controlName as 'username' | 'senha']
+      : this.cadastroForm.controls[controlName as 'nome' | 'username' | 'senha' | 'curso' | 'periodo'];
     return control.invalid && (control.touched || control.dirty);
   }
 
-  getErrorMessage(controlName: 'username' | 'senha') {
-    const control = this.form.controls[controlName];
+  getErrorMessage(formName: 'login' | 'cadastro', controlName: string) {
+    const control = formName === 'login'
+      ? this.loginForm.controls[controlName as 'username' | 'senha']
+      : this.cadastroForm.controls[controlName as 'nome' | 'username' | 'senha' | 'curso' | 'periodo'];
 
     if (control.hasError('required')) {
       return 'Este campo é obrigatório.';
     }
 
-    if (controlName === 'username' && control.hasError('minlength')) {
-      return 'Informe pelo menos 3 caracteres.';
+    if (controlName === 'nome' && control.hasError('nomeCompleto')) {
+      return 'Informe nome e sobrenome.';
     }
 
     if (controlName === 'username' && control.hasError('pattern')) {
@@ -61,9 +99,21 @@ export class LoginComponent {
     }
 
     if (control.hasError('minlength')) {
-      return 'Informe pelo menos 6 caracteres.';
+      return controlName === 'senha' ? 'Informe pelo menos 6 caracteres.' : 'Informe pelo menos 3 caracteres.';
     }
 
     return '';
   }
+}
+
+function nomeCompletoValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const valor = String(control.value ?? '').trim();
+    if (!valor) {
+      return null;
+    }
+
+    const partes = valor.split(/\s+/).filter(Boolean);
+    return partes.length >= 2 ? null : { nomeCompleto: true };
+  };
 }

@@ -2,67 +2,97 @@
     <div class="card-header">
         <div class="card-title-wrap">
             <div>
-                <h2>{{ equipeEditando ? 'Editar equipe' : 'Cadastrar equipe' }}</h2>
-                <p>Preencha os dados principais da equipe e a modalidade praticada.</p>
+                <h2>{{ titulo }}</h2>
+                <p>{{ descricao }}</p>
             </div>
         </div>
     </div>
 
     <form class="form-grid" [formGroup]="form">
-        <div class="field-group">
-            <label for="nome-equipe">Nome da equipe</label>
-            <input id="nome-equipe" class="app-input" [class.invalid]="isInvalid('nome')" formControlName="nome" placeholder="Ex: Time Alfa" type="text">
-            @if (isInvalid('nome')) {
-                <small class="field-error">{{ getErrorMessage('nome') }}</small>
-            }
-        </div>
+        @if (!individualUsaDadosDaConta) {
+            <div class="field-group">
+                <label for="nome-equipe">{{ ehColetivo ? 'Nome da equipe' : 'Nome completo' }}</label>
+                <input
+                    id="nome-equipe"
+                    class="app-input"
+                    [class.invalid]="isInvalid('nome')"
+                    formControlName="nome"
+                    [placeholder]="ehColetivo ? 'Ex: Time Alfa' : 'Ex: Maria da Silva'"
+                    type="text">
+                @if (isInvalid('nome')) {
+                    <small class="field-error">{{ getErrorMessage('nome') }}</small>
+                }
+            </div>
 
-        <div class="field-group">
-            <label for="responsavel-equipe">Responsavel</label>
-            <input id="responsavel-equipe" class="app-input" [class.invalid]="isInvalid('responsavel')" formControlName="responsavel" placeholder="Nome completo" type="text">
-            @if (isInvalid('responsavel')) {
-                <small class="field-error">{{ getErrorMessage('responsavel') }}</small>
-            }
-        </div>
+            <div class="field-group">
+                <label for="curso-equipe">Curso</label>
+                <select id="curso-equipe" class="app-select" [class.invalid]="isInvalid('curso')" formControlName="curso">
+                    <option value="">Selecione o curso</option>
+                    @for (curso of cursosDisponiveis; track curso) {
+                        <option [value]="curso">{{ curso }}</option>
+                    }
+                </select>
+                @if (isInvalid('curso')) {
+                    <small class="field-error">{{ getErrorMessage('curso') }}</small>
+                }
+            </div>
 
-        <div class="field-group">
-            <label for="email-equipe">E-mail de contato</label>
-            <input id="email-equipe" class="app-input" [class.invalid]="isInvalid('email')" formControlName="email" placeholder="contato@equipe.com" type="email">
-            @if (isInvalid('email')) {
-                <small class="field-error">{{ getErrorMessage('email') }}</small>
-            }
-        </div>
+            <div class="field-group">
+                <label for="periodo-equipe">Período</label>
+                <select id="periodo-equipe" class="app-select" [class.invalid]="isInvalid('periodo')" formControlName="periodo">
+                    <option value="">Selecione o período</option>
+                    @for (periodo of periodosDisponiveis; track periodo) {
+                        <option [value]="periodo">{{ periodo }}</option>
+                    }
+                </select>
+                @if (isInvalid('periodo')) {
+                    <small class="field-error">{{ getErrorMessage('periodo') }}</small>
+                }
+            </div>
+        } @else {
+            <div class="field-group full-width">
+                <label>Dados da sua conta</label>
+                <div class="surface-card summary-box">
+                    <strong>{{ usuarioAtual?.nome }}</strong>
+                    <span>{{ usuarioAtual?.curso }}</span>
+                    <span>{{ usuarioAtual?.periodo }}</span>
+                </div>
+            </div>
+        }
 
         <div class="field-group">
             <label for="modalidade-equipe">Modalidade</label>
             <select id="modalidade-equipe" class="app-select" [class.invalid]="isInvalid('modalidade')" formControlName="modalidade">
                 <option value="">Selecione a modalidade</option>
-                @for (modalidade of modalidades; track modalidade) {
-                    <option [value]="modalidade">{{ modalidade }}</option>
+                @for (modalidade of modalidadesDisponiveis; track modalidade.valor) {
+                    <option [value]="modalidade.valor">{{ modalidade.label }}</option>
                 }
             </select>
             @if (isInvalid('modalidade')) {
                 <small class="field-error">{{ getErrorMessage('modalidade') }}</small>
+            }
+            @if (modalidadeBloqueada) {
+                <small class="field-error">Você já possui inscrição nessa modalidade.</small>
             }
         </div>
     </form>
 
     <div class="actions">
         @if (equipeEditando) {
-            <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando">
+            <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando || modalidadeBloqueada">
                 @if (salvando) {
                     <app-loading-indicator [inline]="true" [small]="true" label="Atualizando..."></app-loading-indicator>
                 } @else {
-                    Atualizar equipe
+                    {{ ehColetivo ? 'Atualizar equipe' : 'Atualizar inscrição' }}
                 }
             </button>
             <button class="app-button-ghost" type="button" (click)="onCancelarEdicao()" [disabled]="salvando">Cancelar</button>
         } @else {
-            <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando">
+            <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando || modalidadeBloqueada">
                 @if (salvando) {
                     <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
                 } @else {
-                    Salvar equipe
+                    {{ ehColetivo ? 'Salvar equipe' : 'Confirmar inscrição' }}
                 }
             </button>
         }

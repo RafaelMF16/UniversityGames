@@ -26,6 +26,31 @@
     font-size: clamp(0.96rem, 1.1vw, 1.08rem);
 }
 
+.tabs-row {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 12px;
+}
+
+.tab-button {
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.18);
+    border-radius: 18px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    padding: 14px 18px;
+    transition: 0.2s ease;
+}
+
+.tab-button.active {
+    background: rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.42);
+    box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.18);
+}
+
 .list-section {
     display: flex;
     flex-direction: column;
@@ -38,8 +63,29 @@
     gap: 18px;
 }
 
+.empty-state {
+    color: var(--text-muted);
+    padding: 18px 0;
+}
+
+.visitor-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 24px 26px;
+}
+
+.visitor-cta p {
+    color: var(--text-muted);
+}
+
 @media (max-width: 900px) {
     .top-row {
         flex-direction: column;
+    }
+
+    .tabs-row {
+        grid-template-columns: 1fr;
     }
 }
