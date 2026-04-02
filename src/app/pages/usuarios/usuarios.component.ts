@@ -1,11 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
-import { EquipesStateService } from '../../services/equipes-state.service';
-import { UsuariosStateService } from '../../services/usuarios-state.service';
+import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
 import { ManagedUserRole, Usuario, UsuarioPayload } from '../../models/usuario.model';
+import { UsuariosStateService } from '../../services/usuarios-state.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -17,22 +16,23 @@ import { ManagedUserRole, Usuario, UsuarioPayload } from '../../models/usuario.m
 export class UsuariosComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly usuariosState = inject(UsuariosStateService);
-  private readonly equipesState = inject(EquipesStateService);
 
   readonly usuarioEditando = signal<Usuario | null>(null);
   readonly usuarios = this.usuariosState.usuarios.asReadonly();
-  readonly equipes = this.equipesState.equipes.asReadonly();
-  readonly loading = computed(() => this.usuariosState.loading() || this.equipesState.loading());
+  readonly loading = this.usuariosState.loading.asReadonly();
   readonly formSaving = computed(() => {
     const editando = this.usuarioEditando();
     return this.usuariosState.formSaving() || (editando !== null && this.usuariosState.updatingId() === editando.id);
   });
   readonly deletingId = this.usuariosState.deletingId.asReadonly();
-  readonly error = computed(() => this.usuariosState.error() ?? this.equipesState.error());
+  readonly error = this.usuariosState.error.asReadonly();
+  readonly cursos = CURSOS_DISPONIVEIS;
+  readonly periodos = PERIODOS_DISPONIVEIS;
   readonly roles: { value: ManagedUserRole; label: string; }[] = [
     { value: 'admin', label: 'Admin' },
     { value: 'juiz', label: 'Juiz' },
-    { value: 'capitao', label: 'Capitão' }
+    { value: 'capitao', label: 'Capitão' },
+    { value: 'visitante', label: 'Visitante' }
   ];
 
   readonly form = this.formBuilder.nonNullable.group({
@@ -40,29 +40,32 @@ export class UsuariosComponent {
     username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
     senha: ['', [Validators.minLength(6)]],
     role: ['admin' as ManagedUserRole, Validators.required],
-    equipeId: [{ value: '', disabled: true }],
+    curso: [''],
+    periodo: [''],
     ativo: [true]
   });
 
   constructor() {
-    this.form.controls.role.valueChanges
-      .pipe(takeUntilDestroyed())
-      .subscribe((role) => {
-        if (role === 'capitao') {
-          this.form.controls.equipeId.enable({ emitEvent: false });
-          return;
-        }
+    this.form.controls.role.valueChanges.subscribe((role) => {
+      const precisaDadosAcademicos = role === 'visitante' || role === 'capitao';
+      const curso = this.form.controls.curso;
+      const periodo = this.form.controls.periodo;
 
-        this.form.controls.equipeId.reset('', { emitEvent: false });
-        this.form.controls.equipeId.disable({ emitEvent: false });
-      });
+      if (precisaDadosAcademicos) {
+        curso.setValidators([Validators.required]);
+        periodo.setValidators([Validators.required]);
+      } else {
+        curso.setValue('');
+        periodo.setValue('');
+        curso.clearValidators();
+        periodo.clearValidators();
+      }
+
+      curso.updateValueAndValidity({ emitEvent: false });
+      periodo.updateValueAndValidity({ emitEvent: false });
+    });
 
     void this.usuariosState.loadUsuarios();
-    void this.equipesState.loadEquipes();
-  }
-
-  get requerEquipe() {
-    return this.form.controls.role.value === 'capitao';
   }
 
   async salvar() {
@@ -76,17 +79,13 @@ export class UsuariosComponent {
       return;
     }
 
-    if (this.requerEquipe && !this.form.controls.equipeId.value) {
-      this.form.controls.equipeId.markAsTouched();
-      return;
-    }
-
     const values = this.form.getRawValue();
     const payload: UsuarioPayload = {
       nome: values.nome,
       username: values.username.trim().toLowerCase(),
       role: values.role,
-      equipeId: values.role === 'capitao' ? Number(values.equipeId) : null,
+      curso: values.role === 'visitante' || values.role === 'capitao' ? values.curso : null,
+      periodo: values.role === 'visitante' || values.role === 'capitao' ? values.periodo : null,
       ativo: values.ativo,
       ...(values.senha ? { senha: values.senha } : {})
     };
@@ -107,8 +106,9 @@ export class UsuariosComponent {
       nome: usuario.nome,
       username: usuario.username,
       senha: '',
-      role: usuario.role === 'visitante' ? 'admin' : usuario.role,
-      equipeId: usuario.equipeId ? String(usuario.equipeId) : '',
+      role: usuario.role,
+      curso: usuario.curso ?? '',
+      periodo: usuario.periodo ?? '',
       ativo: usuario.ativo
     });
   }
@@ -128,12 +128,13 @@ export class UsuariosComponent {
       username: '',
       senha: '',
       role: 'admin',
-      equipeId: '',
+      curso: '',
+      periodo: '',
       ativo: true
     });
   }
 
-  roleLabel(role: ManagedUserRole | 'visitante') {
+  roleLabel(role: ManagedUserRole) {
     if (role === 'admin') {
       return 'Admin';
     }
@@ -149,22 +150,13 @@ export class UsuariosComponent {
     return 'Visitante';
   }
 
-  isInvalid(controlName: 'nome' | 'username' | 'senha' | 'role' | 'equipeId') {
+  isInvalid(controlName: 'nome' | 'username' | 'senha' | 'role' | 'curso' | 'periodo') {
     const control = this.form.controls[controlName];
-
-    if (controlName === 'equipeId' && this.requerEquipe) {
-      return !control.value && (control.touched || control.dirty);
-    }
-
     return control.invalid && (control.touched || control.dirty);
   }
 
-  getErrorMessage(controlName: 'nome' | 'username' | 'senha' | 'role' | 'equipeId') {
+  getErrorMessage(controlName: 'nome' | 'username' | 'senha' | 'role' | 'curso' | 'periodo') {
     const control = this.form.controls[controlName];
-
-    if (controlName === 'equipeId' && this.requerEquipe && !control.value) {
-      return 'Selecione a equipe do capitão.';
-    }
 
     if (control.hasError('required')) {
       return 'Este campo é obrigatório.';

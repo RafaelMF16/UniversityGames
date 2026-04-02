@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ApiRequestService } from './api-request.service';
-import { AuthResponse, LoginPayload } from '../models/auth.model';
+import { AuthResponse, LoginPayload, VisitorRegisterPayload } from '../models/auth.model';
 import { Usuario, UserRole } from '../models/usuario.model';
 
 const TOKEN_STORAGE_KEY = 'ug_access_token';
@@ -24,8 +24,9 @@ export class AuthStateService {
   readonly error = signal<string | null>(null);
 
   readonly isAuthenticated = computed(() => !!this.user() && !!this.token());
-  readonly isVisitor = computed(() => !this.user() && this.visitorMode());
-  readonly canAccessShell = computed(() => this.isAuthenticated() || this.isVisitor());
+  readonly isAnonymousVisitor = computed(() => !this.user() && this.visitorMode());
+  readonly isAuthenticatedVisitor = computed(() => this.user()?.role === 'visitante');
+  readonly canAccessShell = computed(() => this.isAuthenticated() || this.isAnonymousVisitor());
   readonly currentRole = computed<UserRole>(() => this.user()?.role ?? 'visitante');
   readonly displayName = computed(() => this.user()?.nome ?? 'Visitante');
 
@@ -42,20 +43,11 @@ export class AuthStateService {
   }
 
   async login(payload: LoginPayload) {
-    this.loading.set(true);
-    this.error.set(null);
+    return this.authenticate('/auth/login', payload, 'Não foi possível fazer login com as credenciais informadas.');
+  }
 
-    try {
-      const response = await firstValueFrom(this.api.post<AuthResponse, LoginPayload>('/auth/login', payload));
-      this.setSession(response);
-      await this.router.navigateByUrl('/dashboard');
-      return true;
-    } catch {
-      this.error.set('Não foi possível fazer login com as credenciais informadas.');
-      return false;
-    } finally {
-      this.loading.set(false);
-    }
+  async registerVisitor(payload: VisitorRegisterPayload) {
+    return this.authenticate('/auth/register-visitor', payload, 'Não foi possível concluir o cadastro de visitante.');
   }
 
   async refreshCurrentUser() {
@@ -109,7 +101,13 @@ export class AuthStateService {
   }
 
   canCreateEquipe() {
-    return this.user()?.role === 'admin';
+    const user = this.user();
+    return user?.role === 'admin' || (user?.role === 'capitao' && !user.equipeId);
+  }
+
+  canCreateIndividualRegistration() {
+    const role = this.user()?.role;
+    return role === 'admin' || role === 'visitante' || role === 'capitao';
   }
 
   canDeleteEquipe() {
@@ -140,6 +138,23 @@ export class AuthStateService {
 
     this.initialized.set(true);
     this.initPromise = null;
+  }
+
+  private async authenticate(endpoint: string, payload: LoginPayload | VisitorRegisterPayload, errorMessage: string) {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const response = await firstValueFrom(this.api.post<AuthResponse, typeof payload>(endpoint, payload));
+      this.setSession(response);
+      await this.router.navigateByUrl('/dashboard');
+      return true;
+    } catch {
+      this.error.set(errorMessage);
+      return false;
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   private setSession(response: AuthResponse) {

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatIcon } from "@angular/material/icon";
-import { Equipe } from '../../models/equipe.model';
-import { LinhaMembroEquipeComponent } from "../linha-membro-equipe/linha-membro-equipe.component";
+import { MatIcon } from '@angular/material/icon';
+import { Equipe, getModalidadeLabel, modalidadePermiteMembros } from '../../models/equipe.model';
+import { LinhaMembroEquipeComponent } from '../linha-membro-equipe/linha-membro-equipe.component';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
@@ -28,10 +28,30 @@ export class EquipeCardComponent {
   novoNome = '';
   novasHabilidades: string[] = [];
 
-  habilidadesDisponiveis = [
-    'Ataque', 'Defesa', 'Velocidade', 'Lideranca', 'Passe', 'Resistencia',
-    'Tatica', 'Comunicacao', 'Drible', 'Finalizacao'
+  readonly habilidadesDisponiveis = [
+    'Ataque', 'Defesa', 'Velocidade', 'Liderança', 'Passe', 'Resistência',
+    'Tática', 'Comunicação', 'Drible', 'Finalização'
   ];
+
+  get membrosHabilitados() {
+    return modalidadePermiteMembros(this.equipe?.modalidade);
+  }
+
+  get podeGerenciarMembrosDaEquipe() {
+    return this.podeGerenciarMembros && this.membrosHabilitados;
+  }
+
+  get subtitulo() {
+    if (this.membrosHabilitados) {
+      return `${this.modalidadeLabel()} • Capitão: ${this.equipe.responsavel ?? '-'} • ${this.equipe.curso} • ${this.equipe.periodo}`;
+    }
+
+    return `${this.modalidadeLabel()} • ${this.equipe.curso} • ${this.equipe.periodo}`;
+  }
+
+  modalidadeLabel() {
+    return getModalidadeLabel(this.equipe.modalidade);
+  }
 
   toggleHabilidade(habilidade: string) {
     if (this.novasHabilidades.includes(habilidade)) {
@@ -43,7 +63,7 @@ export class EquipeCardComponent {
   }
 
   confirmarMembro() {
-    if (!this.novoNome || this.salvando || !this.podeGerenciarMembros) {
+    if (!this.novoNome || this.salvando || !this.podeGerenciarMembrosDaEquipe) {
       return;
     }
 
@@ -52,7 +72,7 @@ export class EquipeCardComponent {
       {
         id: Date.now(),
         nome: this.novoNome,
-      funcao: this.equipe.membros.length === 0 ? 'Capitão' : 'Membro',
+        funcao: this.equipe.membros.length === 0 ? 'Capitão' : 'Membro',
         habilidades: [...this.novasHabilidades]
       }
     ];
@@ -65,7 +85,7 @@ export class EquipeCardComponent {
   }
 
   onMembroRemovido(id: number) {
-    if (!this.podeGerenciarMembros) {
+    if (!this.podeGerenciarMembrosDaEquipe) {
       return;
     }
 

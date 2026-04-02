@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
+import { getModalidadeLabel } from '../../models/equipe.model';
 
 @Component({
   selector: 'app-proximos-confrontos-card',
@@ -17,4 +18,8 @@ export class ProximosConfrontosCardComponent {
     local: string;
     modalidade: string;
   };
+
+  modalidadeLabel() {
+    return getModalidadeLabel(this.confronto.modalidade);
+  }
 }

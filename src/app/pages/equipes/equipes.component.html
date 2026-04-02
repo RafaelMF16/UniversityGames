@@ -2,18 +2,55 @@
     <div class="equipes-container">
         <section class="top-row">
             <div class="heading-copy">
-                <h1>Gestão de equipes</h1>
-                <p>Cadastre equipes, organize membros e mantenha as modalidades atualizadas.</p>
+                <h1>Gestão de esportes</h1>
+                <p>Organize os esportes do evento, separe por categoria e mantenha os cadastros atualizados.</p>
             </div>
+        </section>
+
+        <section class="tabs-row surface-card">
+            <button
+                class="tab-button"
+                type="button"
+                [class.active]="categoriaSelecionada() === 'coletivo'"
+                (click)="selecionarCategoria('coletivo')">
+                Esportes coletivos
+            </button>
+            <button
+                class="tab-button"
+                type="button"
+                [class.active]="categoriaSelecionada() === 'individual'"
+                (click)="selecionarCategoria('individual')">
+                Esportes individuais
+            </button>
         </section>
 
         @if (error()) {
             <div class="pill pill-warning feedback-pill">{{ error() }}</div>
         }
 
+        @if (categoriaSelecionada() === 'individual' && visitanteAnonimo()) {
+            <section class="surface-card visitor-cta">
+                <h2>Entre ou crie uma conta de visitante</h2>
+                <p>Para se inscrever nos esportes individuais, você precisa estar autenticado.</p>
+                <button class="app-button-secondary" type="button" (click)="irParaLogin()">Ir para o login</button>
+            </section>
+        }
+
+        @if (categoriaSelecionada() === 'individual' && usuarioPodeSeInscreverNoIndividual() && bloqueouTodasModalidadesIndividuais() && !equipeEditando()) {
+            <section class="surface-card visitor-cta">
+                <h2>Inscrição já realizada</h2>
+                <p>Você já está inscrito em todas as modalidades individuais disponíveis no momento.</p>
+            </section>
+        }
+
         @if (mostrarFormulario()) {
             <app-cadastrar-equipe-card
+                [categoria]="categoriaSelecionada()"
                 [equipeEditando]="equipeEditando()"
+                [modalidadesDisponiveis]="modalidadesDaCategoria()"
+                [usuarioAtual]="usuarioAtual()"
+                [individualAutopreenchido]="categoriaSelecionada() === 'individual' && usuarioPodeSeInscreverNoIndividual()"
+                [modalidadesIndividuaisBloqueadas]="modalidadesIndividuaisDoUsuario()"
                 [salvando]="formSaving() || (equipeEditando() !== null && updatingId() === equipeEditando()?.id)"
                 (equipeAdicionada)="onEquipeAdicionada($event)"
                 (equipeAtualizada)="onEquipeAtualizada($event)"
@@ -24,30 +61,33 @@
         <section class="list-section">
             <div class="section-heading">
                 <div>
-                    <h2>Equipes Registradas</h2>
+                    <h2>{{ categoriaTitulo() }}</h2>
+                    <p>{{ categoriaDescricao() }}</p>
                 </div>
 
-                <span class="pill pill-neutral">{{ equipes().length }} Ativas</span>
+                <span class="pill pill-neutral">{{ equipesFiltradas().length }} cadastro(s)</span>
             </div>
 
             @if (carregandoLista()) {
-                <app-loading-indicator label="Carregando equipes..."></app-loading-indicator>
+                <app-loading-indicator label="Carregando esportes..."></app-loading-indicator>
             } @else {
                 <div class="teams-list">
-                    @for (equipe of equipes(); track equipe.id) {
+                    @for (equipe of equipesFiltradas(); track equipe.id) {
                         <app-equipe-card
                             [equipe]="equipe"
                             [salvando]="updatingId() === equipe.id"
                             [removendo]="deletingId() === equipe.id"
                             [podeEditar]="podeEditarEquipe(equipe)"
-                            [podeExcluir]="podeExcluirEquipe()"
+                            [podeExcluir]="podeExcluirEquipe(equipe)"
                             [podeGerenciarMembros]="podeGerenciarMembros(equipe)"
                             (equipeEditada)="iniciarEdicao($event)"
                             (equipeAtualizada)="onEquipeCardAtualizada($event)"
                             (equipeRemovida)="onEquipeRemovida($event)">
                         </app-equipe-card>
                     } @empty {
-                        <app-loading-indicator label="Nenhuma equipe cadastrada." [inline]="true"></app-loading-indicator>
+                        <div class="empty-state">
+                            Nenhum cadastro encontrado para esta categoria esportiva.
+                        </div>
                     }
                 </div>
             }

@@ -5,7 +5,7 @@ import { ConfrontoFormCardComponent } from '../../components/confronto-form-card
 import { ConfrontosListaCardComponent } from '../../components/confrontos-lista-card/confrontos-lista-card.component';
 import { EditarPlacarDialogComponent } from '../../components/editar-placar-dialog/editar-placar-dialog.component';
 import { Confronto, ConfrontosFiltros } from '../../models/confronto.model';
-import { MODALIDADES_EQUIPE } from '../../models/equipe.model';
+import { MODALIDADES_CONFIG } from '../../models/equipe.model';
 import { AuthStateService } from '../../services/auth-state.service';
 import { ConfrontosStateService } from '../../services/confrontos-state.service';
 import { EquipesStateService } from '../../services/equipes-state.service';
@@ -32,7 +32,7 @@ export class ConfrontosComponent {
   readonly loading = computed(() => this.confrontosState.loading() || this.equipesState.loading());
   readonly error = computed(() => this.confrontosState.error() ?? this.equipesState.error());
   readonly nomesEquipes = computed(() => this.equipes().map((equipe) => equipe.nome));
-  readonly modalidades = MODALIDADES_EQUIPE;
+  readonly modalidades = MODALIDADES_CONFIG;
   readonly removendoId = this.confrontosState.deletingId.asReadonly();
   readonly placarSalvandoId = this.confrontosState.placarSavingId.asReadonly();
   readonly podeGerenciarConfrontos = computed(() => this.authState.canManageConfrontos());

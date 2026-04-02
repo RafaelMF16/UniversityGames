@@ -1,17 +1,47 @@
 <section class="card surface-card">
     <div class="card-heading">
         <div>
-            <h2>{{ confrontoEditando ? 'Editar confronto' : 'Cadastrar confronto' }}</h2>
-            <p>Defina equipes, horário, local e modalidade da partida.</p>
+            <h2>{{ titulo }}</h2>
+            <p>{{ subtitulo }}</p>
         </div>
+    </div>
+
+    <div class="tabs-row">
+        <button
+            class="tab-button"
+            type="button"
+            [class.active]="categoriaSelecionada() === 'coletivo'"
+            (click)="selecionarCategoria('coletivo')">
+            Esporte coletivo
+        </button>
+        <button
+            class="tab-button"
+            type="button"
+            [class.active]="categoriaSelecionada() === 'individual'"
+            (click)="selecionarCategoria('individual')">
+            Esporte individual
+        </button>
     </div>
 
     <form class="form-grid" [formGroup]="form">
         <div class="field-group">
-            <label for="equipe-a">Equipe A</label>
-            <select id="equipe-a" class="app-select" [class.invalid]="isInvalid('equipeA')" formControlName="equipeA">
-                <option value="">Selecione a equipe</option>
-                @for (equipe of equipes; track equipe.id) {
+            <label for="confronto-modalidade">Modalidade</label>
+            <select id="confronto-modalidade" class="app-select" [class.invalid]="isInvalid('modalidade')" formControlName="modalidade">
+                <option value="">Selecione a modalidade</option>
+                @for (modalidade of modalidadesDisponiveis(); track modalidade.valor) {
+                    <option [value]="modalidade.valor">{{ modalidade.label }}</option>
+                }
+            </select>
+            @if (isInvalid('modalidade')) {
+                <small class="field-error">{{ getErrorMessage('modalidade') }}</small>
+            }
+        </div>
+
+        <div class="field-group">
+            <label for="equipe-a">{{ labelParticipanteA }}</label>
+            <select id="equipe-a" class="app-select" [class.invalid]="isInvalid('equipeA')" formControlName="equipeA" [disabled]="!form.controls.modalidade.value">
+                <option value="">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
+                @for (equipe of participantesDisponiveis(); track equipe.id) {
                     <option [value]="equipe.nome">{{ equipe.nome }}</option>
                 }
             </select>
@@ -21,10 +51,10 @@
         </div>
 
         <div class="field-group">
-            <label for="equipe-b">Equipe B</label>
-            <select id="equipe-b" class="app-select" [class.invalid]="isInvalid('equipeB')" formControlName="equipeB">
-                <option value="">Selecione a equipe</option>
-                @for (equipe of equipes; track equipe.id) {
+            <label for="equipe-b">{{ labelParticipanteB }}</label>
+            <select id="equipe-b" class="app-select" [class.invalid]="isInvalid('equipeB')" formControlName="equipeB" [disabled]="!form.controls.modalidade.value">
+                <option value="">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
+                @for (equipe of participantesDisponiveis(); track equipe.id) {
                     <option [value]="equipe.nome">{{ equipe.nome }}</option>
                 }
             </select>
@@ -54,19 +84,6 @@
             <input id="confronto-local" class="app-input" [class.invalid]="isInvalid('local')" type="text" formControlName="local" placeholder="Ex: Quadra Principal">
             @if (isInvalid('local')) {
                 <small class="field-error">{{ getErrorMessage('local') }}</small>
-            }
-        </div>
-
-        <div class="field-group">
-            <label for="confronto-modalidade">Modalidade</label>
-            <select id="confronto-modalidade" class="app-select" [class.invalid]="isInvalid('modalidade')" formControlName="modalidade">
-                <option value="">Selecione a modalidade</option>
-                @for (modalidade of modalidadesDisponiveis; track modalidade) {
-                    <option [value]="modalidade">{{ modalidade }}</option>
-                }
-            </select>
-            @if (isInvalid('modalidade')) {
-                <small class="field-error">{{ getErrorMessage('modalidade') }}</small>
             }
         </div>
 

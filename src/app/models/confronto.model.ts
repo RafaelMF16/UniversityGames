@@ -11,6 +11,7 @@ export interface Confronto {
     local: string;
     golsA?: number | null;
     golsB?: number | null;
+    vencedor?: string | null;
     modalidade: ModalidadeEquipe;
     status: StatusConfronto;
     destaque?: boolean;

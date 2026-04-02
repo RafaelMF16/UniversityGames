@@ -3,7 +3,7 @@
         <section class="page-copy">
             <div>
                 <h1>Usuários e permissões</h1>
-                <p>Cadastre acessos administrativos, vincule capitães às equipes e organize as permissões do sistema.</p>
+                <p>Cadastre acessos administrativos e organize as permissões do sistema.</p>
             </div>
         </section>
 
@@ -53,18 +53,33 @@
                     </select>
                 </div>
 
-                <div class="field-group">
-                    <label for="usuario-equipe">Equipe vinculada</label>
-                    <select id="usuario-equipe" class="app-select" [class.invalid]="isInvalid('equipeId')" formControlName="equipeId">
-                        <option value="">{{ requerEquipe ? 'Selecione a equipe' : 'Não se aplica' }}</option>
-                        @for (equipe of equipes(); track equipe.id) {
-                            <option [value]="equipe.id">{{ equipe.nome }}</option>
+                @if (form.controls.role.value === 'visitante' || form.controls.role.value === 'capitao') {
+                    <div class="field-group">
+                        <label for="usuario-curso">Curso</label>
+                        <select id="usuario-curso" class="app-select" [class.invalid]="isInvalid('curso')" formControlName="curso">
+                            <option value="">Selecione o curso</option>
+                            @for (curso of cursos; track curso) {
+                                <option [value]="curso">{{ curso }}</option>
+                            }
+                        </select>
+                        @if (isInvalid('curso')) {
+                            <small class="field-error">{{ getErrorMessage('curso') }}</small>
                         }
-                    </select>
-                    @if (isInvalid('equipeId')) {
-                        <small class="field-error">{{ getErrorMessage('equipeId') }}</small>
-                    }
-                </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="usuario-periodo">Período</label>
+                        <select id="usuario-periodo" class="app-select" [class.invalid]="isInvalid('periodo')" formControlName="periodo">
+                            <option value="">Selecione o período</option>
+                            @for (periodo of periodos; track periodo) {
+                                <option [value]="periodo">{{ periodo }}</option>
+                            }
+                        </select>
+                        @if (isInvalid('periodo')) {
+                            <small class="field-error">{{ getErrorMessage('periodo') }}</small>
+                        }
+                    </div>
+                }
 
                 <label class="toggle-row">
                     <input type="checkbox" formControlName="ativo">
@@ -90,7 +105,7 @@
             <div class="section-heading">
                 <div>
                     <h2>Usuários cadastrados</h2>
-                    <p>Perfis autenticados criados pelo administrador.</p>
+                    <p>Perfis autenticados criados ou mantidos pelo sistema.</p>
                 </div>
 
                 <span class="pill pill-neutral">{{ usuarios().length }} usuário(s)</span>
@@ -112,9 +127,12 @@
                                 <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
                                     {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
                                 </span>
-                                <span class="pill pill-neutral">
-                                    {{ usuario.equipeId ? ('Equipe #' + usuario.equipeId) : 'Sem equipe' }}
-                                </span>
+                                @if (usuario.equipeId) {
+                                    <span class="pill pill-neutral">Equipe #{{ usuario.equipeId }}</span>
+                                }
+                                @if (usuario.curso) {
+                                    <span class="pill pill-neutral">{{ usuario.curso }}</span>
+                                }
                             </div>
 
                             <div class="row-actions">
@@ -132,7 +150,7 @@
                             </div>
                         </article>
                     } @empty {
-                        <div class="empty-state">Nenhum usuário administrativo cadastrado ainda.</div>
+                        <div class="empty-state">Nenhum usuário cadastrado ainda.</div>
                     }
                 </div>
             }

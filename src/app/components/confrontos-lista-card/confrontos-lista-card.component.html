@@ -12,9 +12,9 @@
 
     <div class="filters-grid">
         <div class="filter-field">
-            <label for="filtro-equipe">Equipe</label>
+            <label for="filtro-equipe">Participante</label>
             <select id="filtro-equipe" class="app-select" [(ngModel)]="equipeSelecionada" (ngModelChange)="onFiltroAlterado()">
-                <option value="">Todas as equipes</option>
+                <option value="">Todos os participantes</option>
                 @for (equipe of equipes; track equipe) {
                     <option [value]="equipe">{{ equipe }}</option>
                 }
@@ -25,8 +25,8 @@
             <label for="filtro-modalidade">Modalidade</label>
             <select id="filtro-modalidade" class="app-select" [(ngModel)]="modalidadeSelecionada" (ngModelChange)="onFiltroAlterado()">
                 <option value="">Todas as modalidades</option>
-                @for (modalidade of modalidades; track modalidade) {
-                    <option [value]="modalidade">{{ modalidade }}</option>
+                @for (modalidade of modalidades; track modalidade.valor) {
+                    <option [value]="modalidade.valor">{{ modalidade.label }}</option>
                 }
             </select>
         </div>
@@ -45,7 +45,7 @@
     <div class="table-head" [class.readonly]="!podeGerenciar">
         <span>Confronto</span>
         <span>Modalidade</span>
-        <span>Placar</span>
+        <span>Resultado</span>
         <span>Data/Hora</span>
         <span>Local</span>
         @if (podeGerenciar) {
@@ -70,12 +70,14 @@
 
                 <div class="modalidade-cell">
                     <span class="mobile-label">Modalidade</span>
-                    <span class="pill pill-neutral modalidade-pill">{{ confronto.modalidade || 'Não informada' }}</span>
+                    <span class="pill pill-neutral modalidade-pill">{{ confronto.modalidade ? modalidadeLabel(confronto.modalidade) : 'Não informada' }}</span>
                 </div>
 
                 <div class="score-column">
-                    <span class="mobile-label">Placar</span>
-                    <span class="score-badge" [class.finished]="confronto.status === 'encerrado'">{{ placar(confronto) }}</span>
+                    <span class="mobile-label">Resultado</span>
+                    <span class="score-badge" [class.finished]="confronto.status === 'encerrado'" [class.winner-badge]="!usaPlacar(confronto)">
+                        {{ resultadoLabel(confronto) }}
+                    </span>
                     <small>{{ statusLabel(confronto) }}</small>
                 </div>
 
@@ -94,7 +96,7 @@
                 @if (podeGerenciar) {
                     <div class="actions-column">
                         <span class="mobile-label">Ações</span>
-                        <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
+                        <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" [attr.aria-label]="usaPlacar(confronto) ? 'Editar placar' : 'Definir vencedor'" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
                             @if (placarSalvandoId === confronto.id) {
                                 <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
                             } @else {

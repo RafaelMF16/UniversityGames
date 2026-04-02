@@ -31,6 +31,11 @@ export const routes: Routes = [
             },
             {
                 path: 'equipes',
+                redirectTo: 'esportes',
+                pathMatch: 'full'
+            },
+            {
+                path: 'esportes',
                 component: EquipesComponent
             },
             {
