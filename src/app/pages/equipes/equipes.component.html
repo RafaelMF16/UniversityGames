@@ -31,12 +31,12 @@
         @if (categoriaSelecionada() === 'individual' && visitanteAnonimo()) {
             <section class="surface-card visitor-cta">
                 <h2>Entre ou crie uma conta de visitante</h2>
-                <p>Para se inscrever nos esportes individuais, você precisa estar autenticado com uma conta de visitante.</p>
+                <p>Para se inscrever nos esportes individuais, você precisa estar autenticado.</p>
                 <button class="app-button-secondary" type="button" (click)="irParaLogin()">Ir para o login</button>
             </section>
         }
 
-        @if (categoriaSelecionada() === 'individual' && visitanteAutenticado() && bloqueouTodasModalidadesIndividuais() && !equipeEditando()) {
+        @if (categoriaSelecionada() === 'individual' && usuarioPodeSeInscreverNoIndividual() && bloqueouTodasModalidadesIndividuais() && !equipeEditando()) {
             <section class="surface-card visitor-cta">
                 <h2>Inscrição já realizada</h2>
                 <p>Você já está inscrito em todas as modalidades individuais disponíveis no momento.</p>
@@ -49,7 +49,7 @@
                 [equipeEditando]="equipeEditando()"
                 [modalidadesDisponiveis]="modalidadesDaCategoria()"
                 [usuarioAtual]="usuarioAtual()"
-                [individualAutopreenchido]="categoriaSelecionada() === 'individual' && visitanteAutenticado()"
+                [individualAutopreenchido]="categoriaSelecionada() === 'individual' && usuarioPodeSeInscreverNoIndividual()"
                 [modalidadesIndividuaisBloqueadas]="modalidadesIndividuaisDoUsuario()"
                 [salvando]="formSaving() || (equipeEditando() !== null && updatingId() === equipeEditando()?.id)"
                 (equipeAdicionada)="onEquipeAdicionada($event)"

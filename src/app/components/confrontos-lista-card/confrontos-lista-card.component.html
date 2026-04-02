@@ -45,7 +45,7 @@
     <div class="table-head" [class.readonly]="!podeGerenciar">
         <span>Confronto</span>
         <span>Modalidade</span>
-        <span>Placar</span>
+        <span>Resultado</span>
         <span>Data/Hora</span>
         <span>Local</span>
         @if (podeGerenciar) {
@@ -74,8 +74,10 @@
                 </div>
 
                 <div class="score-column">
-                    <span class="mobile-label">Placar</span>
-                    <span class="score-badge" [class.finished]="confronto.status === 'encerrado'">{{ placar(confronto) }}</span>
+                    <span class="mobile-label">Resultado</span>
+                    <span class="score-badge" [class.finished]="confronto.status === 'encerrado'" [class.winner-badge]="!usaPlacar(confronto)">
+                        {{ resultadoLabel(confronto) }}
+                    </span>
                     <small>{{ statusLabel(confronto) }}</small>
                 </div>
 
@@ -94,7 +96,7 @@
                 @if (podeGerenciar) {
                     <div class="actions-column">
                         <span class="mobile-label">Ações</span>
-                        <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" aria-label="Editar placar" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
+                        <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" [attr.aria-label]="usaPlacar(confronto) ? 'Editar placar' : 'Definir vencedor'" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
                             @if (placarSalvandoId === confronto.id) {
                                 <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
                             } @else {

@@ -47,11 +47,11 @@ export class UsuariosComponent {
 
   constructor() {
     this.form.controls.role.valueChanges.subscribe((role) => {
-      const isVisitante = role === 'visitante';
+      const precisaDadosAcademicos = role === 'visitante' || role === 'capitao';
       const curso = this.form.controls.curso;
       const periodo = this.form.controls.periodo;
 
-      if (isVisitante) {
+      if (precisaDadosAcademicos) {
         curso.setValidators([Validators.required]);
         periodo.setValidators([Validators.required]);
       } else {
@@ -84,8 +84,8 @@ export class UsuariosComponent {
       nome: values.nome,
       username: values.username.trim().toLowerCase(),
       role: values.role,
-      curso: values.role === 'visitante' ? values.curso : null,
-      periodo: values.role === 'visitante' ? values.periodo : null,
+      curso: values.role === 'visitante' || values.role === 'capitao' ? values.curso : null,
+      periodo: values.role === 'visitante' || values.role === 'capitao' ? values.periodo : null,
       ativo: values.ativo,
       ...(values.senha ? { senha: values.senha } : {})
     };

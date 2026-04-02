@@ -107,7 +107,7 @@ export class AuthStateService {
 
   canCreateIndividualRegistration() {
     const role = this.user()?.role;
-    return role === 'admin' || role === 'visitante';
+    return role === 'admin' || role === 'visitante' || role === 'capitao';
   }
 
   canDeleteEquipe() {

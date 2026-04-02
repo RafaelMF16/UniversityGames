@@ -1,36 +1,47 @@
 <section class="dialog surface-card">
     <div class="dialog-header">
         <div>
-            <h2>Editar Placar</h2>
+            <h2>{{ usaPlacar() ? 'Editar placar' : 'Definir vencedor' }}</h2>
             <p>{{ data.equipeA }} x {{ data.equipeB }}</p>
         </div>
 
-        <button class="icon-btn" type="button" (click)="fechar()" aria-label="Fechar dialogo" [disabled]="salvando()">
+        <button class="icon-btn" type="button" (click)="fechar()" aria-label="Fechar diálogo" [disabled]="salvando()">
             <mat-icon>close</mat-icon>
         </button>
     </div>
 
-    <div class="placar">
-        <div class="time">
-            <span class="time-nome">{{ data.equipeA }}</span>
-            <input class="score-input" type="number" [(ngModel)]="golsA" min="0">
-        </div>
+    @if (usaPlacar()) {
+        <div class="placar">
+            <div class="time">
+                <span class="time-nome">{{ data.equipeA }}</span>
+                <input class="score-input" type="number" [(ngModel)]="golsA" min="0">
+            </div>
 
-        <span class="x">x</span>
+            <span class="x">x</span>
 
-        <div class="time">
-            <span class="time-nome">{{ data.equipeB }}</span>
-            <input class="score-input" type="number" [(ngModel)]="golsB" min="0">
+            <div class="time">
+                <span class="time-nome">{{ data.equipeB }}</span>
+                <input class="score-input" type="number" [(ngModel)]="golsB" min="0">
+            </div>
         </div>
-    </div>
+    } @else {
+        <div class="winner-block">
+            <label for="vencedor">Vencedor</label>
+            <select id="vencedor" class="app-select" [(ngModel)]="vencedor">
+                <option value="">Selecione o vencedor</option>
+                <option [value]="data.equipeA">{{ data.equipeA }}</option>
+                <option [value]="data.equipeB">{{ data.equipeB }}</option>
+            </select>
+        </div>
+    }
 
     <div class="dialog-acoes">
         <button class="app-button-ghost" type="button" (click)="fechar()" [disabled]="salvando()">Cancelar</button>
-        <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando()">
+        <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="salvando() || (!usaPlacar() && !vencedor)">
             @if (salvando()) {
                 <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
             } @else {
-                Salvar Placar
+                {{ usaPlacar() ? 'Salvar placar' : 'Salvar vencedor' }}
             }
         </button>
     </div>

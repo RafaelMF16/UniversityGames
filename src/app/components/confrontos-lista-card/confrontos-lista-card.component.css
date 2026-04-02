@@ -130,6 +130,11 @@
     color: var(--primary);
 }
 
+.winner-badge {
+    min-width: 180px;
+    text-align: center;
+}
+
 .location-column {
     align-items: center;
     color: var(--text-muted);

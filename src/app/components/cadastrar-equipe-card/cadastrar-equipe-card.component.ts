@@ -41,6 +41,7 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     }
 
     if (this.equipeEditando) {
+      this.form.controls.periodo.enable({ emitEvent: false });
       this.form.patchValue({
         nome: this.equipeEditando.nome,
         curso: this.equipeEditando.curso,
@@ -48,6 +49,13 @@ export class CadastrarEquipeCardComponent implements OnChanges {
         modalidade: this.equipeEditando.modalidade
       });
       return;
+    }
+
+    if (this.periodoTravadoPeloCapitao) {
+      this.form.controls.periodo.setValue(this.usuarioAtual?.periodo ?? '', { emitEvent: false });
+      this.form.controls.periodo.disable({ emitEvent: false });
+    } else {
+      this.form.controls.periodo.enable({ emitEvent: false });
     }
 
     this.limparFormulario();
@@ -81,6 +89,10 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     return !this.ehColetivo && this.individualAutopreenchido && !!this.usuarioAtual;
   }
 
+  get periodoTravadoPeloCapitao() {
+    return this.ehColetivo && !this.equipeEditando && this.usuarioAtual?.role === 'capitao' && !!this.usuarioAtual?.periodo;
+  }
+
   get modalidadeBloqueada() {
     const modalidade = this.form.controls.modalidade.value;
     if (!modalidade) {
@@ -105,9 +117,13 @@ export class CadastrarEquipeCardComponent implements OnChanges {
       nome: this.individualUsaDadosDaConta ? this.usuarioAtual?.nome ?? '' : values.nome?.trim() ?? '',
       responsavel: this.ehColetivo ? this.equipeEditando?.responsavel ?? null : null,
       curso: this.individualUsaDadosDaConta ? this.usuarioAtual?.curso ?? '' : values.curso?.trim() ?? '',
-      periodo: this.individualUsaDadosDaConta ? this.usuarioAtual?.periodo ?? '' : values.periodo?.trim() ?? '',
+      periodo: this.individualUsaDadosDaConta || this.periodoTravadoPeloCapitao
+        ? this.usuarioAtual?.periodo ?? ''
+        : values.periodo?.trim() ?? '',
       modalidade: values.modalidade as ModalidadeEquipe,
-      usuarioId: !this.ehColetivo && this.usuarioAtual?.role === 'visitante' ? this.usuarioAtual.id : this.equipeEditando?.usuarioId ?? null,
+      usuarioId: !this.ehColetivo && (this.usuarioAtual?.role === 'visitante' || this.usuarioAtual?.role === 'capitao')
+        ? this.usuarioAtual.id
+        : this.equipeEditando?.usuarioId ?? null,
       membros: this.equipeEditando?.membros.map((membro) => ({
         id: membro.id,
         nome: membro.nome,
@@ -159,7 +175,7 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     this.form.reset({
       nome: this.individualUsaDadosDaConta ? this.usuarioAtual?.nome ?? '' : '',
       curso: this.individualUsaDadosDaConta ? this.usuarioAtual?.curso ?? '' : '',
-      periodo: this.individualUsaDadosDaConta ? this.usuarioAtual?.periodo ?? '' : '',
+      periodo: this.individualUsaDadosDaConta || this.periodoTravadoPeloCapitao ? this.usuarioAtual?.periodo ?? '' : '',
       modalidade: ''
     });
   }

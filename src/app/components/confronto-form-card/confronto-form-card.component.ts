@@ -32,24 +32,19 @@ export class ConfrontoFormCardComponent {
   readonly confrontoEditando: Confronto | null;
   readonly salvando = signal(false);
   readonly categoriaSelecionada = signal<CategoriaEsporte>('coletivo');
+  readonly modalidadeSelecionada = signal<ModalidadeEquipe | ''>('');
   readonly modalidadesDisponiveis = computed(() =>
     MODALIDADES_CONFIG.filter((modalidade) => modalidade.categoria === this.categoriaSelecionada())
   );
   readonly participantesDisponiveis = computed(() => {
-    const modalidade = this.form.controls.modalidade.value;
-    const categoria = this.categoriaSelecionada();
+    const modalidade = this.modalidadeSelecionada();
+    if (!modalidade) {
+      return [];
+    }
 
     return this.equipes.filter((item) => {
       const config = getModalidadeConfig(item.modalidade);
-      if (!config || config.categoria !== categoria) {
-        return false;
-      }
-
-      if (modalidade) {
-        return item.modalidade === modalidade;
-      }
-
-      return true;
+      return !!config && config.categoria === this.categoriaSelecionada() && item.modalidade === modalidade;
     });
   });
 
@@ -73,6 +68,7 @@ export class ConfrontoFormCardComponent {
     if (this.confrontoEditando) {
       const config = getModalidadeConfig(this.confrontoEditando.modalidade);
       this.categoriaSelecionada.set(config?.categoria ?? 'coletivo');
+      this.modalidadeSelecionada.set(this.confrontoEditando.modalidade);
       this.form.patchValue({
         equipeA: this.confrontoEditando.equipeA,
         equipeB: this.confrontoEditando.equipeB,
@@ -84,7 +80,8 @@ export class ConfrontoFormCardComponent {
       });
     }
 
-    this.form.controls.modalidade.valueChanges.subscribe(() => {
+    this.form.controls.modalidade.valueChanges.subscribe((modalidade) => {
+      this.modalidadeSelecionada.set(modalidade ?? '');
       this.form.controls.equipeA.setValue('');
       this.form.controls.equipeB.setValue('');
     });
@@ -114,6 +111,7 @@ export class ConfrontoFormCardComponent {
     }
 
     this.categoriaSelecionada.set(categoria);
+    this.modalidadeSelecionada.set('');
     this.form.patchValue({
       equipeA: '',
       equipeB: '',
@@ -146,6 +144,7 @@ export class ConfrontoFormCardComponent {
       status: values.status as NonNullable<Confronto['status']>,
       golsA: this.confrontoEditando?.golsA,
       golsB: this.confrontoEditando?.golsB,
+      vencedor: this.confrontoEditando?.vencedor ?? null,
       destaque: this.confrontoEditando?.destaque,
       periodoAtual: this.confrontoEditando?.periodoAtual,
       duracao: this.confrontoEditando?.duracao,

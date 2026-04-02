@@ -6,14 +6,15 @@ export interface ModalidadeEsporteConfig {
     label: string;
     categoria: CategoriaEsporte;
     permiteMembros: boolean;
+    usaPlacar: boolean;
 }
 
 export const MODALIDADES_CONFIG: ModalidadeEsporteConfig[] = [
-    { valor: 'Futsal', label: 'Futsal', categoria: 'coletivo', permiteMembros: true },
-    { valor: 'Volei', label: 'Vôlei', categoria: 'coletivo', permiteMembros: true },
-    { valor: 'Queimada', label: 'Queimada', categoria: 'coletivo', permiteMembros: true },
-    { valor: 'Basquete', label: 'Basquete', categoria: 'coletivo', permiteMembros: true },
-    { valor: 'Natacao', label: 'Natação', categoria: 'individual', permiteMembros: false }
+    { valor: 'Futsal', label: 'Futsal', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
+    { valor: 'Volei', label: 'Vôlei', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
+    { valor: 'Queimada', label: 'Queimada', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
+    { valor: 'Basquete', label: 'Basquete', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
+    { valor: 'Natacao', label: 'Natação', categoria: 'individual', permiteMembros: false, usaPlacar: false }
 ];
 
 export const MODALIDADES_EQUIPE: ModalidadeEquipe[] = MODALIDADES_CONFIG.map((item) => item.valor);
@@ -62,4 +63,8 @@ export function modalidadeEhIndividual(modalidade: ModalidadeEquipe | string | n
 
 export function modalidadeEhColetiva(modalidade: ModalidadeEquipe | string | null | undefined) {
     return getModalidadeConfig(modalidade)?.categoria === 'coletivo';
+}
+
+export function modalidadeUsaPlacar(modalidade: ModalidadeEquipe | string | null | undefined) {
+    return getModalidadeConfig(modalidade)?.usaPlacar ?? true;
 }

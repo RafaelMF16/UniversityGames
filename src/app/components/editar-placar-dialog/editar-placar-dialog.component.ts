@@ -1,8 +1,9 @@
-import { Component, Inject, inject, signal } from '@angular/core';
+import { Component, Inject, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { Confronto } from '../../models/confronto.model';
+import { modalidadeUsaPlacar } from '../../models/equipe.model';
 import { ConfrontosStateService } from '../../services/confrontos-state.service';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
@@ -22,7 +23,9 @@ export class EditarPlacarDialogComponent {
 
   golsA: number;
   golsB: number;
+  vencedor: string;
   readonly salvando = signal(false);
+  readonly usaPlacar = computed(() => modalidadeUsaPlacar(this.data.modalidade));
 
   constructor(
     public dialogRef: MatDialogRef<EditarPlacarDialogComponent>,
@@ -30,10 +33,15 @@ export class EditarPlacarDialogComponent {
   ) {
     this.golsA = data.golsA ?? 0;
     this.golsB = data.golsB ?? 0;
+    this.vencedor = data.vencedor ?? '';
   }
 
   async salvar() {
     if (this.salvando()) {
+      return;
+    }
+
+    if (!this.usaPlacar() && !this.vencedor) {
       return;
     }
 
@@ -49,8 +57,9 @@ export class EditarPlacarDialogComponent {
         local: this.data.local,
         modalidade: this.data.modalidade,
         status: 'encerrado',
-        golsA: this.golsA,
-        golsB: this.golsB,
+        golsA: this.usaPlacar() ? this.golsA : null,
+        golsB: this.usaPlacar() ? this.golsB : null,
+        vencedor: this.usaPlacar() ? null : this.vencedor,
         destaque: this.data.destaque,
         periodoAtual: this.data.periodoAtual,
         duracao: this.data.duracao,

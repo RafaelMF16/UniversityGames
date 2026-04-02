@@ -39,8 +39,8 @@
 
         <div class="field-group">
             <label for="equipe-a">{{ labelParticipanteA }}</label>
-            <select id="equipe-a" class="app-select" [class.invalid]="isInvalid('equipeA')" formControlName="equipeA">
-                <option value="">{{ categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta' }}</option>
+            <select id="equipe-a" class="app-select" [class.invalid]="isInvalid('equipeA')" formControlName="equipeA" [disabled]="!form.controls.modalidade.value">
+                <option value="">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
                 @for (equipe of participantesDisponiveis(); track equipe.id) {
                     <option [value]="equipe.nome">{{ equipe.nome }}</option>
                 }
@@ -52,8 +52,8 @@
 
         <div class="field-group">
             <label for="equipe-b">{{ labelParticipanteB }}</label>
-            <select id="equipe-b" class="app-select" [class.invalid]="isInvalid('equipeB')" formControlName="equipeB">
-                <option value="">{{ categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta' }}</option>
+            <select id="equipe-b" class="app-select" [class.invalid]="isInvalid('equipeB')" formControlName="equipeB" [disabled]="!form.controls.modalidade.value">
+                <option value="">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
                 @for (equipe of participantesDisponiveis(); track equipe.id) {
                     <option [value]="equipe.nome">{{ equipe.nome }}</option>
                 }

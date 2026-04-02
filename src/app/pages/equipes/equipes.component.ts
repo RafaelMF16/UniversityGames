@@ -51,7 +51,7 @@ export class EquipesComponent {
   );
   readonly usuarioAtual = this.authState.user.asReadonly();
   readonly visitanteAnonimo = this.authState.isAnonymousVisitor;
-  readonly visitanteAutenticado = this.authState.isAuthenticatedVisitor;
+  readonly usuarioPodeSeInscreverNoIndividual = computed(() => this.authState.canCreateIndividualRegistration());
   readonly modalidadesIndividuaisDoUsuario = computed<ModalidadeEquipe[]>(() => {
     const usuario = this.usuarioAtual();
     if (!usuario) {
@@ -63,7 +63,7 @@ export class EquipesComponent {
       .map((equipe) => equipe.modalidade);
   });
   readonly bloqueouTodasModalidadesIndividuais = computed(() => {
-    if (!this.visitanteAutenticado()) {
+    if (!this.usuarioAtual() || !this.usuarioPodeSeInscreverNoIndividual()) {
       return false;
     }
 
@@ -167,7 +167,8 @@ export class EquipesComponent {
     const usuario = this.usuarioAtual();
 
     if (modalidadeEhIndividual(equipe.modalidade)) {
-      return usuario?.role === 'admin' || (usuario?.role === 'visitante' && equipe.usuarioId === usuario.id);
+      return usuario?.role === 'admin'
+        || ((usuario?.role === 'visitante' || usuario?.role === 'capitao') && equipe.usuarioId === usuario.id);
     }
 
     return this.authState.canEditEquipe(equipe.id);
@@ -192,7 +193,7 @@ export class EquipesComponent {
   categoriaDescricao() {
     return this.categoriaSelecionada() === 'coletivo'
       ? 'Cadastre equipes de modalidades coletivas com capitão, curso, período e membros.'
-      : 'Faça inscrições individuais usando os dados da conta do visitante autenticado.';
+      : 'Faça inscrições individuais usando os dados da conta autenticada.';
   }
 
   modalidadeLabel(modalidade: string) {

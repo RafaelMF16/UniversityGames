@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { Confronto, ConfrontosFiltros, StatusConfronto } from '../../models/confronto.model';
-import { ModalidadeEsporteConfig, ModalidadeEquipe, getModalidadeLabel } from '../../models/equipe.model';
+import { ModalidadeEsporteConfig, ModalidadeEquipe, getModalidadeLabel, modalidadeUsaPlacar } from '../../models/equipe.model';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
@@ -37,20 +37,28 @@ export class ConfrontosListaCardComponent {
     return getModalidadeLabel(modalidade);
   }
 
+  resultadoLabel(confronto: Confronto) {
+    if (!modalidadeUsaPlacar(confronto.modalidade)) {
+      return confronto.vencedor ? `Vencedor: ${confronto.vencedor}` : 'Vencedor não definido';
+    }
+
+    if (confronto.golsA === undefined || confronto.golsA === null || confronto.golsB === undefined || confronto.golsB === null) {
+      return '- : -';
+    }
+
+    return `${confronto.golsA} : ${confronto.golsB}`;
+  }
+
+  usaPlacar(confronto: Confronto) {
+    return modalidadeUsaPlacar(confronto.modalidade);
+  }
+
   private emitirFiltros() {
     this.filtrosAlterados.emit({
       equipe: this.equipeSelecionada,
       modalidade: this.modalidadeSelecionada,
       status: this.statusSelecionado
     });
-  }
-
-  placar(confronto: Confronto) {
-    if (confronto.golsA === undefined || confronto.golsA === null || confronto.golsB === undefined || confronto.golsB === null) {
-      return '- : -';
-    }
-
-    return `${confronto.golsA} : ${confronto.golsB}`;
   }
 
   statusLabel(confronto: Confronto) {
