@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ApiRequestService } from './api-request.service';
 import { Usuario, UsuarioPayload } from '../models/usuario.model';
+import { DEFAULT_PAGINATION_STATE, PaginatedResponse, PaginationState } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +16,35 @@ export class UsuariosStateService {
   readonly updatingId = signal<number | null>(null);
   readonly deletingId = signal<number | null>(null);
   readonly error = signal<string | null>(null);
+  readonly pagination = signal<PaginationState>(DEFAULT_PAGINATION_STATE);
 
-  async loadUsuarios() {
+  async loadUsuarios(page = this.pagination().page) {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      const usuarios = await firstValueFrom(this.api.get<Usuario[]>('/usuarios'));
-      this.usuarios.set(usuarios);
+      const response = await firstValueFrom(this.api.get<PaginatedResponse<Usuario>>('/usuarios', {
+        params: {
+          page,
+          page_size: this.pagination().pageSize
+        }
+      }));
+
+      this.usuarios.set(response.items);
+      this.pagination.set(this.toPaginationState(response));
+
+      if (!response.items.length && response.total > 0 && response.page > response.total_pages) {
+        await this.loadUsuarios(response.total_pages);
+      }
     } catch {
       this.error.set('Não foi possível carregar os usuários.');
     } finally {
       this.loading.set(false);
     }
+  }
+
+  async changePage(page: number) {
+    await this.loadUsuarios(page);
   }
 
   async createUsuario(payload: UsuarioPayload) {
@@ -36,7 +53,7 @@ export class UsuariosStateService {
 
     try {
       const usuario = await firstValueFrom(this.api.post<Usuario, UsuarioPayload>('/usuarios', payload));
-      this.usuarios.update((atual) => [usuario, ...atual]);
+      await this.loadUsuarios(this.pagination().page);
       return usuario;
     } catch {
       this.error.set('Não foi possível cadastrar o usuário.');
@@ -52,7 +69,7 @@ export class UsuariosStateService {
 
     try {
       const usuario = await firstValueFrom(this.api.put<Usuario, UsuarioPayload>(`/usuarios/${usuarioId}`, payload));
-      this.usuarios.update((atual) => atual.map((item) => item.id === usuarioId ? usuario : item));
+      await this.loadUsuarios(this.pagination().page);
       return usuario;
     } catch {
       this.error.set('Não foi possível atualizar o usuário.');
@@ -68,7 +85,7 @@ export class UsuariosStateService {
 
     try {
       await firstValueFrom(this.api.delete<void>(`/usuarios/${usuarioId}`));
-      this.usuarios.update((atual) => atual.filter((item) => item.id !== usuarioId));
+      await this.loadUsuarios(this.pagination().page);
       return true;
     } catch {
       this.error.set('Não foi possível remover o usuário.');
@@ -76,5 +93,14 @@ export class UsuariosStateService {
     } finally {
       this.deletingId.set(null);
     }
+  }
+
+  private toPaginationState(response: PaginatedResponse<Usuario>): PaginationState {
+    return {
+      page: response.page,
+      pageSize: response.page_size,
+      total: response.total,
+      totalPages: response.total_pages
+    };
   }
 }

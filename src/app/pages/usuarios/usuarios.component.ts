@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
+import { PaginationControlsComponent } from '../../components/pagination-controls/pagination-controls.component';
 import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
 import { ManagedUserRole, Usuario, UsuarioPayload } from '../../models/usuario.model';
 import { UsuariosStateService } from '../../services/usuarios-state.service';
@@ -9,7 +10,7 @@ import { UsuariosStateService } from '../../services/usuarios-state.service';
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [ContainerPrincipalComponent, ReactiveFormsModule, LoadingIndicatorComponent],
+  imports: [ContainerPrincipalComponent, ReactiveFormsModule, LoadingIndicatorComponent, PaginationControlsComponent],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.css'
 })
@@ -20,6 +21,7 @@ export class UsuariosComponent {
   readonly usuarioEditando = signal<Usuario | null>(null);
   readonly usuarios = this.usuariosState.usuarios.asReadonly();
   readonly loading = this.usuariosState.loading.asReadonly();
+  readonly pagination = this.usuariosState.pagination.asReadonly();
   readonly formSaving = computed(() => {
     const editando = this.usuarioEditando();
     return this.usuariosState.formSaving() || (editando !== null && this.usuariosState.updatingId() === editando.id);
@@ -132,6 +134,10 @@ export class UsuariosComponent {
       periodo: '',
       ativo: true
     });
+  }
+
+  async onPageChange(page: number) {
+    await this.usuariosState.changePage(page);
   }
 
   roleLabel(role: ManagedUserRole) {

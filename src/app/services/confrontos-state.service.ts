@@ -1,7 +1,8 @@
-import { Injectable, effect, inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ApiRequestService } from './api-request.service';
 import { Confronto, ConfrontoPayload, ConfrontosFiltros } from '../models/confronto.model';
+import { DEFAULT_PAGINATION_STATE, PaginatedResponse, PaginationState } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,30 +18,48 @@ export class ConfrontosStateService {
   readonly deletingId = signal<number | null>(null);
   readonly error = signal<string | null>(null);
   readonly filtros = this.filtrosInternos.asReadonly();
+  readonly pagination = signal<PaginationState>(DEFAULT_PAGINATION_STATE);
 
   constructor() {
-    effect(() => {
-      const filtros = this.filtrosInternos();
-      void this.loadConfrontos(filtros);
-    });
+    void this.loadConfrontos();
   }
 
   setFiltros(filtros: ConfrontosFiltros) {
-    this.filtrosInternos.set({
+    const novosFiltros = {
       busca: filtros.busca?.trim() || undefined,
       equipe: filtros.equipe || undefined,
       modalidade: filtros.modalidade || undefined,
       status: filtros.status || undefined
-    });
+    };
+
+    this.filtrosInternos.set(novosFiltros);
+    this.pagination.update((state) => ({ ...state, page: 1 }));
+    void this.loadConfrontos(novosFiltros, 1);
   }
 
-  async loadConfrontos(filtros: ConfrontosFiltros = this.filtrosInternos()) {
+  async changePage(page: number) {
+    await this.loadConfrontos(this.filtrosInternos(), page);
+  }
+
+  async loadConfrontos(filtros: ConfrontosFiltros = this.filtrosInternos(), page = this.pagination().page) {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      const confrontos = await firstValueFrom(this.api.get<Confronto[]>('/confrontos', { params: { ...filtros } }));
-      this.confrontos.set(confrontos);
+      const response = await firstValueFrom(this.api.get<PaginatedResponse<Confronto>>('/confrontos', {
+        params: {
+          ...filtros,
+          page,
+          page_size: this.pagination().pageSize
+        }
+      }));
+
+      this.confrontos.set(response.items);
+      this.pagination.set(this.toPaginationState(response));
+
+      if (!response.items.length && response.total > 0 && response.page > response.total_pages) {
+        await this.loadConfrontos(filtros, response.total_pages);
+      }
     } catch {
       this.error.set('Não foi possível carregar os confrontos.');
     } finally {
@@ -54,7 +73,7 @@ export class ConfrontosStateService {
 
     try {
       const confronto = await firstValueFrom(this.api.post<Confronto, ConfrontoPayload>('/confrontos', payload));
-      await this.loadConfrontos();
+      await this.loadConfrontos(this.filtrosInternos(), this.pagination().page);
       return confronto;
     } catch {
       this.error.set('Não foi possível cadastrar o confronto.');
@@ -74,10 +93,10 @@ export class ConfrontosStateService {
 
     try {
       const confronto = await firstValueFrom(this.api.put<Confronto, ConfrontoPayload>(`/confrontos/${confrontoId}`, payload));
-      await this.loadConfrontos();
+      await this.loadConfrontos(this.filtrosInternos(), this.pagination().page);
       return confronto;
     } catch {
-      this.error.set(scoreOnly ? 'Não foi possível atualizar o placar.' : 'Não foi possível atualizar o confronto.');
+      this.error.set(scoreOnly ? 'Não foi possível atualizar o resultado.' : 'Não foi possível atualizar o confronto.');
       return null;
     } finally {
       if (scoreOnly) {
@@ -94,7 +113,7 @@ export class ConfrontosStateService {
 
     try {
       await firstValueFrom(this.api.delete<void>(`/confrontos/${confrontoId}`));
-      await this.loadConfrontos();
+      await this.loadConfrontos(this.filtrosInternos(), this.pagination().page);
       return true;
     } catch {
       this.error.set('Não foi possível remover o confronto.');
@@ -102,5 +121,14 @@ export class ConfrontosStateService {
     } finally {
       this.deletingId.set(null);
     }
+  }
+
+  private toPaginationState(response: PaginatedResponse<Confronto>): PaginationState {
+    return {
+      page: response.page,
+      pageSize: response.page_size,
+      total: response.total,
+      totalPages: response.total_pages
+    };
   }
 }
