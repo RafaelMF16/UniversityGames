@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { Equipe, getModalidadeLabel, modalidadePermiteMembros } from '../../models/equipe.model';
+import { Equipe, getNivelLabel, getModalidadeLabel, modalidadeEhIndividual, modalidadePermiteMembros } from '../../models/equipe.model';
 import { LinhaMembroEquipeComponent } from '../linha-membro-equipe/linha-membro-equipe.component';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
@@ -29,8 +29,8 @@ export class EquipeCardComponent {
   novasHabilidades: string[] = [];
 
   readonly habilidadesDisponiveis = [
-    'Ataque', 'Defesa', 'Velocidade', 'Liderança', 'Passe', 'Resistência',
-    'Tática', 'Comunicação', 'Drible', 'Finalização'
+    'Ataque', 'Defesa', 'Velocidade', 'Lideranca', 'Passe', 'Resistencia',
+    'Tatica', 'Comunicacao', 'Drible', 'Finalizacao'
   ];
 
   get membrosHabilitados() {
@@ -43,10 +43,18 @@ export class EquipeCardComponent {
 
   get subtitulo() {
     if (this.membrosHabilitados) {
-      return `${this.modalidadeLabel()} • Capitão: ${this.equipe.responsavel ?? '-'} • ${this.equipe.curso} • ${this.equipe.periodo}`;
+      return `${this.modalidadeLabel()} • Capitao: ${this.equipe.responsavel ?? '-'} • ${this.equipe.curso} • ${this.equipe.periodo}`;
     }
 
     return `${this.modalidadeLabel()} • ${this.equipe.curso} • ${this.equipe.periodo}`;
+  }
+
+  get nivelLabel() {
+    return getNivelLabel(this.membrosHabilitados ? this.equipe.nivelEquipe : this.equipe.nivelTecnico, this.membrosHabilitados ? 'coletivo' : 'individual');
+  }
+
+  get experiencia() {
+    return modalidadeEhIndividual(this.equipe.modalidade) ? this.equipe.experiencia : null;
   }
 
   modalidadeLabel() {
@@ -72,7 +80,7 @@ export class EquipeCardComponent {
       {
         id: Date.now(),
         nome: this.novoNome,
-        funcao: this.equipe.membros.length === 0 ? 'Capitão' : 'Membro',
+        funcao: this.equipe.membros.length === 0 ? 'Capitao' : 'Membro',
         habilidades: [...this.novasHabilidades]
       }
     ];

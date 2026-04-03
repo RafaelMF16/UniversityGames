@@ -1,0 +1,154 @@
+.detail-page {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.page-top {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.hero-card,
+.panel-card,
+.info-card,
+.loading-card,
+.feedback-card {
+    padding: 24px;
+}
+
+.hero-card {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hero-copy h1 {
+    font-size: clamp(1.9rem, 2.6vw, 2.8rem);
+    line-height: 1.1;
+}
+
+.hero-copy h1 span,
+.eyebrow,
+.meta-label {
+    color: var(--text-soft);
+}
+
+.eyebrow,
+.meta-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.hero-pills,
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.status-pill {
+    background: rgba(36, 144, 255, 0.14);
+    border: 1px solid rgba(36, 144, 255, 0.32);
+    border-radius: 999px;
+    color: var(--primary);
+    padding: 8px 14px;
+}
+
+.content-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr);
+}
+
+.main-column,
+.side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.panel-header {
+    margin-bottom: 16px;
+}
+
+.panel-header h2 {
+    font-size: 1.2rem;
+    margin-top: 6px;
+}
+
+.participants-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.participant-card,
+.info-card {
+    background: rgba(24, 37, 58, 0.56);
+    border: 1px solid rgba(87, 112, 158, 0.14);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.participant-card {
+    padding: 18px;
+}
+
+.info-card strong,
+.participant-card strong {
+    font-size: 1.05rem;
+}
+
+.info-card span:not(.meta-label) {
+    color: var(--text-muted);
+}
+
+.feedback-card p {
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+@media (max-width: 960px) {
+    .hero-card,
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-card {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-card,
+    .panel-card,
+    .info-card,
+    .loading-card,
+    .feedback-card {
+        padding: 18px;
+    }
+
+    .participants-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .hero-actions button {
+        width: 100%;
+    }
+}

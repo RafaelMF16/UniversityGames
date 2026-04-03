@@ -127,7 +127,8 @@ small {
 
 .app-button,
 .app-button-secondary,
-.app-button-ghost {
+.app-button-ghost,
+.app-button-danger {
     align-items: center;
     border-radius: 16px;
     cursor: pointer;
@@ -159,9 +160,16 @@ small {
     color: var(--text-muted);
 }
 
+.app-button-danger {
+    background: rgba(239, 115, 115, 0.12);
+    border: 1px solid rgba(239, 115, 115, 0.28);
+    color: var(--danger);
+}
+
 .app-button:hover,
 .app-button-secondary:hover,
-.app-button-ghost:hover {
+.app-button-ghost:hover,
+.app-button-danger:hover {
     transform: translateY(-1px);
 }
 

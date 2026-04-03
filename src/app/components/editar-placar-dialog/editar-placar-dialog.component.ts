@@ -52,6 +52,8 @@ export class EditarPlacarDialogComponent {
       {
         equipeA: this.data.equipeA,
         equipeB: this.data.equipeB,
+        participanteAId: this.data.participanteAId ?? null,
+        participanteBId: this.data.participanteBId ?? null,
         data: this.data.data,
         horario: this.data.horario,
         local: this.data.local,

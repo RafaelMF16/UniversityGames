@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatIcon } from '@angular/material/icon';
 import { Confronto, ConfrontosFiltros, StatusConfronto } from '../../models/confronto.model';
-import { ModalidadeEsporteConfig, ModalidadeEquipe, getModalidadeLabel, modalidadeUsaPlacar } from '../../models/equipe.model';
+import { ModalidadeEsporteConfig, ModalidadeEquipe } from '../../models/equipe.model';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
   selector: 'app-confrontos-lista-card',
   standalone: true,
-  imports: [FormsModule, MatIcon, LoadingIndicatorComponent],
+  imports: [FormsModule, LoadingIndicatorComponent],
   templateUrl: './confrontos-lista-card.component.html',
   styleUrl: './confrontos-lista-card.component.css'
 })
@@ -17,12 +16,7 @@ export class ConfrontosListaCardComponent {
   @Input() equipes: string[] = [];
   @Input() modalidades: ModalidadeEsporteConfig[] = [];
   @Input() carregando = false;
-  @Input() podeGerenciar = false;
-  @Input() removendoId: number | null = null;
-  @Input() placarSalvandoId: number | null = null;
-  @Output() editarConfrontoClicado = new EventEmitter<Confronto>();
-  @Output() editarPlacarClicado = new EventEmitter<Confronto>();
-  @Output() confrontoRemovido = new EventEmitter<number>();
+  @Output() verDetalhesClicado = new EventEmitter<number>();
   @Output() filtrosAlterados = new EventEmitter<ConfrontosFiltros>();
 
   equipeSelecionada = '';
@@ -30,30 +24,6 @@ export class ConfrontosListaCardComponent {
   statusSelecionado: StatusConfronto | '' = '';
 
   onFiltroAlterado() {
-    this.emitirFiltros();
-  }
-
-  modalidadeLabel(modalidade: string) {
-    return getModalidadeLabel(modalidade);
-  }
-
-  resultadoLabel(confronto: Confronto) {
-    if (!modalidadeUsaPlacar(confronto.modalidade)) {
-      return confronto.vencedor ? `Vencedor: ${confronto.vencedor}` : 'Vencedor não definido';
-    }
-
-    if (confronto.golsA === undefined || confronto.golsA === null || confronto.golsB === undefined || confronto.golsB === null) {
-      return '- : -';
-    }
-
-    return `${confronto.golsA} : ${confronto.golsB}`;
-  }
-
-  usaPlacar(confronto: Confronto) {
-    return modalidadeUsaPlacar(confronto.modalidade);
-  }
-
-  private emitirFiltros() {
     this.filtrosAlterados.emit({
       equipe: this.equipeSelecionada,
       modalidade: this.modalidadeSelecionada,
@@ -61,15 +31,19 @@ export class ConfrontosListaCardComponent {
     });
   }
 
-  statusLabel(confronto: Confronto) {
-    if (confronto.status === 'encerrado') {
+  statusLabel(status: StatusConfronto) {
+    if (status === 'encerrado') {
       return 'Finalizado';
     }
 
-    if (confronto.status === 'ao-vivo') {
+    if (status === 'ao-vivo') {
       return 'Ao vivo';
     }
 
     return 'Agendado';
+  }
+
+  modalidadeLabel(modalidade: ModalidadeEquipe) {
+    return this.modalidades.find((item) => item.valor === modalidade)?.label ?? modalidade;
   }
 }

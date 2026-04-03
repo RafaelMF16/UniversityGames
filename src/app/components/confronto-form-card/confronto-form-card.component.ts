@@ -49,8 +49,8 @@ export class ConfrontoFormCardComponent {
   });
 
   readonly form = this.formBuilder.nonNullable.group({
-    equipeA: ['', Validators.required],
-    equipeB: ['', Validators.required],
+    participanteAId: [0, [Validators.required, Validators.min(1)]],
+    participanteBId: [0, [Validators.required, Validators.min(1)]],
     data: ['', Validators.required],
     horario: ['', Validators.required],
     local: ['', [Validators.required, Validators.minLength(3)]],
@@ -70,8 +70,8 @@ export class ConfrontoFormCardComponent {
       this.categoriaSelecionada.set(config?.categoria ?? 'coletivo');
       this.modalidadeSelecionada.set(this.confrontoEditando.modalidade);
       this.form.patchValue({
-        equipeA: this.confrontoEditando.equipeA,
-        equipeB: this.confrontoEditando.equipeB,
+        participanteAId: this.findParticipanteId(this.confrontoEditando.participanteAId, this.confrontoEditando.equipeA),
+        participanteBId: this.findParticipanteId(this.confrontoEditando.participanteBId, this.confrontoEditando.equipeB),
         data: this.confrontoEditando.data,
         horario: this.confrontoEditando.horario,
         local: this.confrontoEditando.local,
@@ -82,8 +82,8 @@ export class ConfrontoFormCardComponent {
 
     this.form.controls.modalidade.valueChanges.subscribe((modalidade) => {
       this.modalidadeSelecionada.set(modalidade ?? '');
-      this.form.controls.equipeA.setValue('');
-      this.form.controls.equipeB.setValue('');
+      this.form.controls.participanteAId.setValue(0);
+      this.form.controls.participanteBId.setValue(0);
     });
   }
 
@@ -93,8 +93,8 @@ export class ConfrontoFormCardComponent {
 
   get subtitulo() {
     return this.categoriaSelecionada() === 'coletivo'
-      ? 'Defina equipes, horário, local e modalidade da partida coletiva.'
-      : 'Defina atletas, horário, local e modalidade da disputa individual.';
+      ? 'Defina equipes, horario, local e modalidade da partida coletiva.'
+      : 'Defina atletas, horario, local e modalidade da disputa individual.';
   }
 
   get labelParticipanteA() {
@@ -113,8 +113,8 @@ export class ConfrontoFormCardComponent {
     this.categoriaSelecionada.set(categoria);
     this.modalidadeSelecionada.set('');
     this.form.patchValue({
-      equipeA: '',
-      equipeB: '',
+      participanteAId: 0,
+      participanteBId: 0,
       modalidade: ''
     });
   }
@@ -126,17 +126,28 @@ export class ConfrontoFormCardComponent {
     }
 
     const values = this.form.getRawValue();
-    if (values.equipeA === values.equipeB) {
-      this.form.controls.equipeB.setErrors({ duplicate: true });
-      this.form.controls.equipeB.markAsTouched();
+    if (values.participanteAId === values.participanteBId) {
+      this.form.controls.participanteBId.setErrors({ duplicate: true });
+      this.form.controls.participanteBId.markAsTouched();
+      return;
+    }
+
+    const participanteA = this.participantesDisponiveis().find((item) => item.id === values.participanteAId);
+    const participanteB = this.participantesDisponiveis().find((item) => item.id === values.participanteBId);
+
+    if (!participanteA || !participanteB) {
+      this.form.controls.participanteAId.setErrors({ required: true });
+      this.form.controls.participanteBId.setErrors({ required: true });
       return;
     }
 
     this.salvando.set(true);
 
     const payload: ConfrontoPayload = {
-      equipeA: values.equipeA,
-      equipeB: values.equipeB,
+      equipeA: participanteA.nome,
+      equipeB: participanteB.nome,
+      participanteAId: participanteA.id,
+      participanteBId: participanteB.id,
       data: values.data,
       horario: values.horario,
       local: values.local,
@@ -168,16 +179,16 @@ export class ConfrontoFormCardComponent {
     }
   }
 
-  isInvalid(controlName: 'equipeA' | 'equipeB' | 'data' | 'horario' | 'local' | 'modalidade' | 'status') {
+  isInvalid(controlName: 'participanteAId' | 'participanteBId' | 'data' | 'horario' | 'local' | 'modalidade' | 'status') {
     const control = this.form.controls[controlName];
     return control.invalid && (control.touched || control.dirty);
   }
 
-  getErrorMessage(controlName: 'equipeA' | 'equipeB' | 'data' | 'horario' | 'local' | 'modalidade' | 'status') {
+  getErrorMessage(controlName: 'participanteAId' | 'participanteBId' | 'data' | 'horario' | 'local' | 'modalidade' | 'status') {
     const control = this.form.controls[controlName];
 
-    if (control.hasError('required')) {
-      return 'Este campo é obrigatório.';
+    if (control.hasError('required') || control.hasError('min')) {
+      return 'Este campo e obrigatorio.';
     }
 
     if (control.hasError('minlength')) {
@@ -189,5 +200,13 @@ export class ConfrontoFormCardComponent {
     }
 
     return '';
+  }
+
+  private findParticipanteId(id: number | null | undefined, nome: string) {
+    if (id) {
+      return id;
+    }
+
+    return this.equipes.find((item) => item.nome === nome)?.id ?? 0;
   }
 }

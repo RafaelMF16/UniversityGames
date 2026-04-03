@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EquipesComponent } from './pages/equipes/equipes.component';
 import { ConfrontosComponent } from './pages/confrontos/confrontos.component';
+import { ConfrontoDetalheComponent } from './pages/confronto-detalhe/confronto-detalhe.component';
 import { PaginaPrincipalComponent } from './pages/pagina-principal/pagina-principal.component';
 import { LoginComponent } from './pages/login/login.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
@@ -41,6 +42,10 @@ export const routes: Routes = [
             {
                 path: 'confrontos',
                 component: ConfrontosComponent
+            },
+            {
+                path: 'confrontos/:id',
+                component: ConfrontoDetalheComponent
             },
             {
                 path: 'usuarios',

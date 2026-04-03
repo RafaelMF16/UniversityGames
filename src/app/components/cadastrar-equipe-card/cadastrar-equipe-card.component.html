@@ -38,9 +38,9 @@
             </div>
 
             <div class="field-group">
-                <label for="periodo-equipe">Período</label>
+                <label for="periodo-equipe">Periodo</label>
                 <select id="periodo-equipe" class="app-select" [class.invalid]="isInvalid('periodo')" formControlName="periodo">
-                    <option value="">Selecione o período</option>
+                    <option value="">Selecione o periodo</option>
                     @for (periodo of periodosDisponiveis; track periodo) {
                         <option [value]="periodo">{{ periodo }}</option>
                     }
@@ -72,8 +72,55 @@
                 <small class="field-error">{{ getErrorMessage('modalidade') }}</small>
             }
             @if (modalidadeBloqueada) {
-                <small class="field-error">Você já possui inscrição nessa modalidade.</small>
+                <small class="field-error">Voce ja possui inscricao nessa modalidade.</small>
             }
+        </div>
+
+        <div class="prediction-section full-width surface-card">
+            <div class="prediction-heading">
+                <strong>Dados para previsao</strong>
+                <span>Essas informacoes ajudam o sistema a estimar melhor as chances de vitoria.</span>
+            </div>
+
+            <div class="prediction-grid">
+                @if (ehColetivo) {
+                    <div class="field-group">
+                        <label for="nivel-equipe">Nivel da equipe</label>
+                        <select id="nivel-equipe" class="app-select" [class.invalid]="isInvalid('nivelEquipe')" formControlName="nivelEquipe">
+                            <option [ngValue]="null">Selecione o nivel</option>
+                            @for (nivel of niveisDisponiveis; track nivel) {
+                                <option [ngValue]="nivel">{{ nivel }}/5</option>
+                            }
+                        </select>
+                        @if (isInvalid('nivelEquipe')) {
+                            <small class="field-error">{{ getErrorMessage('nivelEquipe') }}</small>
+                        }
+                    </div>
+                } @else {
+                    <div class="field-group">
+                        <label for="nivel-tecnico">Nivel tecnico</label>
+                        <select id="nivel-tecnico" class="app-select" [class.invalid]="isInvalid('nivelTecnico')" formControlName="nivelTecnico">
+                            <option [ngValue]="null">Selecione o nivel</option>
+                            @for (nivel of niveisDisponiveis; track nivel) {
+                                <option [ngValue]="nivel">{{ nivel }}/5</option>
+                            }
+                        </select>
+                        @if (isInvalid('nivelTecnico')) {
+                            <small class="field-error">{{ getErrorMessage('nivelTecnico') }}</small>
+                        }
+                    </div>
+
+                    <div class="field-group full-width">
+                        <label for="experiencia-individual">Experiencia esportiva</label>
+                        <textarea
+                            id="experiencia-individual"
+                            class="app-input app-textarea"
+                            formControlName="experiencia"
+                            rows="3"
+                            placeholder="Ex: participa de campeonatos internos, treina ha 2 anos..."></textarea>
+                    </div>
+                }
+            </div>
         </div>
     </form>
 
@@ -83,7 +130,7 @@
                 @if (salvando) {
                     <app-loading-indicator [inline]="true" [small]="true" label="Atualizando..."></app-loading-indicator>
                 } @else {
-                    {{ ehColetivo ? 'Atualizar equipe' : 'Atualizar inscrição' }}
+                    {{ ehColetivo ? 'Atualizar equipe' : 'Atualizar inscricao' }}
                 }
             </button>
             <button class="app-button-ghost" type="button" (click)="onCancelarEdicao()" [disabled]="salvando">Cancelar</button>
@@ -92,7 +139,7 @@
                 @if (salvando) {
                     <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
                 } @else {
-                    {{ ehColetivo ? 'Salvar equipe' : 'Confirmar inscrição' }}
+                    {{ ehColetivo ? 'Salvar equipe' : 'Confirmar inscricao' }}
                 }
             </button>
         }

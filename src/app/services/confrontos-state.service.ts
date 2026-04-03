@@ -15,8 +15,12 @@ export class ConfrontosStateService {
   readonly loading = signal(false);
   readonly formSaving = signal(false);
   readonly placarSavingId = signal<number | null>(null);
+  readonly predictionSavingId = signal<number | null>(null);
   readonly deletingId = signal<number | null>(null);
   readonly error = signal<string | null>(null);
+  readonly selectedConfronto = signal<Confronto | null>(null);
+  readonly detailLoading = signal(false);
+  readonly detailError = signal<string | null>(null);
   readonly filtros = this.filtrosInternos.asReadonly();
   readonly pagination = signal<PaginationState>(DEFAULT_PAGINATION_STATE);
 
@@ -61,9 +65,26 @@ export class ConfrontosStateService {
         await this.loadConfrontos(filtros, response.total_pages);
       }
     } catch {
-      this.error.set('Não foi possível carregar os confrontos.');
+      this.error.set('Nao foi possivel carregar os confrontos.');
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  async loadConfrontoById(confrontoId: number) {
+    this.detailLoading.set(true);
+    this.detailError.set(null);
+
+    try {
+      const confronto = await firstValueFrom(this.api.get<Confronto>(`/confrontos/${confrontoId}`));
+      this.selectedConfronto.set(confronto);
+      return confronto;
+    } catch {
+      this.selectedConfronto.set(null);
+      this.detailError.set('Nao foi possivel carregar os detalhes do confronto.');
+      return null;
+    } finally {
+      this.detailLoading.set(false);
     }
   }
 
@@ -75,8 +96,8 @@ export class ConfrontosStateService {
       const confronto = await firstValueFrom(this.api.post<Confronto, ConfrontoPayload>('/confrontos', payload));
       await this.loadConfrontos(this.filtrosInternos(), this.pagination().page);
       return confronto;
-    } catch {
-      this.error.set('Não foi possível cadastrar o confronto.');
+    } catch (error: any) {
+      this.error.set(error?.error?.detail ?? 'Nao foi possivel cadastrar o confronto.');
       return null;
     } finally {
       this.formSaving.set(false);
@@ -93,10 +114,13 @@ export class ConfrontosStateService {
 
     try {
       const confronto = await firstValueFrom(this.api.put<Confronto, ConfrontoPayload>(`/confrontos/${confrontoId}`, payload));
+      if (this.selectedConfronto()?.id === confrontoId) {
+        this.selectedConfronto.set(confronto);
+      }
       await this.loadConfrontos(this.filtrosInternos(), this.pagination().page);
       return confronto;
-    } catch {
-      this.error.set(scoreOnly ? 'Não foi possível atualizar o resultado.' : 'Não foi possível atualizar o confronto.');
+    } catch (error: any) {
+      this.error.set(error?.error?.detail ?? (scoreOnly ? 'Nao foi possivel atualizar o resultado.' : 'Nao foi possivel atualizar o confronto.'));
       return null;
     } finally {
       if (scoreOnly) {
@@ -107,16 +131,38 @@ export class ConfrontosStateService {
     }
   }
 
+  async regeneratePrediction(confrontoId: number) {
+    this.predictionSavingId.set(confrontoId);
+    this.error.set(null);
+
+    try {
+      const confronto = await firstValueFrom(this.api.post<Confronto, Record<string, never>>(`/confrontos/${confrontoId}/previsao`, {}));
+      if (this.selectedConfronto()?.id === confrontoId) {
+        this.selectedConfronto.set(confronto);
+      }
+      this.confrontos.update((items) => items.map((item) => item.id === confrontoId ? confronto : item));
+      return confronto;
+    } catch (error: any) {
+      this.error.set(error?.error?.detail ?? 'Nao foi possivel regerar a previsao.');
+      return null;
+    } finally {
+      this.predictionSavingId.set(null);
+    }
+  }
+
   async deleteConfronto(confrontoId: number) {
     this.deletingId.set(confrontoId);
     this.error.set(null);
 
     try {
       await firstValueFrom(this.api.delete<void>(`/confrontos/${confrontoId}`));
+      if (this.selectedConfronto()?.id === confrontoId) {
+        this.selectedConfronto.set(null);
+      }
       await this.loadConfrontos(this.filtrosInternos(), this.pagination().page);
       return true;
     } catch {
-      this.error.set('Não foi possível remover o confronto.');
+      this.error.set('Nao foi possivel remover o confronto.');
       return false;
     } finally {
       this.deletingId.set(null);

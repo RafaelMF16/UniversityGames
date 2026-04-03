@@ -22,13 +22,8 @@
             [equipes]="nomesEquipes()"
             [modalidades]="modalidades"
             [carregando]="loading()"
-            [podeGerenciar]="podeGerenciarConfrontos()"
-            [removendoId]="removendoId()"
-            [placarSalvandoId]="placarSalvandoId()"
             (filtrosAlterados)="onFiltrosAlterados($event)"
-            (editarConfrontoClicado)="abrirModalConfronto($event)"
-            (editarPlacarClicado)="abrirDialogPlacar($event)"
-            (confrontoRemovido)="onConfrontoRemovido($event)">
+            (verDetalhesClicado)="onVerDetalhes($event)">
         </app-confrontos-lista-card>
 
         <app-pagination-controls
