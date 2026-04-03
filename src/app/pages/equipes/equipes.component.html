@@ -65,14 +65,14 @@
                     <p>{{ categoriaDescricao() }}</p>
                 </div>
 
-                <span class="pill pill-neutral">{{ equipesFiltradas().length }} cadastro(s)</span>
+                <span class="pill pill-neutral">{{ pagination().total }} cadastro(s)</span>
             </div>
 
             @if (carregandoLista()) {
                 <app-loading-indicator label="Carregando esportes..."></app-loading-indicator>
             } @else {
                 <div class="teams-list">
-                    @for (equipe of equipesFiltradas(); track equipe.id) {
+                    @for (equipe of equipes(); track equipe.id) {
                         <app-equipe-card
                             [equipe]="equipe"
                             [salvando]="updatingId() === equipe.id"
@@ -91,6 +91,15 @@
                     }
                 </div>
             }
+
+            <app-pagination-controls
+                [page]="pagination().page"
+                [pageSize]="pagination().pageSize"
+                [total]="pagination().total"
+                [totalPages]="pagination().totalPages"
+                [loading]="loading()"
+                (pageChange)="onPageChange($event)">
+            </app-pagination-controls>
         </section>
     </div>
 </app-container-principal>

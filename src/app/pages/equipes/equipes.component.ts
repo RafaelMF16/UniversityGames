@@ -16,6 +16,7 @@ import { EquipeCardComponent } from '../../components/equipe-card/equipe-card.co
 import { EquipesStateService } from '../../services/equipes-state.service';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
 import { AuthStateService } from '../../services/auth-state.service';
+import { PaginationControlsComponent } from '../../components/pagination-controls/pagination-controls.component';
 
 @Component({
   selector: 'app-equipes',
@@ -24,7 +25,8 @@ import { AuthStateService } from '../../services/auth-state.service';
     ContainerPrincipalComponent,
     CadastrarEquipeCardComponent,
     EquipeCardComponent,
-    LoadingIndicatorComponent
+    LoadingIndicatorComponent,
+    PaginationControlsComponent
   ],
   templateUrl: './equipes.component.html',
   styleUrl: './equipes.component.css'
@@ -42,13 +44,9 @@ export class EquipesComponent {
   readonly updatingId = this.equipesState.updatingId.asReadonly();
   readonly deletingId = this.equipesState.deletingId.asReadonly();
   readonly error = this.equipesState.error.asReadonly();
+  readonly pagination = this.equipesState.pagination.asReadonly();
   readonly carregandoLista = computed(() => this.loading() && !this.equipes().length);
   readonly modalidadesDaCategoria = computed(() => getModalidadesPorCategoria(this.categoriaSelecionada()));
-  readonly equipesFiltradas = computed(() =>
-    this.equipes().filter((equipe) =>
-      this.modalidadesDaCategoria().some((modalidade) => modalidade.valor === equipe.modalidade)
-    )
-  );
   readonly usuarioAtual = this.authState.user.asReadonly();
   readonly visitanteAnonimo = this.authState.isAnonymousVisitor;
   readonly usuarioPodeSeInscreverNoIndividual = computed(() => this.authState.canCreateIndividualRegistration());
@@ -58,7 +56,7 @@ export class EquipesComponent {
       return [];
     }
 
-    return this.equipes()
+    return this.equipesState.equipesReferencia()
       .filter((equipe) => modalidadeEhIndividual(equipe.modalidade) && equipe.usuarioId === usuario.id)
       .map((equipe) => equipe.modalidade);
   });
@@ -80,11 +78,13 @@ export class EquipesComponent {
   readonly mostrarFormulario = computed(() => this.podeCriarRegistro() || this.equipeEditando() !== null);
 
   constructor() {
-    void this.equipesState.loadEquipes();
+    void this.equipesState.loadEquipesReferencia();
+    void this.equipesState.setCategoria('coletivo');
   }
 
-  selecionarCategoria(categoria: CategoriaEsporte) {
+  async selecionarCategoria(categoria: CategoriaEsporte) {
     this.categoriaSelecionada.set(categoria);
+    await this.equipesState.setCategoria(categoria);
 
     const equipe = this.equipeEditando();
     if (equipe) {
@@ -103,7 +103,10 @@ export class EquipesComponent {
     const equipe = await this.equipesState.createEquipe(payload);
     if (equipe) {
       this.equipeEditando.set(null);
-      await this.authState.refreshCurrentUser();
+      const usuario = this.usuarioAtual();
+      if (payload.modalidade !== 'Natacao' && usuario?.role === 'capitao' && !usuario.equipeId) {
+        await this.authState.refreshCurrentUser();
+      }
     }
   }
 
@@ -125,7 +128,6 @@ export class EquipesComponent {
     const equipe = await this.equipesState.updateEquipe(equipeAtual.id, payload);
     if (equipe) {
       this.equipeEditando.set(null);
-      await this.authState.refreshCurrentUser();
     }
   }
 
@@ -139,8 +141,6 @@ export class EquipesComponent {
     if (this.equipeEditando()?.id === equipe.id) {
       this.equipeEditando.set(equipe);
     }
-
-    await this.authState.refreshCurrentUser();
   }
 
   async onEquipeRemovida(id: number) {
@@ -161,6 +161,10 @@ export class EquipesComponent {
 
   async irParaLogin() {
     await this.router.navigateByUrl('/login');
+  }
+
+  async onPageChange(page: number) {
+    await this.equipesState.changePage(page);
   }
 
   podeEditarEquipe(equipe: Equipe) {

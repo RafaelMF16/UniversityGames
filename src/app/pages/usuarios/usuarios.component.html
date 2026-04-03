@@ -108,7 +108,7 @@
                     <p>Perfis autenticados criados ou mantidos pelo sistema.</p>
                 </div>
 
-                <span class="pill pill-neutral">{{ usuarios().length }} usuário(s)</span>
+                <span class="pill pill-neutral">{{ pagination().total }} usuário(s)</span>
             </div>
 
             @if (loading() && !usuarios().length) {
@@ -154,6 +154,15 @@
                     }
                 </div>
             }
+
+            <app-pagination-controls
+                [page]="pagination().page"
+                [pageSize]="pagination().pageSize"
+                [total]="pagination().total"
+                [totalPages]="pagination().totalPages"
+                [loading]="loading()"
+                (pageChange)="onPageChange($event)">
+            </app-pagination-controls>
         </section>
     </div>
 </app-container-principal>
