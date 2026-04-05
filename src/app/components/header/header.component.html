@@ -1,25 +1,18 @@
 <header class="header">
-    <div class="brand">
-        <a class="brand-link" routerLink="/dashboard">
-            <span class="brand-main">JOGOS INTERNOS</span>
-            <span class="brand-accent">FPM</span>
-        </a>
+    <div class="header-left">
+        <button class="menu-button" type="button" aria-label="Abrir menu lateral" (click)="abrirMenuLateral()">
+            <mat-icon>menu</mat-icon>
+        </button>
+
+        <div class="brand">
+            <a class="brand-link" routerLink="/dashboard">
+                <span class="brand-main">Jogos internos</span>
+            </a>
+        </div>
     </div>
 
-    <nav class="nav">
-        <a
-            class="nav-link"
-            routerLink="/dashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
-            Dashboard
-        </a>
-        <a class="nav-link" routerLink="/esportes" routerLinkActive="active">Esportes</a>
-        <a class="nav-link" routerLink="/confrontos" routerLinkActive="active">Confrontos</a>
-    </nav>
-
     <div class="actions">
-        <button class="profile-button" type="button" aria-label="Perfil do usuário" (click)="toggleMenu($event)">
+        <button class="profile-button" type="button" aria-label="Perfil do usuario" (click)="toggleMenu($event)">
             <mat-icon>person</mat-icon>
         </button>
 
@@ -29,10 +22,6 @@
                     <strong>{{ nomeUsuario() }}</strong>
                     <span>Perfil: {{ perfilLabel() }}</span>
                 </div>
-
-                @if (podeGerenciarUsuarios()) {
-                    <a class="menu-link" routerLink="/usuarios" (click)="fecharMenu()">Gerenciar usuários</a>
-                }
 
                 @if (isVisitor()) {
                     <button class="menu-link" type="button" (click)="entrar()">Entrar</button>
