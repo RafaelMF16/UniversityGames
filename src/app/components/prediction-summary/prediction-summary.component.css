@@ -1,0 +1,91 @@
+.prediction-card {
+    background: rgba(24, 37, 58, 0.72);
+    border: 1px solid rgba(87, 112, 158, 0.14);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+}
+
+.prediction-card.stale {
+    border-color: rgba(255, 207, 112, 0.35);
+}
+
+.prediction-card.error {
+    border-color: rgba(255, 109, 109, 0.3);
+}
+
+.prediction-top,
+.favorite-line {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.status,
+.model {
+    color: var(--text-soft);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.percentage-row {
+    align-items: center;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: minmax(90px, auto) minmax(140px, 1fr) minmax(90px, auto);
+}
+
+.score-chip {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.score-chip strong {
+    font-size: 1.1rem;
+}
+
+.score-chip span {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.align-end {
+    text-align: right;
+}
+
+.bar {
+    background: rgba(39, 57, 86, 0.9);
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fill-a {
+    background: linear-gradient(90deg, rgba(36, 144, 255, 0.9), rgba(91, 165, 255, 0.9));
+    border-radius: 999px;
+    display: block;
+    height: 100%;
+}
+
+.prediction-card p,
+.favorite-line {
+    color: var(--text-muted);
+    line-height: 1.45;
+    margin: 0;
+}
+
+@media (max-width: 760px) {
+    .percentage-row {
+        grid-template-columns: 1fr;
+    }
+
+    .align-end {
+        text-align: left;
+    }
+}

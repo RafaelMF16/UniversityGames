@@ -1,0 +1,12 @@
+<app-cadastrar-equipe-card
+    [categoria]="data.categoria"
+    [equipeEditando]="data.equipeEditando"
+    [modalidadesDisponiveis]="data.modalidadesDisponiveis"
+    [usuarioAtual]="data.usuarioAtual"
+    [individualAutopreenchido]="data.individualAutopreenchido"
+    [modalidadesIndividuaisBloqueadas]="data.modalidadesIndividuaisBloqueadas"
+    [salvando]="formSaving()"
+    (equipeAdicionada)="onEquipeAdicionada($event)"
+    (equipeAtualizada)="onEquipeAtualizada($event)"
+    (cancelarEdicao)="onCancelarEdicao()">
+</app-cadastrar-equipe-card>

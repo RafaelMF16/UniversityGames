@@ -1,5 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
 import { ConfrontoFormCardComponent } from '../../components/confronto-form-card/confronto-form-card.component';
 import { ConfrontosListaCardComponent } from '../../components/confrontos-lista-card/confrontos-lista-card.component';
@@ -25,6 +26,7 @@ import { EquipesStateService } from '../../services/equipes-state.service';
 })
 export class ConfrontosComponent {
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
   private readonly confrontosState = inject(ConfrontosStateService);
   private readonly equipesState = inject(EquipesStateService);
   private readonly authState = inject(AuthStateService);
@@ -35,8 +37,6 @@ export class ConfrontosComponent {
   readonly error = computed(() => this.confrontosState.error() ?? this.equipesState.error());
   readonly nomesEquipes = computed(() => Array.from(new Set(this.equipes().map((equipe) => equipe.nome))));
   readonly modalidades = MODALIDADES_CONFIG;
-  readonly removendoId = this.confrontosState.deletingId.asReadonly();
-  readonly placarSalvandoId = this.confrontosState.placarSavingId.asReadonly();
   readonly pagination = this.confrontosState.pagination.asReadonly();
   readonly podeGerenciarConfrontos = computed(() => this.authState.canManageConfrontos());
 
@@ -72,10 +72,8 @@ export class ConfrontosComponent {
     });
   }
 
-  async onConfrontoRemovido(id: number) {
-    if (this.authState.canManageConfrontos()) {
-      await this.confrontosState.deleteConfronto(id);
-    }
+  async onVerDetalhes(id: number) {
+    await this.router.navigate(['/confrontos', id]);
   }
 
   onFiltrosAlterados(filtros: ConfrontosFiltros) {

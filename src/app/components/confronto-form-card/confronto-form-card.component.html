@@ -38,28 +38,28 @@
         </div>
 
         <div class="field-group">
-            <label for="equipe-a">{{ labelParticipanteA }}</label>
-            <select id="equipe-a" class="app-select" [class.invalid]="isInvalid('equipeA')" formControlName="equipeA" [disabled]="!form.controls.modalidade.value">
-                <option value="">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
+            <label for="participante-a">{{ labelParticipanteA }}</label>
+            <select id="participante-a" class="app-select" [class.invalid]="isInvalid('participanteAId')" formControlName="participanteAId" [disabled]="!form.controls.modalidade.value">
+                <option [ngValue]="0">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
                 @for (equipe of participantesDisponiveis(); track equipe.id) {
-                    <option [value]="equipe.nome">{{ equipe.nome }}</option>
+                    <option [ngValue]="equipe.id">{{ equipe.nome }}</option>
                 }
             </select>
-            @if (isInvalid('equipeA')) {
-                <small class="field-error">{{ getErrorMessage('equipeA') }}</small>
+            @if (isInvalid('participanteAId')) {
+                <small class="field-error">{{ getErrorMessage('participanteAId') }}</small>
             }
         </div>
 
         <div class="field-group">
-            <label for="equipe-b">{{ labelParticipanteB }}</label>
-            <select id="equipe-b" class="app-select" [class.invalid]="isInvalid('equipeB')" formControlName="equipeB" [disabled]="!form.controls.modalidade.value">
-                <option value="">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
+            <label for="participante-b">{{ labelParticipanteB }}</label>
+            <select id="participante-b" class="app-select" [class.invalid]="isInvalid('participanteBId')" formControlName="participanteBId" [disabled]="!form.controls.modalidade.value">
+                <option [ngValue]="0">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
                 @for (equipe of participantesDisponiveis(); track equipe.id) {
-                    <option [value]="equipe.nome">{{ equipe.nome }}</option>
+                    <option [ngValue]="equipe.id">{{ equipe.nome }}</option>
                 }
             </select>
-            @if (isInvalid('equipeB')) {
-                <small class="field-error">{{ getErrorMessage('equipeB') }}</small>
+            @if (isInvalid('participanteBId')) {
+                <small class="field-error">{{ getErrorMessage('participanteBId') }}</small>
             }
         </div>
 
@@ -72,7 +72,7 @@
         </div>
 
         <div class="field-group">
-            <label for="confronto-hora">Horário</label>
+            <label for="confronto-hora">Horario</label>
             <input id="confronto-hora" class="app-input" [class.invalid]="isInvalid('horario')" type="time" formControlName="horario">
             @if (isInvalid('horario')) {
                 <small class="field-error">{{ getErrorMessage('horario') }}</small>
@@ -107,7 +107,7 @@
             @if (salvando()) {
                 <app-loading-indicator [inline]="true" [small]="true" [label]="confrontoEditando ? 'Salvando...' : 'Cadastrando...'"></app-loading-indicator>
             } @else {
-                {{ confrontoEditando ? 'Salvar alterações' : 'Cadastrar confronto' }}
+                {{ confrontoEditando ? 'Salvar alteracoes' : 'Cadastrar confronto' }}
             }
         </button>
     </div>

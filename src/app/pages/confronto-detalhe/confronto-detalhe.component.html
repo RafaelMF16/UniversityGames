@@ -1,0 +1,127 @@
+<app-container-principal>
+    <div class="detail-page">
+        <div class="page-top">
+            <button class="app-button-ghost" type="button" (click)="voltar()">
+                Voltar para confrontos
+            </button>
+        </div>
+
+        @if (detailLoading()) {
+            <div class="surface-card loading-card">
+                <app-loading-indicator label="Carregando detalhes do confronto..."></app-loading-indicator>
+            </div>
+        } @else if (detailError()) {
+            <div class="surface-card feedback-card">
+                <strong>Algo deu errado</strong>
+                <p>{{ detailError() }}</p>
+            </div>
+        } @else if (confronto()) {
+            <section class="hero-card surface-card">
+                <div class="hero-copy">
+                    <span class="eyebrow">Detalhes do confronto</span>
+                    <h1>{{ confronto()!.equipeA }} <span>vs</span> {{ confronto()!.equipeB }}</h1>
+                    <div class="hero-pills">
+                        <span class="pill pill-neutral">{{ modalidadeLabel() }}</span>
+                        <span class="status-pill">{{ statusLabel() }}</span>
+                    </div>
+                </div>
+
+                @if (podeGerenciar()) {
+                    <div class="hero-actions">
+                        <button class="app-button-ghost" type="button" (click)="regerarPrevisao()" [disabled]="previsaoSalvandoId() === confronto()!.id || placarSalvandoId() === confronto()!.id || removendoId() === confronto()!.id">
+                            @if (previsaoSalvandoId() === confronto()!.id) {
+                                <app-loading-indicator [inline]="true" [small]="true" label="Regerando..."></app-loading-indicator>
+                            } @else {
+                                Regerar previsao
+                            }
+                        </button>
+                        <button class="app-button-secondary" type="button" (click)="abrirDialogPlacar()" [disabled]="placarSalvandoId() === confronto()!.id || previsaoSalvandoId() === confronto()!.id || removendoId() === confronto()!.id">
+                            @if (placarSalvandoId() === confronto()!.id) {
+                                <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
+                            } @else {
+                                Atualizar resultado
+                            }
+                        </button>
+                        <button class="app-button-ghost" type="button" (click)="abrirModalEdicao()" [disabled]="placarSalvandoId() === confronto()!.id || previsaoSalvandoId() === confronto()!.id || removendoId() === confronto()!.id">
+                            Editar confronto
+                        </button>
+                        <button class="app-button-danger" type="button" (click)="removerConfronto()" [disabled]="removendoId() === confronto()!.id">
+                            @if (removendoId() === confronto()!.id) {
+                                <app-loading-indicator [inline]="true" [small]="true" label="Removendo..."></app-loading-indicator>
+                            } @else {
+                                Excluir confronto
+                            }
+                        </button>
+                    </div>
+                }
+            </section>
+
+            <section class="content-grid">
+                <div class="main-column">
+                    <div class="surface-card panel-card">
+                        <div class="panel-header">
+                            <div>
+                                <span class="eyebrow">Previsao</span>
+                                <h2>Analise do confronto</h2>
+                            </div>
+                        </div>
+
+                        <app-prediction-summary
+                            [previsao]="confronto()!.previsao"
+                            [participanteA]="confronto()!.equipeA"
+                            [participanteB]="confronto()!.equipeB">
+                        </app-prediction-summary>
+                    </div>
+
+                    <div class="surface-card panel-card">
+                        <div class="panel-header">
+                            <div>
+                                <span class="eyebrow">Participantes</span>
+                                <h2>Quem vai jogar</h2>
+                            </div>
+                        </div>
+
+                        <div class="participants-grid">
+                            <div class="participant-card">
+                                <span class="meta-label">Lado A</span>
+                                <strong>{{ confronto()!.equipeA }}</strong>
+                            </div>
+                            <div class="participant-card">
+                                <span class="meta-label">Lado B</span>
+                                <strong>{{ confronto()!.equipeB }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="side-column">
+                    <div class="surface-card info-card">
+                        <span class="meta-label">Resultado</span>
+                        <strong>{{ resultadoLabel() }}</strong>
+                    </div>
+
+                    <div class="surface-card info-card">
+                        <span class="meta-label">Data</span>
+                        <strong>{{ confronto()!.data }}</strong>
+                        <span>{{ confronto()!.horario }}</span>
+                    </div>
+
+                    <div class="surface-card info-card">
+                        <span class="meta-label">Local</span>
+                        <strong>{{ confronto()!.local }}</strong>
+                    </div>
+
+                    <div class="surface-card info-card">
+                        <span class="meta-label">Status</span>
+                        <strong>{{ statusLabel() }}</strong>
+                    </div>
+                </aside>
+            </section>
+        } @else {
+            <div class="surface-card feedback-card">
+                <strong>Confronto nao encontrado</strong>
+                <p>Esse confronto pode ter sido removido ou ainda nao esta disponivel.</p>
+            </div>
+        }
+    </div>
+</app-container-principal>

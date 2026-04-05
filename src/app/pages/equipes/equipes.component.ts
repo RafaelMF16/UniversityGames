@@ -1,11 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
-import { CadastrarEquipeCardComponent } from '../../components/cadastrar-equipe-card/cadastrar-equipe-card.component';
 import {
   CategoriaEsporte,
   Equipe,
-  EquipePayload,
   ModalidadeEquipe,
   getModalidadeLabel,
   getModalidadesPorCategoria,
@@ -17,30 +16,30 @@ import { EquipesStateService } from '../../services/equipes-state.service';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
 import { AuthStateService } from '../../services/auth-state.service';
 import { PaginationControlsComponent } from '../../components/pagination-controls/pagination-controls.component';
+import { EquipeFormDialogComponent } from '../../components/equipe-form-dialog/equipe-form-dialog.component';
 
 @Component({
   selector: 'app-equipes',
   standalone: true,
   imports: [
     ContainerPrincipalComponent,
-    CadastrarEquipeCardComponent,
     EquipeCardComponent,
     LoadingIndicatorComponent,
-    PaginationControlsComponent
+    PaginationControlsComponent,
+    MatDialogModule
   ],
   templateUrl: './equipes.component.html',
   styleUrl: './equipes.component.css'
 })
 export class EquipesComponent {
+  private readonly dialog = inject(MatDialog);
   private readonly equipesState = inject(EquipesStateService);
   private readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
 
-  readonly equipeEditando = signal<Equipe | null>(null);
   readonly categoriaSelecionada = signal<CategoriaEsporte>('coletivo');
   readonly equipes = this.equipesState.equipes.asReadonly();
   readonly loading = this.equipesState.loading.asReadonly();
-  readonly formSaving = this.equipesState.formSaving.asReadonly();
   readonly updatingId = this.equipesState.updatingId.asReadonly();
   readonly deletingId = this.equipesState.deletingId.asReadonly();
   readonly error = this.equipesState.error.asReadonly();
@@ -75,7 +74,6 @@ export class EquipesComponent {
 
     return this.authState.canCreateEquipe();
   });
-  readonly mostrarFormulario = computed(() => this.podeCriarRegistro() || this.equipeEditando() !== null);
 
   constructor() {
     void this.equipesState.loadEquipesReferencia();
@@ -85,29 +83,6 @@ export class EquipesComponent {
   async selecionarCategoria(categoria: CategoriaEsporte) {
     this.categoriaSelecionada.set(categoria);
     await this.equipesState.setCategoria(categoria);
-
-    const equipe = this.equipeEditando();
-    if (equipe) {
-      const pertence = this.modalidadesDaCategoria().some((modalidade) => modalidade.valor === equipe.modalidade);
-      if (!pertence) {
-        this.equipeEditando.set(null);
-      }
-    }
-  }
-
-  async onEquipeAdicionada(payload: EquipePayload) {
-    if (!this.podeCriarRegistro()) {
-      return;
-    }
-
-    const equipe = await this.equipesState.createEquipe(payload);
-    if (equipe) {
-      this.equipeEditando.set(null);
-      const usuario = this.usuarioAtual();
-      if (payload.modalidade !== 'Natacao' && usuario?.role === 'capitao' && !usuario.equipeId) {
-        await this.authState.refreshCurrentUser();
-      }
-    }
   }
 
   iniciarEdicao(equipe: Equipe) {
@@ -115,20 +90,7 @@ export class EquipesComponent {
       return;
     }
 
-    this.categoriaSelecionada.set(modalidadePermiteMembros(equipe.modalidade) ? 'coletivo' : 'individual');
-    this.equipeEditando.set({ ...equipe });
-  }
-
-  async onEquipeAtualizada(payload: EquipePayload) {
-    const equipeAtual = this.equipeEditando();
-    if (!equipeAtual || !this.podeEditarEquipe(equipeAtual)) {
-      return;
-    }
-
-    const equipe = await this.equipesState.updateEquipe(equipeAtual.id, payload);
-    if (equipe) {
-      this.equipeEditando.set(null);
-    }
+    void this.abrirModalCadastro({ ...equipe }, modalidadePermiteMembros(equipe.modalidade) ? 'coletivo' : 'individual');
   }
 
   async onEquipeCardAtualizada(equipe: Equipe) {
@@ -137,10 +99,6 @@ export class EquipesComponent {
     }
 
     await this.equipesState.updateEquipe(equipe.id, this.toPayload(equipe));
-
-    if (this.equipeEditando()?.id === equipe.id) {
-      this.equipeEditando.set(equipe);
-    }
   }
 
   async onEquipeRemovida(id: number) {
@@ -149,14 +107,7 @@ export class EquipesComponent {
       return;
     }
 
-    const removeu = await this.equipesState.deleteEquipe(id);
-    if (removeu && this.equipeEditando()?.id === id) {
-      this.equipeEditando.set(null);
-    }
-  }
-
-  cancelarEdicao() {
-    this.equipeEditando.set(null);
+    await this.equipesState.deleteEquipe(id);
   }
 
   async irParaLogin() {
@@ -196,15 +147,35 @@ export class EquipesComponent {
 
   categoriaDescricao() {
     return this.categoriaSelecionada() === 'coletivo'
-      ? 'Cadastre equipes de modalidades coletivas com capitão, curso, período e membros.'
-      : 'Faça inscrições individuais usando os dados da conta autenticada.';
+      ? 'Cadastre equipes de modalidades coletivas com capitao, curso, periodo e membros.'
+      : 'Faca inscricoes individuais usando os dados da conta autenticada.';
   }
 
   modalidadeLabel(modalidade: string) {
     return getModalidadeLabel(modalidade);
   }
 
-  private toPayload(equipe: Equipe): EquipePayload {
+  abrirModalCadastro(equipeEditando: Equipe | null = null, categoria = this.categoriaSelecionada()) {
+    if (!equipeEditando && !this.podeCriarRegistro()) {
+      return;
+    }
+
+    this.dialog.open(EquipeFormDialogComponent, {
+      width: '760px',
+      maxWidth: '94vw',
+      panelClass: 'dialog-sem-borda',
+      data: {
+        categoria,
+        equipeEditando,
+        modalidadesDisponiveis: getModalidadesPorCategoria(categoria),
+        usuarioAtual: this.usuarioAtual(),
+        individualAutopreenchido: categoria === 'individual' && this.usuarioPodeSeInscreverNoIndividual(),
+        modalidadesIndividuaisBloqueadas: this.modalidadesIndividuaisDoUsuario()
+      }
+    });
+  }
+
+  private toPayload(equipe: Equipe) {
     return {
       nome: equipe.nome,
       responsavel: equipe.responsavel ?? null,
@@ -213,6 +184,9 @@ export class EquipesComponent {
       modalidade: equipe.modalidade,
       usuarioId: equipe.usuarioId ?? null,
       icone: equipe.icone,
+      nivelTecnico: equipe.nivelTecnico ?? null,
+      nivelEquipe: equipe.nivelEquipe ?? null,
+      experiencia: equipe.experiencia ?? null,
       membros: equipe.membros.map((membro) => ({
         id: membro.id,
         nome: membro.nome,

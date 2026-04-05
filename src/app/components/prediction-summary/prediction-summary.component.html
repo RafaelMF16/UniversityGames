@@ -1,0 +1,30 @@
+<div class="prediction-card" [class.stale]="previsao.precisaRegerar" [class.error]="previsao.status === 'error'">
+    <div class="prediction-top">
+        <span class="status">{{ statusLabel }}</span>
+        @if (previsao.modelo) {
+            <span class="model">{{ previsao.modelo }}</span>
+        }
+    </div>
+
+    <div class="percentage-row">
+        <div class="score-chip">
+            <strong>{{ percentageA }}%</strong>
+            <span>{{ participanteA }}</span>
+        </div>
+        <div class="bar">
+            <span class="fill-a" [style.width.%]="percentageA"></span>
+        </div>
+        <div class="score-chip align-end">
+            <strong>{{ percentageB }}%</strong>
+            <span>{{ participanteB }}</span>
+        </div>
+    </div>
+
+    @if (previsao.favorito) {
+        <div class="favorite-line">
+            Favorito: <strong>{{ previsao.favorito }}</strong>
+        </div>
+    }
+
+    <p>{{ resumo }}</p>
+</div>

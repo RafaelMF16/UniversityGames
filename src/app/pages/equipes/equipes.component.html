@@ -2,9 +2,15 @@
     <div class="equipes-container">
         <section class="top-row">
             <div class="heading-copy">
-                <h1>Gestão de esportes</h1>
+                <h1>Gestao de esportes</h1>
                 <p>Organize os esportes do evento, separe por categoria e mantenha os cadastros atualizados.</p>
             </div>
+
+            @if (podeCriarRegistro()) {
+                <button class="app-button" type="button" (click)="abrirModalCadastro()">
+                    {{ categoriaSelecionada() === 'coletivo' ? 'Cadastrar equipe' : 'Nova inscricao' }}
+                </button>
+            }
         </section>
 
         <section class="tabs-row surface-card">
@@ -31,31 +37,16 @@
         @if (categoriaSelecionada() === 'individual' && visitanteAnonimo()) {
             <section class="surface-card visitor-cta">
                 <h2>Entre ou crie uma conta de visitante</h2>
-                <p>Para se inscrever nos esportes individuais, você precisa estar autenticado.</p>
+                <p>Para se inscrever nos esportes individuais, voce precisa estar autenticado.</p>
                 <button class="app-button-secondary" type="button" (click)="irParaLogin()">Ir para o login</button>
             </section>
         }
 
-        @if (categoriaSelecionada() === 'individual' && usuarioPodeSeInscreverNoIndividual() && bloqueouTodasModalidadesIndividuais() && !equipeEditando()) {
+        @if (categoriaSelecionada() === 'individual' && usuarioPodeSeInscreverNoIndividual() && bloqueouTodasModalidadesIndividuais()) {
             <section class="surface-card visitor-cta">
-                <h2>Inscrição já realizada</h2>
-                <p>Você já está inscrito em todas as modalidades individuais disponíveis no momento.</p>
+                <h2>Inscricao ja realizada</h2>
+                <p>Voce ja esta inscrito em todas as modalidades individuais disponiveis no momento.</p>
             </section>
-        }
-
-        @if (mostrarFormulario()) {
-            <app-cadastrar-equipe-card
-                [categoria]="categoriaSelecionada()"
-                [equipeEditando]="equipeEditando()"
-                [modalidadesDisponiveis]="modalidadesDaCategoria()"
-                [usuarioAtual]="usuarioAtual()"
-                [individualAutopreenchido]="categoriaSelecionada() === 'individual' && usuarioPodeSeInscreverNoIndividual()"
-                [modalidadesIndividuaisBloqueadas]="modalidadesIndividuaisDoUsuario()"
-                [salvando]="formSaving() || (equipeEditando() !== null && updatingId() === equipeEditando()?.id)"
-                (equipeAdicionada)="onEquipeAdicionada($event)"
-                (equipeAtualizada)="onEquipeAtualizada($event)"
-                (cancelarEdicao)="cancelarEdicao()">
-            </app-cadastrar-equipe-card>
         }
 
         <section class="list-section">

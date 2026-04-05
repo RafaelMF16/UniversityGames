@@ -2,7 +2,7 @@
     <div class="card-top">
         <div>
             <h2>Lista de confrontos</h2>
-            <p>Consulte, filtre e atualize os confrontos em um único lugar.</p>
+            <p>Consulte, filtre e acompanhe os confrontos em um unico lugar.</p>
         </div>
 
         @if (carregando) {
@@ -42,85 +42,59 @@
         </div>
     </div>
 
-    <div class="table-head" [class.readonly]="!podeGerenciar">
-        <span>Confronto</span>
-        <span>Modalidade</span>
-        <span>Resultado</span>
-        <span>Data/Hora</span>
-        <span>Local</span>
-        @if (podeGerenciar) {
-            <span class="actions-head">Ações</span>
-        }
-    </div>
-
     <div class="rows">
         @if (carregando && !confrontos.length) {
             <div class="empty-state">
                 <app-loading-indicator label="Carregando confrontos..." [inline]="true"></app-loading-indicator>
             </div>
+        } @else if (confrontos.length) {
+            <div class="table-shell">
+                <table class="confrontos-table">
+                    <thead>
+                        <tr>
+                            <th>Confronto</th>
+                            <th>Modalidade</th>
+                            <th>Horario</th>
+                            <th>Local</th>
+                            <th>Status</th>
+                            <th class="actions-col">Acao</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (confronto of confrontos; track confronto.id) {
+                            <tr>
+                                <td>
+                                    <div class="matchup-cell">
+                                        <strong>{{ confronto.equipeA }}</strong>
+                                        <span>vs</span>
+                                        <strong>{{ confronto.equipeB }}</strong>
+                                    </div>
+                                </td>
+                                <td>{{ modalidadeLabel(confronto.modalidade) }}</td>
+                                <td>
+                                    <div class="date-cell">
+                                        <strong>{{ confronto.data }}</strong>
+                                        <span>{{ confronto.horario }}</span>
+                                    </div>
+                                </td>
+                                <td>{{ confronto.local }}</td>
+                                <td>
+                                    <span class="pill pill-neutral">{{ statusLabel(confronto.status) }}</span>
+                                </td>
+                                <td class="actions-col">
+                                    <button class="app-button-secondary table-action" type="button" (click)="verDetalhesClicado.emit(confronto.id)">
+                                        Ver detalhes
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         } @else {
-        @for (confronto of confrontos; track confronto.id) {
-            <article class="row" [class.readonly]="!podeGerenciar">
-                <div class="confronto-copy">
-                    <span class="mobile-label">Confronto</span>
-                    <strong>{{ confronto.equipeA }}</strong>
-                    <span class="versus">vs</span>
-                    <strong>{{ confronto.equipeB }}</strong>
-                </div>
-
-                <div class="modalidade-cell">
-                    <span class="mobile-label">Modalidade</span>
-                    <span class="pill pill-neutral modalidade-pill">{{ confronto.modalidade ? modalidadeLabel(confronto.modalidade) : 'Não informada' }}</span>
-                </div>
-
-                <div class="score-column">
-                    <span class="mobile-label">Resultado</span>
-                    <span class="score-badge" [class.finished]="confronto.status === 'encerrado'" [class.winner-badge]="!usaPlacar(confronto)">
-                        {{ resultadoLabel(confronto) }}
-                    </span>
-                    <small>{{ statusLabel(confronto) }}</small>
-                </div>
-
-                <div class="date-column">
-                    <span class="mobile-label">Data e hora</span>
-                    <strong>{{ confronto.data }}</strong>
-                    <small>{{ confronto.horario }}</small>
-                </div>
-
-                <div class="location-column">
-                    <span class="mobile-label">Local</span>
-                    <mat-icon>location_on</mat-icon>
-                    <span>{{ confronto.local }}</span>
-                </div>
-
-                @if (podeGerenciar) {
-                    <div class="actions-column">
-                        <span class="mobile-label">Ações</span>
-                        <button class="icon-btn trophy" type="button" (click)="editarPlacarClicado.emit(confronto)" [attr.aria-label]="usaPlacar(confronto) ? 'Editar placar' : 'Definir vencedor'" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
-                            @if (placarSalvandoId === confronto.id) {
-                                <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
-                            } @else {
-                                <mat-icon>emoji_events</mat-icon>
-                            }
-                        </button>
-                        <button class="icon-btn" type="button" (click)="editarConfrontoClicado.emit(confronto)" aria-label="Editar confronto" [disabled]="placarSalvandoId === confronto.id || removendoId === confronto.id">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button class="icon-btn danger" type="button" (click)="confrontoRemovido.emit(confronto.id)" aria-label="Remover confronto" [disabled]="removendoId === confronto.id">
-                            @if (removendoId === confronto.id) {
-                                <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
-                            } @else {
-                                <mat-icon>delete</mat-icon>
-                            }
-                        </button>
-                    </div>
-                }
-            </article>
-        } @empty {
             <div class="empty-state">
                 Nenhum confronto encontrado para os filtros informados.
             </div>
-        }
         }
     </div>
 

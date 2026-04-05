@@ -1,0 +1,35 @@
+<article class="confronto-card surface-card">
+    <div class="summary-copy">
+        <span class="eyebrow">Confronto</span>
+        <h3>{{ confronto.equipeA }} <span>vs</span> {{ confronto.equipeB }}</h3>
+    </div>
+
+    <div class="meta-grid">
+        <div class="meta-item">
+            <span class="meta-label">Modalidade</span>
+            <strong>{{ modalidadeLabel() }}</strong>
+        </div>
+
+        <div class="meta-item">
+            <span class="meta-label">Horario</span>
+            <strong>{{ confronto.data }}</strong>
+            <span>{{ confronto.horario }}</span>
+        </div>
+
+        <div class="meta-item">
+            <span class="meta-label">Local</span>
+            <strong>{{ confronto.local }}</strong>
+        </div>
+
+        <div class="meta-item">
+            <span class="meta-label">Status</span>
+            <span class="status-pill">{{ statusLabel() }}</span>
+        </div>
+    </div>
+
+    <div class="actions-row">
+        <button class="app-button-secondary" type="button" (click)="verDetalhes.emit(confronto.id)">
+            Ver detalhes
+        </button>
+    </div>
+</article>
