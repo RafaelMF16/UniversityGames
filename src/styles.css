@@ -8,6 +8,7 @@
     --border: rgba(101, 126, 167, 0.18);
     --border-strong: rgba(120, 149, 196, 0.28);
     --text: #eef4fb;
+    --text-primary: #eef4fb;
     --text-muted: #9caecc;
     --text-soft: #788bab;
     --primary: #5ba4ff;
@@ -177,6 +178,7 @@ small {
     background: linear-gradient(180deg, rgba(19, 31, 47, 0.94) 0%, rgba(15, 24, 37, 0.96) 100%);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
+    color: var(--text);
     box-shadow: var(--shadow);
 }
 

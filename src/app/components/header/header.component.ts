@@ -1,12 +1,12 @@
-import { Component, ElementRef, HostListener, inject, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Output, inject, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthStateService } from '../../services/auth-state.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, MatIcon],
+  imports: [RouterLink, MatIcon],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -14,6 +14,7 @@ export class HeaderComponent {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly authState = inject(AuthStateService);
 
+  @Output() menuToggle = new EventEmitter<void>();
   readonly menuAberto = signal(false);
   readonly nomeUsuario = this.authState.displayName;
   readonly roleAtual = this.authState.currentRole;
@@ -22,6 +23,10 @@ export class HeaderComponent {
   toggleMenu(event: MouseEvent) {
     event.stopPropagation();
     this.menuAberto.update((aberto) => !aberto);
+  }
+
+  abrirMenuLateral() {
+    this.menuToggle.emit();
   }
 
   async entrar() {
@@ -40,10 +45,6 @@ export class HeaderComponent {
 
   perfilLabel() {
     return this.authState.displayRole(this.roleAtual());
-  }
-
-  podeGerenciarUsuarios() {
-    return this.authState.canManageUsers();
   }
 
   @HostListener('document:click', ['$event'])

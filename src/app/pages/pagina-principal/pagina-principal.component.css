@@ -4,9 +4,36 @@
 }
 
 .shell {
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
 }
 
-.shell-content {
+.shell-drawer {
+    background: transparent;
+    flex: 1;
     min-height: calc(100vh - 80px);
+}
+
+.shell-sidebar {
+    background: #0b1320;
+    border-right: 0;
+    padding: 16px 0 16px 16px;
+    width: 280px;
+}
+
+.shell-content {
+    color: var(--text);
+    min-height: calc(100vh - 80px);
+}
+
+:host ::ng-deep .shell-drawer .mat-drawer-inner-container {
+    overflow: hidden;
+}
+
+@media (max-width: 1100px) {
+    .shell-sidebar {
+        padding: 16px;
+        width: min(320px, 88vw);
+    }
 }

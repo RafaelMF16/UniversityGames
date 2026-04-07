@@ -1,6 +1,16 @@
 <div class="shell">
-    <app-header></app-header>
-    <main class="shell-content">
-        <router-outlet></router-outlet>
-    </main>
+    <app-header (menuToggle)="toggleSidebar()"></app-header>
+
+    <mat-drawer-container class="shell-drawer" autosize>
+        <mat-drawer
+            class="shell-sidebar"
+            [mode]="drawerMode()"
+            [opened]="drawerOpened()">
+            <app-sidebar [items]="itensMenu()"></app-sidebar>
+        </mat-drawer>
+
+        <mat-drawer-content class="shell-content" (click)="closeSidebarOnMobile()">
+            <router-outlet></router-outlet>
+        </mat-drawer-content>
+    </mat-drawer-container>
 </div>

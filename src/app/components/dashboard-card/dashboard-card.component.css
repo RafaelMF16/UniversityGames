@@ -34,6 +34,7 @@ mat-icon {
 }
 
 .valor {
+    color: var(--text);
     font-family: 'Outfit', sans-serif;
     font-size: clamp(1.9rem, 2.3vw, 2.5rem);
     line-height: 1;
