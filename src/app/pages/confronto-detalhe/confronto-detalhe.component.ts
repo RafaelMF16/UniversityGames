@@ -46,7 +46,7 @@ export class ConfrontoDetalheComponent {
     this.route.paramMap.subscribe((params) => {
       const confrontoId = Number(params.get('id'));
       if (!Number.isFinite(confrontoId) || confrontoId <= 0) {
-        this.confrontosState.detailError.set('Confronto invalido.');
+        this.confrontosState.detailError.set('Confronto inválido.');
         this.confrontosState.selectedConfronto.set(null);
         return;
       }
@@ -79,7 +79,7 @@ export class ConfrontoDetalheComponent {
     }
 
     if (!modalidadeUsaPlacar(confronto.modalidade)) {
-      return confronto.vencedor ? `Vencedor: ${confronto.vencedor}` : 'Vencedor nao definido';
+      return confronto.vencedor ? `Vencedor: ${confronto.vencedor}` : 'Vencedor não definido';
     }
 
     if (confronto.golsA == null || confronto.golsB == null) {
@@ -87,6 +87,19 @@ export class ConfrontoDetalheComponent {
     }
 
     return `${confronto.golsA} : ${confronto.golsB}`;
+  }
+
+  formatarData(data: string | null | undefined) {
+    if (!data) {
+      return '';
+    }
+
+    const [ano, mes, dia] = data.split('-');
+    if (!ano || !mes || !dia) {
+      return data;
+    }
+
+    return `${dia}/${mes}/${ano}`;
   }
 
   async voltar() {

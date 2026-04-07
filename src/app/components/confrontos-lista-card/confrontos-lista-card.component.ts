@@ -46,4 +46,17 @@ export class ConfrontosListaCardComponent {
   modalidadeLabel(modalidade: ModalidadeEquipe) {
     return this.modalidades.find((item) => item.valor === modalidade)?.label ?? modalidade;
   }
+
+  formatarData(data: string) {
+    if (!data) {
+      return '';
+    }
+
+    const [ano, mes, dia] = data.split('-');
+    if (!ano || !mes || !dia) {
+      return data;
+    }
+
+    return `${dia}/${mes}/${ano}`;
+  }
 }

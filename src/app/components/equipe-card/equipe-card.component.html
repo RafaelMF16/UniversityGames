@@ -9,14 +9,6 @@
                         • {{ equipe.membros.length }} membros
                     }
                 </p>
-                <div class="meta-row">
-                    <span class="pill" [class.pill-neutral]="!!(equipe.nivelEquipe || equipe.nivelTecnico)" [class.level-pending]="!(equipe.nivelEquipe || equipe.nivelTecnico)">
-                        {{ nivelLabel }}
-                    </span>
-                    @if (experiencia) {
-                        <span class="experience-copy">{{ experiencia }}</span>
-                    }
-                </div>
             </div>
         </div>
 
@@ -99,8 +91,8 @@
                 }
             } @else {
                 <div class="empty-state">
-                    <strong>Perfil esportivo</strong>
-                    <p>{{ experiencia || 'Este atleta ainda nao informou experiencia esportiva complementar.' }}</p>
+                    <strong>Inscrição individual</strong>
+                    <p>Esse cadastro não possui lista de membros porque a modalidade é individual.</p>
                 </div>
             }
         </div>

@@ -18,7 +18,6 @@ export const MODALIDADES_CONFIG: ModalidadeEsporteConfig[] = [
 ];
 
 export const MODALIDADES_EQUIPE: ModalidadeEquipe[] = MODALIDADES_CONFIG.map((item) => item.valor);
-export const NIVEIS_TECNICOS = [1, 2, 3, 4, 5];
 
 export interface Membro {
     id: number;
@@ -37,9 +36,6 @@ export interface Equipe {
     membros: Membro[];
     usuarioId?: number | null;
     icone?: string;
-    nivelTecnico?: number | null;
-    nivelEquipe?: number | null;
-    experiencia?: string | null;
 }
 
 export type MembroPayload = Omit<Membro, 'id'> & { id?: number };
@@ -71,13 +67,4 @@ export function modalidadeEhColetiva(modalidade: ModalidadeEquipe | string | nul
 
 export function modalidadeUsaPlacar(modalidade: ModalidadeEquipe | string | null | undefined) {
     return getModalidadeConfig(modalidade)?.usaPlacar ?? true;
-}
-
-export function getNivelLabel(nivel: number | null | undefined, categoria: CategoriaEsporte) {
-    if (!nivel) {
-        return categoria === 'coletivo' ? 'Nivel da equipe nao informado' : 'Nivel tecnico nao informado';
-    }
-
-    const prefixo = categoria === 'coletivo' ? 'Equipe' : 'Tecnico';
-    return `${prefixo} ${nivel}/5`;
 }

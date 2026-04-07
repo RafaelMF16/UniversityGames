@@ -1,0 +1,106 @@
+<app-container-principal>
+    <div class="detail-page">
+        <div class="page-top">
+            <button class="app-button-ghost" type="button" (click)="voltar()">
+                Voltar para esportes
+            </button>
+        </div>
+
+        @if (detailLoading()) {
+            <div class="surface-card loading-card">
+                <app-loading-indicator label="Carregando detalhes do esporte..."></app-loading-indicator>
+            </div>
+        } @else if (detailError()) {
+            <div class="surface-card feedback-card">
+                <strong>Algo deu errado</strong>
+                <p>{{ detailError() }}</p>
+            </div>
+        } @else if (equipe()) {
+            <section class="hero-card surface-card">
+                <div class="hero-copy">
+                    <span class="eyebrow">{{ categoriaLabel() }}</span>
+                    <h1>{{ equipe()!.nome }}</h1>
+                    @if (!ehIndividual() && equipe()!.responsavel) {
+                        <p class="captain-copy">Capitão: {{ equipe()!.responsavel }}</p>
+                    }
+                    <div class="hero-pills">
+                        <span class="pill pill-neutral">{{ modalidadeLabel() }}</span>
+                        <span class="pill pill-primary">{{ equipe()!.curso }}</span>
+                        <span class="pill pill-neutral">{{ equipe()!.periodo }}</span>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    @if (podeEditar()) {
+                        <button class="app-button-secondary" type="button" (click)="abrirModalEdicao()" [disabled]="deletingId() === equipe()!.id">
+                            Editar cadastro
+                        </button>
+                    }
+                    @if (podeExcluir()) {
+                        <button class="app-button-danger" type="button" (click)="removerEquipe()" [disabled]="deletingId() === equipe()!.id">
+                            @if (deletingId() === equipe()!.id) {
+                                <app-loading-indicator [inline]="true" [small]="true" label="Removendo..."></app-loading-indicator>
+                            } @else {
+                                Excluir cadastro
+                            }
+                        </button>
+                    }
+                </div>
+            </section>
+
+            <section class="members-section surface-card">
+                <div class="section-heading">
+                    <div>
+                        <h2>{{ ehIndividual() ? 'Inscrição individual' : 'Membros da equipe' }}</h2>
+                        <p>
+                            {{ ehIndividual()
+                                ? 'Essa modalidade não possui lista de membros.'
+                                : 'Visualize os membros e as habilidades cadastradas para esta equipe.' }}
+                        </p>
+                    </div>
+                </div>
+
+                @if (ehIndividual()) {
+                    <div class="empty-members">
+                        <strong>Sem membros</strong>
+                        <p>Modalidades individuais não possuem composição de equipe.</p>
+                    </div>
+                } @else {
+                    <div class="members-grid">
+                        @for (membro of equipe()!.membros; track membro.id) {
+                            <article class="member-card">
+                                <div class="member-header">
+                                    <h3>{{ membro.nome }}</h3>
+                                    <p>{{ membro.funcao || 'Função não informada' }}</p>
+                                </div>
+
+                                <div class="skills-block">
+                                    <span class="skills-label">Habilidades</span>
+                                    @if (membro.habilidades.length) {
+                                        <mat-chip-set>
+                                            @for (habilidade of membro.habilidades; track habilidade) {
+                                                <mat-chip>{{ habilidade }}</mat-chip>
+                                            }
+                                        </mat-chip-set>
+                                    } @else {
+                                        <p class="empty-copy">Sem habilidades informadas.</p>
+                                    }
+                                </div>
+                            </article>
+                        } @empty {
+                            <div class="empty-members">
+                                <strong>Sem membros cadastrados</strong>
+                                <p>Adicione participantes para enriquecer a composição dessa equipe.</p>
+                            </div>
+                        }
+                    </div>
+                }
+            </section>
+        } @else {
+            <div class="surface-card feedback-card">
+                <strong>Cadastro não encontrado</strong>
+                <p>Esse cadastro pode ter sido removido ou ainda não está disponível.</p>
+            </div>
+        }
+    </div>
+</app-container-principal>

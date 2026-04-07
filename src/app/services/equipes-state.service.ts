@@ -14,6 +14,9 @@ export class EquipesStateService {
 
   readonly equipes = signal<Equipe[]>([]);
   readonly equipesReferencia = signal<Equipe[]>([]);
+  readonly selectedEquipe = signal<Equipe | null>(null);
+  readonly detailLoading = signal(false);
+  readonly detailError = signal<string | null>(null);
   readonly loading = signal(false);
   readonly formSaving = signal(false);
   readonly updatingId = signal<number | null>(null);
@@ -42,9 +45,26 @@ export class EquipesStateService {
         await this.loadEquipes(response.total_pages);
       }
     } catch {
-      this.error.set('Nao foi possivel carregar os esportes.');
+      this.error.set('Não foi possível carregar os esportes.');
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  async loadEquipeById(equipeId: number) {
+    this.detailLoading.set(true);
+    this.detailError.set(null);
+
+    try {
+      const equipe = await firstValueFrom(this.api.get<Equipe>(`/equipes/${equipeId}`));
+      this.selectedEquipe.set(equipe);
+      return equipe;
+    } catch {
+      this.selectedEquipe.set(null);
+      this.detailError.set('Não foi possível carregar os detalhes do esporte.');
+      return null;
+    } finally {
+      this.detailLoading.set(false);
     }
   }
 
@@ -64,7 +84,7 @@ export class EquipesStateService {
       this.equipesReferencia.set(response.items);
       this.referenciaCarregada.set(true);
     } catch {
-      this.error.set('Nao foi possivel carregar os cadastros de referencia.');
+      this.error.set('Não foi possível carregar os cadastros de referência.');
     }
   }
 
@@ -87,7 +107,7 @@ export class EquipesStateService {
       await this.loadEquipes(this.pagination().page);
       return equipe;
     } catch (error: any) {
-      this.error.set(error?.error?.detail ?? 'Nao foi possivel cadastrar o esporte.');
+      this.error.set(error?.error?.detail ?? 'Não foi possível cadastrar o esporte.');
       return null;
     } finally {
       this.formSaving.set(false);
@@ -101,10 +121,13 @@ export class EquipesStateService {
     try {
       const equipe = await firstValueFrom(this.api.put<Equipe, EquipePayload>(`/equipes/${equipeId}`, payload));
       this.equipesReferencia.update((equipes) => this.mergeEquipeReferencia(equipes, equipe));
+      if (this.selectedEquipe()?.id === equipeId) {
+        this.selectedEquipe.set(equipe);
+      }
       await this.loadEquipes(this.pagination().page);
       return equipe;
     } catch (error: any) {
-      this.error.set(error?.error?.detail ?? 'Nao foi possivel atualizar o esporte.');
+      this.error.set(error?.error?.detail ?? 'Não foi possível atualizar o esporte.');
       return null;
     } finally {
       this.updatingId.set(null);
@@ -118,10 +141,13 @@ export class EquipesStateService {
     try {
       await firstValueFrom(this.api.delete<void>(`/equipes/${equipeId}`));
       this.equipesReferencia.update((equipes) => equipes.filter((equipe) => equipe.id !== equipeId));
+      if (this.selectedEquipe()?.id === equipeId) {
+        this.selectedEquipe.set(null);
+      }
       await this.loadEquipes(this.pagination().page);
       return true;
     } catch {
-      this.error.set('Nao foi possivel remover o esporte.');
+      this.error.set('Não foi possível remover o esporte.');
       return false;
     } finally {
       this.deletingId.set(null);

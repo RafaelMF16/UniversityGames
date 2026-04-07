@@ -9,11 +9,12 @@
     display: flex;
     gap: 20px;
     justify-content: space-between;
-    padding: 22px 24px 10px;
+    padding: 22px 24px 8px;
 }
 
 .card-top h2 {
-    font-size: clamp(1.4rem, 1.8vw, 1.8rem);
+    font-size: clamp(1.35rem, 1.7vw, 1.7rem);
+    margin-top: 6px;
 }
 
 .card-top p {
@@ -26,7 +27,7 @@
     display: grid;
     gap: 14px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    padding: 0 24px 18px;
+    padding: 0 24px 16px;
 }
 
 .filter-field {
@@ -47,7 +48,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 0 24px 20px;
+    padding: 0 24px 18px;
 }
 
 .table-shell {
@@ -56,7 +57,7 @@
 
 .confrontos-table {
     border-collapse: collapse;
-    min-width: 860px;
+    min-width: 920px;
     width: 100%;
 }
 
@@ -76,15 +77,22 @@
     text-transform: uppercase;
 }
 
-.matchup-cell,
-.date-cell {
+.confrontos-table td {
+    color: var(--text);
+}
+
+.matchup-cell {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
+.matchup-cell strong {
+    color: var(--text);
+}
+
 .matchup-cell span,
-.date-cell span {
+.location-copy {
     color: var(--text-muted);
     font-size: 0.92rem;
 }
@@ -104,7 +112,7 @@
     color: var(--text-muted);
     display: flex;
     justify-content: flex-end;
-    padding: 0 24px 20px;
+    padding: 2px 24px 20px;
 }
 
 .empty-state {

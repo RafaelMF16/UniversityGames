@@ -1,7 +1,7 @@
 .equipes-container {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 26px;
     width: 100%;
 }
 
@@ -17,20 +17,22 @@
 }
 
 .heading-copy h1 {
-    font-size: clamp(2.1rem, 3vw, 3rem);
-    margin-bottom: 8px;
+    font-size: clamp(2rem, 3vw, 3rem);
+    letter-spacing: -0.04em;
+    margin-top: 6px;
 }
 
 .heading-copy p {
     color: var(--text-muted);
-    font-size: clamp(0.96rem, 1.1vw, 1.08rem);
+    font-size: clamp(0.96rem, 1.1vw, 1.05rem);
+    line-height: 1.5;
 }
 
 .tabs-row {
     display: grid;
     gap: 12px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    padding: 12px;
+    padding: 10px;
 }
 
 .tab-button {
@@ -55,12 +57,52 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
+    padding: 22px 24px;
 }
 
-.teams-list {
+.sports-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.sport-card {
+    align-items: flex-start;
+    background: rgba(20, 35, 61, 0.56);
+    border: 1px solid rgba(87, 112, 158, 0.14);
+    border-radius: 18px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
+    min-height: 188px;
+    justify-content: space-between;
+    padding: 18px;
+}
+
+.sport-card__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sport-card__copy h3 {
+    font-size: 1.18rem;
+    line-height: 1.2;
+}
+
+.sport-card__copy p {
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.captain-inline {
+    color: var(--text-soft);
+    font-size: 0.92rem;
+}
+
+.card-action {
+    min-height: 42px;
+    padding: 0 16px;
 }
 
 .empty-state {
@@ -69,11 +111,11 @@
 }
 
 .visitor-cta {
+    align-items: flex-start;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    align-items: flex-start;
-    padding: 24px 26px;
+    padding: 22px 24px;
 }
 
 .visitor-cta p {
@@ -87,5 +129,13 @@
 
     .tabs-row {
         grid-template-columns: 1fr;
+    }
+
+    .list-section {
+        padding: 18px 16px;
+    }
+
+    .sport-card {
+        min-height: auto;
     }
 }

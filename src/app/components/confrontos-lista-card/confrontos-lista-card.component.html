@@ -1,8 +1,9 @@
 <section class="card surface-card">
     <div class="card-top">
         <div>
-            <h2>Lista de confrontos</h2>
-            <p>Consulte, filtre e acompanhe os confrontos em um unico lugar.</p>
+            <span class="eyebrow">Agenda</span>
+            <h2>Confrontos</h2>
+            <p>Consulte e filtre a agenda de partidas em uma leitura rápida.</p>
         </div>
 
         @if (carregando) {
@@ -54,10 +55,11 @@
                         <tr>
                             <th>Confronto</th>
                             <th>Modalidade</th>
-                            <th>Horario</th>
+                            <th>Data</th>
+                            <th>Horário</th>
                             <th>Local</th>
                             <th>Status</th>
-                            <th class="actions-col">Acao</th>
+                            <th class="actions-col">Ação</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,13 +73,9 @@
                                     </div>
                                 </td>
                                 <td>{{ modalidadeLabel(confronto.modalidade) }}</td>
-                                <td>
-                                    <div class="date-cell">
-                                        <strong>{{ confronto.data }}</strong>
-                                        <span>{{ confronto.horario }}</span>
-                                    </div>
-                                </td>
-                                <td>{{ confronto.local }}</td>
+                                <td>{{ formatarData(confronto.data) }}</td>
+                                <td>{{ confronto.horario }}</td>
+                                <td><span class="location-copy">{{ confronto.local }}</span></td>
                                 <td>
                                     <span class="pill pill-neutral">{{ statusLabel(confronto.status) }}</span>
                                 </td>

@@ -1,0 +1,20 @@
+<section class="metrics-strip surface-card">
+    @for (item of items(); track item.titulo) {
+        <article class="metric-item">
+            <div class="metric-copy">
+                <div class="metric-label-row">
+                    <span class="eyebrow">{{ item.titulo }}</span>
+                    @if (item.icone) {
+                        <mat-icon>{{ item.icone }}</mat-icon>
+                    }
+                </div>
+
+                <strong class="metric-value">{{ item.valor }}</strong>
+
+                @if (item.descricao) {
+                    <p class="metric-description">{{ item.descricao }}</p>
+                }
+            </div>
+        </article>
+    }
+</section>

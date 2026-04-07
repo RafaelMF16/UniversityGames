@@ -2,8 +2,9 @@
     <div class="usuarios-container">
         <section class="page-copy">
             <div>
+                <span class="eyebrow">Administração</span>
                 <h1>Usuários e permissões</h1>
-                <p>Cadastre acessos administrativos e organize as permissões do sistema.</p>
+                <p>Cadastre acessos administrativos e mantenha os perfis do sistema organizados.</p>
             </div>
         </section>
 
@@ -114,44 +115,59 @@
             @if (loading() && !usuarios().length) {
                 <app-loading-indicator label="Carregando usuários..."></app-loading-indicator>
             } @else {
-                <div class="users-list">
-                    @for (usuario of usuarios(); track usuario.id) {
-                        <article class="user-row">
-                            <div class="user-copy">
-                                <strong>{{ usuario.nome }}</strong>
-                                <span>{{ usuario.username }}</span>
-                            </div>
-
-                            <div class="user-meta">
-                                <span class="pill pill-primary">{{ roleLabel(usuario.role) }}</span>
-                                <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
-                                    {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
-                                </span>
-                                @if (usuario.equipeId) {
-                                    <span class="pill pill-neutral">Equipe #{{ usuario.equipeId }}</span>
-                                }
-                                @if (usuario.curso) {
-                                    <span class="pill pill-neutral">{{ usuario.curso }}</span>
-                                }
-                            </div>
-
-                            <div class="row-actions">
-                                <button class="icon-btn" type="button" (click)="iniciarEdicao(usuario)" [disabled]="deletingId() === usuario.id">
-                                    <span class="sr-only">Editar usuário</span>
-                                    Editar
-                                </button>
-                                <button class="icon-btn danger" type="button" (click)="remover(usuario.id)" [disabled]="deletingId() === usuario.id">
-                                    @if (deletingId() === usuario.id) {
-                                        <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
-                                    } @else {
-                                        Remover
-                                    }
-                                </button>
-                            </div>
-                        </article>
-                    } @empty {
-                        <div class="empty-state">Nenhum usuário cadastrado ainda.</div>
-                    }
+                <div class="table-shell">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Usuário</th>
+                                <th>Perfil</th>
+                                <th>Status</th>
+                                <th>Curso</th>
+                                <th class="actions-col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (usuario of usuarios(); track usuario.id) {
+                                <tr>
+                                    <td>
+                                        <div class="user-copy">
+                                            <strong>{{ usuario.nome }}</strong>
+                                            @if (usuario.periodo) {
+                                                <span>{{ usuario.periodo }}</span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>{{ usuario.username }}</td>
+                                    <td><span class="pill pill-primary">{{ roleLabel(usuario.role) }}</span></td>
+                                    <td>
+                                        <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
+                                            {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ usuario.curso || '-' }}</td>
+                                    <td class="actions-col">
+                                        <div class="row-actions">
+                                            <button class="app-button-ghost table-action" type="button" (click)="iniciarEdicao(usuario)" [disabled]="deletingId() === usuario.id">
+                                                Editar
+                                            </button>
+                                            <button class="app-button-danger table-action danger-action" type="button" (click)="remover(usuario.id)" [disabled]="deletingId() === usuario.id">
+                                                @if (deletingId() === usuario.id) {
+                                                    <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                                                } @else {
+                                                    Remover
+                                                }
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="6" class="empty-state">Nenhum usuário cadastrado ainda.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             }
 

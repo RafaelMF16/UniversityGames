@@ -4,22 +4,29 @@
     gap: 24px;
 }
 
+.page-copy h1 {
+    font-size: clamp(2rem, 3vw, 3rem);
+    letter-spacing: -0.04em;
+    margin-top: 6px;
+}
+
 .page-copy p {
     color: var(--text-muted);
     margin-top: 8px;
+    max-width: 760px;
 }
 
 .form-card,
 .list-card {
     display: flex;
     flex-direction: column;
-    gap: 22px;
-    padding: 24px;
+    gap: 20px;
+    padding: 22px 24px;
 }
 
 .form-grid {
     display: grid;
-    gap: 18px;
+    gap: 16px 18px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -35,60 +42,70 @@
     gap: 12px;
 }
 
-.users-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+.table-shell {
+    overflow-x: auto;
 }
 
-.user-row {
-    align-items: center;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    display: grid;
-    gap: 16px;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr) auto;
-    padding: 18px;
+.users-table {
+    border-collapse: collapse;
+    min-width: 760px;
+    width: 100%;
+}
+
+.users-table th,
+.users-table td {
+    border-bottom: 1px solid rgba(87, 112, 158, 0.16);
+    padding: 16px 10px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.users-table th {
+    color: var(--text-soft);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.users-table td {
+    color: var(--text);
 }
 
 .user-copy {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .user-copy span {
     color: var(--text-muted);
-}
-
-.user-meta {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    font-size: 0.92rem;
 }
 
 .row-actions {
     display: flex;
     gap: 10px;
+    justify-content: flex-end;
 }
 
-.row-actions .icon-btn {
-    min-width: 96px;
+.table-action {
+    min-height: 40px;
     padding: 0 14px;
 }
 
-.danger {
-    color: var(--danger);
+.actions-col {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.danger-action {
+    min-width: 96px;
 }
 
 .empty-state {
     color: var(--text-muted);
-}
-
-.sr-only {
-    display: none;
+    padding: 18px 0;
 }
 
 @media (max-width: 900px) {
@@ -96,16 +113,11 @@
         grid-template-columns: 1fr;
     }
 
-    .user-row {
-        grid-template-columns: 1fr;
+    .form-actions {
+        flex-direction: column-reverse;
     }
 
     .row-actions {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .row-actions .icon-btn {
-        width: 100%;
+        justify-content: flex-start;
     }
 }
