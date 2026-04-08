@@ -14,7 +14,5 @@ export interface VisitorRegisterPayload {
 }
 
 export interface AuthResponse {
-    accessToken: string;
-    tokenType: string;
     user: Usuario;
 }
