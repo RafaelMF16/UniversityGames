@@ -49,8 +49,8 @@ export class ConfrontoFormCardComponent {
   });
 
   readonly form = this.formBuilder.nonNullable.group({
-    participanteAId: [0, [Validators.required, Validators.min(1)]],
-    participanteBId: [0, [Validators.required, Validators.min(1)]],
+    participanteAId: [{ value: 0, disabled: true }, [Validators.required, Validators.min(1)]],
+    participanteBId: [{ value: 0, disabled: true }, [Validators.required, Validators.min(1)]],
     data: ['', Validators.required],
     horario: ['', Validators.required],
     local: ['', [Validators.required, Validators.minLength(3)]],
@@ -82,9 +82,10 @@ export class ConfrontoFormCardComponent {
 
     this.form.controls.modalidade.valueChanges.subscribe((modalidade) => {
       this.modalidadeSelecionada.set(modalidade ?? '');
-      this.form.controls.participanteAId.setValue(0);
-      this.form.controls.participanteBId.setValue(0);
+      this.atualizarEstadoParticipantes(!!modalidade);
     });
+
+    this.atualizarEstadoParticipantes(!!this.form.controls.modalidade.value);
   }
 
   get titulo() {
@@ -117,6 +118,7 @@ export class ConfrontoFormCardComponent {
       participanteBId: 0,
       modalidade: ''
     });
+    this.atualizarEstadoParticipantes(false);
   }
 
   async salvar() {
@@ -208,5 +210,22 @@ export class ConfrontoFormCardComponent {
     }
 
     return this.equipes.find((item) => item.nome === nome)?.id ?? 0;
+  }
+
+  private atualizarEstadoParticipantes(habilitado: boolean) {
+    const participanteAControl = this.form.controls.participanteAId;
+    const participanteBControl = this.form.controls.participanteBId;
+
+    participanteAControl.setValue(0, { emitEvent: false });
+    participanteBControl.setValue(0, { emitEvent: false });
+
+    if (habilitado) {
+      participanteAControl.enable({ emitEvent: false });
+      participanteBControl.enable({ emitEvent: false });
+      return;
+    }
+
+    participanteAControl.disable({ emitEvent: false });
+    participanteBControl.disable({ emitEvent: false });
   }
 }
