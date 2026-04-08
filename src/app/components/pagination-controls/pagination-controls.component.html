@@ -1,23 +1,15 @@
-<div class="pagination" [class.disabled]="loading || total === 0">
+<div class="pagination" [class.disabled]="loading || itemsCount === 0">
     <div class="copy">
-        @if (total > 0) {
-            <span>Exibindo {{ inicio() }}-{{ fim() }} de {{ total }}</span>
+        @if (itemsCount > 0) {
+            <span>Página {{ page }} · {{ itemsCount }} item(ns) carregado(s)</span>
         } @else {
             <span>Nenhum item para exibir</span>
         }
     </div>
 
     <div class="controls">
-        <button class="nav-btn" type="button" (click)="goTo(page - 1)" [disabled]="loading || page <= 1">Anterior</button>
-
-        <div class="pages">
-            @for (item of pages(); track item) {
-                <button class="page-btn" type="button" [class.active]="item === page" (click)="goTo(item)" [disabled]="loading">
-                    {{ item }}
-                </button>
-            }
-        </div>
-
-        <button class="nav-btn" type="button" (click)="goTo(page + 1)" [disabled]="loading || page >= totalPages">Próxima</button>
+        <button class="nav-btn" type="button" (click)="goToPrevious()" [disabled]="loading || page <= 1">Anterior</button>
+        <span class="page-copy">{{ pageSize }} por página</span>
+        <button class="nav-btn" type="button" (click)="goToNext()" [disabled]="loading || !hasNext">Próxima</button>
     </div>
 </div>

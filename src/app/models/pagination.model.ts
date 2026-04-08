@@ -1,21 +1,24 @@
-export interface PaginatedResponse<T> {
+export interface CursorPaginatedResponse<T> {
     items: T[];
-    page: number;
     page_size: number;
-    total: number;
-    total_pages: number;
+    next_cursor: string | null;
+    has_next: boolean;
 }
 
-export interface PaginationState {
+export interface CursorPaginationState {
     page: number;
     pageSize: number;
-    total: number;
-    totalPages: number;
+    currentCursor: string | null;
+    nextCursor: string | null;
+    hasNext: boolean;
+    cursorStack: Array<string | null>;
 }
 
-export const DEFAULT_PAGINATION_STATE: PaginationState = {
+export const DEFAULT_CURSOR_PAGINATION_STATE: CursorPaginationState = {
     page: 1,
     pageSize: 10,
-    total: 0,
-    totalPages: 1
+    currentCursor: null,
+    nextCursor: null,
+    hasNext: false,
+    cursorStack: []
 };

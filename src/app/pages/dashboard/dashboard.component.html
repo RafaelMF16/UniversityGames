@@ -22,7 +22,7 @@
                         <p>Agenda enxuta das partidas mais próximas do cronograma.</p>
                     </div>
 
-                    <span class="pill pill-neutral">{{ pagination().total }} jogo(s)</span>
+                    <span class="pill pill-neutral">{{ proximosJogos().length }} jogo(s) na página</span>
                 </div>
 
                 <app-dashboard-upcoming-table [confrontos]="proximosJogos()"></app-dashboard-upcoming-table>
@@ -31,8 +31,8 @@
             <app-pagination-controls
                 [page]="pagination().page"
                 [pageSize]="pagination().pageSize"
-                [total]="pagination().total"
-                [totalPages]="pagination().totalPages"
+                [itemsCount]="proximosJogos().length"
+                [hasNext]="pagination().hasNext"
                 [loading]="loading()"
                 (pageChange)="onPageChange($event)">
             </app-pagination-controls>

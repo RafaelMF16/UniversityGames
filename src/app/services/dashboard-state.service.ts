@@ -3,7 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import { ApiRequestService } from './api-request.service';
 import { ResumoDashboard } from '../models/dashboard.model';
 import { Confronto } from '../models/confronto.model';
-import { DEFAULT_PAGINATION_STATE, PaginationState } from '../models/pagination.model';
+import { CursorPaginationState, DEFAULT_CURSOR_PAGINATION_STATE } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class DashboardStateService {
   readonly resumo = signal<ResumoDashboard | null>(null);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
-  readonly pagination = signal<PaginationState>(DEFAULT_PAGINATION_STATE);
+  readonly pagination = signal<CursorPaginationState>(DEFAULT_CURSOR_PAGINATION_STATE);
   readonly proximosConfrontos = computed<Confronto[]>(() => {
     const page = this.pagination().page;
     const pageSize = this.pagination().pageSize;
@@ -25,9 +25,13 @@ export class DashboardStateService {
   });
 
   async changePage(page: number) {
-    const totalPages = this.pagination().totalPages;
-    const nextPage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
-    this.pagination.update((state) => ({ ...state, page: nextPage }));
+    const totalPages = Math.max(Math.ceil(this.allProximosConfrontos().length / this.pagination().pageSize), 1);
+    const nextPage = Math.min(Math.max(page, 1), totalPages);
+    this.pagination.update((state) => ({
+      ...state,
+      page: nextPage,
+      hasNext: nextPage < totalPages
+    }));
   }
 
   async loadResumo(force = false) {
@@ -52,16 +56,17 @@ export class DashboardStateService {
     }
   }
 
-  private toPaginationState(items: Confronto[]): PaginationState {
+  private toPaginationState(items: Confronto[]): CursorPaginationState {
     const pageSize = this.pagination().pageSize;
-    const total = items.length;
-    const totalPages = Math.max(Math.ceil(total / pageSize), 1);
+    const totalPages = Math.max(Math.ceil(items.length / pageSize), 1);
 
     return {
       page: 1,
       pageSize,
-      total,
-      totalPages
+      currentCursor: null,
+      nextCursor: null,
+      hasNext: totalPages > 1,
+      cursorStack: []
     };
   }
 }
