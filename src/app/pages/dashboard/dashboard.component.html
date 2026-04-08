@@ -1,12 +1,9 @@
 <app-container-principal>
     <div class="dashboard-container">
         <section class="hero">
-            <div class="section-heading">
-                <div>
-                    <h1 class="title">Painel Geral</h1>
-                    <p>Acompanhe o desempenho e os proximos jogos da temporada.</p>
-                </div>
-            </div>
+            <span class="eyebrow">Resumo</span>
+            <h1 class="title">Painel geral</h1>
+            <p>Acompanhe as inscrições e os próximos jogos do evento em uma visão rápida e direta.</p>
         </section>
 
         @if (error()) {
@@ -16,35 +13,29 @@
         @if (loading() && !proximosJogos().length) {
             <app-loading-indicator label="Carregando dashboard..."></app-loading-indicator>
         } @else {
-            <div class="card-container">
-                @for (metrica of metricas(); track metrica.titulo) {
-                    <app-dashboard-card
-                        [titulo]="metrica.titulo"
-                        [valor]="metrica.valor"
-                        [icone]="metrica.icone"
-                        [destaque]="metrica.destaque"
-                        [destaqueTipo]="metrica.destaqueTipo"
-                        [descricao]="metrica.descricao">
-                    </app-dashboard-card>
-                }
-            </div>
+            <app-dashboard-metrics-strip [items]="metricas()"></app-dashboard-metrics-strip>
 
-            <section class="matches-section">
+            <section class="matches-section surface-card">
                 <div class="section-heading">
                     <div>
-                        <h2>Proximos Jogos</h2>
-                        <p>Visao rapida das partidas mais proximas do cronograma.</p>
+                        <h2>Próximos jogos</h2>
+                        <p>Agenda enxuta das partidas mais próximas do cronograma.</p>
                     </div>
+
+                    <span class="pill pill-neutral">{{ pagination().total }} jogo(s)</span>
                 </div>
 
-                <div class="matches-grid">
-                    @for (confronto of proximosJogos(); track confronto.id) {
-                        <app-proximos-confrontos-card [confronto]="confronto"></app-proximos-confrontos-card>
-                    } @empty {
-                        <app-loading-indicator label="Nenhum confronto disponivel." [inline]="true"></app-loading-indicator>
-                    }
-                </div>
+                <app-dashboard-upcoming-table [confrontos]="proximosJogos()"></app-dashboard-upcoming-table>
             </section>
+
+            <app-pagination-controls
+                [page]="pagination().page"
+                [pageSize]="pagination().pageSize"
+                [total]="pagination().total"
+                [totalPages]="pagination().totalPages"
+                [loading]="loading()"
+                (pageChange)="onPageChange($event)">
+            </app-pagination-controls>
         }
     </div>
 </app-container-principal>

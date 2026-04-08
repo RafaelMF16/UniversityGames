@@ -1,0 +1,144 @@
+.detail-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.page-top {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.hero-card,
+.loading-card,
+.feedback-card,
+.members-section {
+    padding: 22px 24px;
+}
+
+.hero-card {
+    align-items: flex-start;
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+}
+
+.hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hero-copy h1 {
+    font-size: clamp(1.9rem, 2.6vw, 2.9rem);
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+}
+
+.captain-copy {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.hero-pills,
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.members-section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.members-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.member-card {
+    background: rgba(20, 35, 61, 0.72);
+    border: 1px solid rgba(87, 112, 158, 0.14);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+}
+
+.member-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.member-header h3 {
+    font-size: 1.05rem;
+    line-height: 1.2;
+}
+
+.member-header p {
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.skills-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.skills-label {
+    color: var(--text-soft);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+:host ::ng-deep .mat-mdc-chip-set {
+    margin: 0;
+}
+
+:host ::ng-deep .mat-mdc-standard-chip {
+    --mdc-chip-label-text-color: var(--text);
+    --mdc-chip-elevated-container-color: rgba(47, 96, 176, 0.2);
+    --mdc-chip-outline-color: rgba(87, 112, 158, 0.24);
+    min-height: 30px;
+}
+
+:host ::ng-deep .mat-mdc-standard-chip .mdc-evolution-chip__text-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.empty-members,
+.feedback-card p,
+.empty-copy {
+    color: var(--text-muted);
+}
+
+.empty-members p,
+.feedback-card p {
+    margin-top: 8px;
+}
+
+@media (max-width: 760px) {
+    .hero-card {
+        flex-direction: column;
+    }
+
+    .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .hero-actions button {
+        width: 100%;
+    }
+}

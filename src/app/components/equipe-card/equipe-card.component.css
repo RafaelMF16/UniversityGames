@@ -1,8 +1,8 @@
 .card {
     display: flex;
     flex-direction: column;
-    gap: 22px;
-    padding: 20px;
+    gap: 18px;
+    padding: 18px 20px;
 }
 
 .summary-row {
@@ -21,11 +21,11 @@
 .copy {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .copy h3 {
-    font-size: clamp(1.25rem, 1.6vw, 1.55rem);
+    font-size: clamp(1.18rem, 1.45vw, 1.4rem);
 }
 
 .copy p {
@@ -37,7 +37,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 .experience-copy {
@@ -79,6 +79,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    padding-top: 4px;
 }
 
 .members-grid {
@@ -127,7 +128,7 @@
 
 @media (max-width: 1200px) {
     .card {
-        padding: 18px;
+        padding: 16px 18px;
     }
 
     .members-grid {
@@ -166,7 +167,7 @@
 @media (max-width: 640px) {
     .card {
         border-radius: 20px;
-        gap: 18px;
+        gap: 16px;
         padding: 16px;
     }
 

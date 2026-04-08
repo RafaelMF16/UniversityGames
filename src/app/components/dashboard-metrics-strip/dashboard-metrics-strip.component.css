@@ -1,0 +1,64 @@
+.metrics-strip {
+    display: grid;
+    gap: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: hidden;
+}
+
+.metric-item {
+    min-width: 0;
+    padding: 24px 28px;
+}
+
+.metric-item + .metric-item {
+    border-left: 1px solid var(--border);
+}
+
+.metric-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.metric-label-row {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.metric-label-row mat-icon {
+    color: var(--primary);
+    font-size: 1.2rem;
+    height: 20px;
+    width: 20px;
+}
+
+.metric-value {
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2rem, 2.6vw, 2.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
+.metric-description {
+    color: var(--text-muted);
+    font-size: 0.96rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 800px) {
+    .metrics-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .metric-item {
+        padding: 20px 22px;
+    }
+
+    .metric-item + .metric-item {
+        border-left: 0;
+        border-top: 1px solid var(--border);
+    }
+}

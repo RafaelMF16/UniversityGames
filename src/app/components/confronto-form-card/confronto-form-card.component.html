@@ -39,7 +39,7 @@
 
         <div class="field-group">
             <label for="participante-a">{{ labelParticipanteA }}</label>
-            <select id="participante-a" class="app-select" [class.invalid]="isInvalid('participanteAId')" formControlName="participanteAId" [disabled]="!form.controls.modalidade.value">
+            <select id="participante-a" class="app-select" [class.invalid]="isInvalid('participanteAId')" formControlName="participanteAId">
                 <option [ngValue]="0">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
                 @for (equipe of participantesDisponiveis(); track equipe.id) {
                     <option [ngValue]="equipe.id">{{ equipe.nome }}</option>
@@ -52,7 +52,7 @@
 
         <div class="field-group">
             <label for="participante-b">{{ labelParticipanteB }}</label>
-            <select id="participante-b" class="app-select" [class.invalid]="isInvalid('participanteBId')" formControlName="participanteBId" [disabled]="!form.controls.modalidade.value">
+            <select id="participante-b" class="app-select" [class.invalid]="isInvalid('participanteBId')" formControlName="participanteBId">
                 <option [ngValue]="0">{{ form.controls.modalidade.value ? (categoriaSelecionada() === 'coletivo' ? 'Selecione a equipe' : 'Selecione o atleta') : 'Escolha a modalidade primeiro' }}</option>
                 @for (equipe of participantesDisponiveis(); track equipe.id) {
                     <option [ngValue]="equipe.id">{{ equipe.nome }}</option>

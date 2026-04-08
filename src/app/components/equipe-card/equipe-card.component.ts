@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { Equipe, getNivelLabel, getModalidadeLabel, modalidadeEhIndividual, modalidadePermiteMembros } from '../../models/equipe.model';
+import { Equipe, getModalidadeLabel, modalidadePermiteMembros } from '../../models/equipe.model';
 import { LinhaMembroEquipeComponent } from '../linha-membro-equipe/linha-membro-equipe.component';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
@@ -12,13 +12,14 @@ import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicato
   templateUrl: './equipe-card.component.html',
   styleUrl: './equipe-card.component.css'
 })
-export class EquipeCardComponent {
+export class EquipeCardComponent implements OnChanges {
   @Input() equipe!: Equipe;
   @Input() salvando = false;
   @Input() removendo = false;
   @Input() podeEditar = false;
   @Input() podeExcluir = false;
   @Input() podeGerenciarMembros = false;
+  @Input() expandidoInicial = false;
   @Output() equipeEditada = new EventEmitter<Equipe>();
   @Output() equipeAtualizada = new EventEmitter<Equipe>();
   @Output() equipeRemovida = new EventEmitter<number>();
@@ -29,9 +30,15 @@ export class EquipeCardComponent {
   novasHabilidades: string[] = [];
 
   readonly habilidadesDisponiveis = [
-    'Ataque', 'Defesa', 'Velocidade', 'Lideranca', 'Passe', 'Resistencia',
-    'Tatica', 'Comunicacao', 'Drible', 'Finalizacao'
+    'Ataque', 'Defesa', 'Velocidade', 'Liderança', 'Passe', 'Resistência',
+    'Tática', 'Comunicação', 'Drible', 'Finalização'
   ];
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['expandidoInicial']) {
+      this.expandido = this.expandidoInicial;
+    }
+  }
 
   get membrosHabilitados() {
     return modalidadePermiteMembros(this.equipe?.modalidade);
@@ -43,18 +50,10 @@ export class EquipeCardComponent {
 
   get subtitulo() {
     if (this.membrosHabilitados) {
-      return `${this.modalidadeLabel()} • Capitao: ${this.equipe.responsavel ?? '-'} • ${this.equipe.curso} • ${this.equipe.periodo}`;
+      return `${this.modalidadeLabel()} • Capitão: ${this.equipe.responsavel ?? '-'} • ${this.equipe.curso} • ${this.equipe.periodo}`;
     }
 
     return `${this.modalidadeLabel()} • ${this.equipe.curso} • ${this.equipe.periodo}`;
-  }
-
-  get nivelLabel() {
-    return getNivelLabel(this.membrosHabilitados ? this.equipe.nivelEquipe : this.equipe.nivelTecnico, this.membrosHabilitados ? 'coletivo' : 'individual');
-  }
-
-  get experiencia() {
-    return modalidadeEhIndividual(this.equipe.modalidade) ? this.equipe.experiencia : null;
   }
 
   modalidadeLabel() {
@@ -80,7 +79,7 @@ export class EquipeCardComponent {
       {
         id: Date.now(),
         nome: this.novoNome,
-        funcao: this.equipe.membros.length === 0 ? 'Capitao' : 'Membro',
+        funcao: this.equipe.membros.length === 0 ? 'Capitão' : 'Membro',
         habilidades: [...this.novasHabilidades]
       }
     ];

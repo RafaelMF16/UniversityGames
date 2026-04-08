@@ -2,8 +2,9 @@
     <div class="usuarios-container">
         <section class="page-copy">
             <div>
+                <span class="eyebrow">Administração</span>
                 <h1>Usuários e permissões</h1>
-                <p>Cadastre acessos administrativos e organize as permissões do sistema.</p>
+                <p>Cadastre acessos administrativos e mantenha os perfis do sistema organizados.</p>
             </div>
         </section>
 
@@ -114,33 +115,33 @@
             @if (loading() && !usuarios().length) {
                 <app-loading-indicator label="Carregando usuários..."></app-loading-indicator>
             } @else {
-                <div class="users-list">
+                <div class="users-grid">
                     @for (usuario of usuarios(); track usuario.id) {
-                        <article class="user-row">
-                            <div class="user-copy">
-                                <strong>{{ usuario.nome }}</strong>
-                                <span>{{ usuario.username }}</span>
-                            </div>
+                        <article class="user-card">
+                            <div class="user-card__copy">
+                                <h3>{{ usuario.nome }}</h3>
+                                <p class="username-copy">&#64;{{ usuario.username }}</p>
 
-                            <div class="user-meta">
-                                <span class="pill pill-primary">{{ roleLabel(usuario.role) }}</span>
-                                <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
-                                    {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
-                                </span>
-                                @if (usuario.equipeId) {
-                                    <span class="pill pill-neutral">Equipe #{{ usuario.equipeId }}</span>
-                                }
-                                @if (usuario.curso) {
-                                    <span class="pill pill-neutral">{{ usuario.curso }}</span>
-                                }
+                                <div class="user-card__meta">
+                                    <span class="pill pill-primary">{{ roleLabel(usuario.role) }}</span>
+                                    <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
+                                        {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+                                    </span>
+                                </div>
+
+                                <p class="secondary-copy">
+                                    {{ usuario.curso || 'Curso não informado' }}
+                                    @if (usuario.periodo) {
+                                        <span> · {{ usuario.periodo }}</span>
+                                    }
+                                </p>
                             </div>
 
                             <div class="row-actions">
-                                <button class="icon-btn" type="button" (click)="iniciarEdicao(usuario)" [disabled]="deletingId() === usuario.id">
-                                    <span class="sr-only">Editar usuário</span>
+                                <button class="app-button-ghost card-action" type="button" (click)="iniciarEdicao(usuario)" [disabled]="deletingId() === usuario.id">
                                     Editar
                                 </button>
-                                <button class="icon-btn danger" type="button" (click)="remover(usuario.id)" [disabled]="deletingId() === usuario.id">
+                                <button class="app-button-danger card-action danger-action" type="button" (click)="remover(usuario.id)" [disabled]="deletingId() === usuario.id">
                                     @if (deletingId() === usuario.id) {
                                         <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
                                     } @else {
@@ -155,14 +156,15 @@
                 </div>
             }
 
-            <app-pagination-controls
-                [page]="pagination().page"
-                [pageSize]="pagination().pageSize"
-                [total]="pagination().total"
-                [totalPages]="pagination().totalPages"
-                [loading]="loading()"
-                (pageChange)="onPageChange($event)">
-            </app-pagination-controls>
         </section>
+
+        <app-pagination-controls
+            [page]="pagination().page"
+            [pageSize]="pagination().pageSize"
+            [total]="pagination().total"
+            [totalPages]="pagination().totalPages"
+            [loading]="loading()"
+            (pageChange)="onPageChange($event)">
+        </app-pagination-controls>
     </div>
 </app-container-principal>

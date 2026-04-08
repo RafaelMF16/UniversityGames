@@ -16,6 +16,7 @@ export class ConfrontosListaCardComponent {
   @Input() equipes: string[] = [];
   @Input() modalidades: ModalidadeEsporteConfig[] = [];
   @Input() carregando = false;
+  @Input() total = 0;
   @Output() verDetalhesClicado = new EventEmitter<number>();
   @Output() filtrosAlterados = new EventEmitter<ConfrontosFiltros>();
 
@@ -45,5 +46,18 @@ export class ConfrontosListaCardComponent {
 
   modalidadeLabel(modalidade: ModalidadeEquipe) {
     return this.modalidades.find((item) => item.valor === modalidade)?.label ?? modalidade;
+  }
+
+  formatarData(data: string) {
+    if (!data) {
+      return '';
+    }
+
+    const [ano, mes, dia] = data.split('-');
+    if (!ano || !mes || !dia) {
+      return data;
+    }
+
+    return `${dia}/${mes}/${ano}`;
   }
 }

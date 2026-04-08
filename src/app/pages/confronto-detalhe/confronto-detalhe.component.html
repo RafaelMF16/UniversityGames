@@ -32,7 +32,7 @@
                             @if (previsaoSalvandoId() === confronto()!.id) {
                                 <app-loading-indicator [inline]="true" [small]="true" label="Regerando..."></app-loading-indicator>
                             } @else {
-                                Regerar previsao
+                                Regerar previsão
                             }
                         </button>
                         <button class="app-button-secondary" type="button" (click)="abrirDialogPlacar()" [disabled]="placarSalvandoId() === confronto()!.id || previsaoSalvandoId() === confronto()!.id || removendoId() === confronto()!.id">
@@ -61,8 +61,8 @@
                     <div class="surface-card panel-card">
                         <div class="panel-header">
                             <div>
-                                <span class="eyebrow">Previsao</span>
-                                <h2>Analise do confronto</h2>
+                                <span class="eyebrow">Previsão</span>
+                                <h2>Análise do confronto</h2>
                             </div>
                         </div>
 
@@ -102,7 +102,7 @@
 
                     <div class="surface-card info-card">
                         <span class="meta-label">Data</span>
-                        <strong>{{ confronto()!.data }}</strong>
+                        <strong>{{ formatarData(confronto()!.data) }}</strong>
                         <span>{{ confronto()!.horario }}</span>
                     </div>
 
@@ -119,8 +119,8 @@
             </section>
         } @else {
             <div class="surface-card feedback-card">
-                <strong>Confronto nao encontrado</strong>
-                <p>Esse confronto pode ter sido removido ou ainda nao esta disponivel.</p>
+                <strong>Confronto não encontrado</strong>
+                <p>Esse confronto pode ter sido removido ou ainda não está disponível.</p>
             </div>
         }
     </div>

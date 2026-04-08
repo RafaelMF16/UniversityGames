@@ -2,8 +2,9 @@
     <div class="confrontos-container">
         <section class="page-copy">
             <div>
+                <span class="eyebrow">Agenda</span>
                 <h1>Confrontos</h1>
-                <p>Gerencie toda a agenda de partidas em uma única tela.</p>
+                <p>Gerencie a agenda do evento com uma estrutura mais direta e fácil de consultar.</p>
             </div>
 
             @if (podeGerenciarConfrontos()) {
@@ -22,6 +23,7 @@
             [equipes]="nomesEquipes()"
             [modalidades]="modalidades"
             [carregando]="loading()"
+            [total]="pagination().total"
             (filtrosAlterados)="onFiltrosAlterados($event)"
             (verDetalhesClicado)="onVerDetalhes($event)">
         </app-confrontos-lista-card>

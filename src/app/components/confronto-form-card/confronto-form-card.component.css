@@ -2,8 +2,11 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    max-height: min(88vh, 820px);
     min-width: 0;
+    overflow-y: auto;
     padding: 24px 26px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .card-heading {
@@ -60,6 +63,11 @@
 }
 
 @media (max-width: 900px) {
+    .card {
+        max-height: 86vh;
+        padding: 18px 16px 20px;
+    }
+
     .form-grid {
         grid-template-columns: 1fr;
     }
