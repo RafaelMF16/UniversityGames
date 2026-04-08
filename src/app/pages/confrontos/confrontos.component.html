@@ -23,7 +23,7 @@
             [equipes]="nomesEquipes()"
             [modalidades]="modalidades"
             [carregando]="loading()"
-            [total]="pagination().total"
+            [total]="confrontos().length"
             (filtrosAlterados)="onFiltrosAlterados($event)"
             (verDetalhesClicado)="onVerDetalhes($event)">
         </app-confrontos-lista-card>
@@ -31,8 +31,8 @@
         <app-pagination-controls
             [page]="pagination().page"
             [pageSize]="pagination().pageSize"
-            [total]="pagination().total"
-            [totalPages]="pagination().totalPages"
+            [itemsCount]="confrontos().length"
+            [hasNext]="pagination().hasNext"
             [loading]="loading()"
             (pageChange)="onPageChange($event)">
         </app-pagination-controls>

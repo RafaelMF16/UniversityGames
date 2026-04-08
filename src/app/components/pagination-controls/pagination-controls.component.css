@@ -23,6 +23,13 @@
     gap: 10px;
 }
 
+.page-copy {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    min-width: 92px;
+    text-align: center;
+}
+
 .nav-btn,
 .page-btn {
     background: rgba(59, 130, 246, 0.08);
@@ -57,10 +64,5 @@
     .controls {
         justify-content: space-between;
         width: 100%;
-    }
-
-    .pages {
-        flex: 1;
-        justify-content: center;
     }
 }

@@ -109,7 +109,7 @@
                     <p>Perfis autenticados criados ou mantidos pelo sistema.</p>
                 </div>
 
-                <span class="pill pill-neutral">{{ pagination().total }} usuário(s)</span>
+                <span class="pill pill-neutral">{{ usuarios().length }} usuario(s) na pagina</span>
             </div>
 
             @if (loading() && !usuarios().length) {
@@ -130,7 +130,7 @@
                                 </div>
 
                                 <p class="secondary-copy">
-                                    {{ usuario.curso || 'Curso não informado' }}
+                                    {{ usuario.curso || 'Curso nao informado' }}
                                     @if (usuario.periodo) {
                                         <span> · {{ usuario.periodo }}</span>
                                     }
@@ -161,8 +161,8 @@
         <app-pagination-controls
             [page]="pagination().page"
             [pageSize]="pagination().pageSize"
-            [total]="pagination().total"
-            [totalPages]="pagination().totalPages"
+            [itemsCount]="usuarios().length"
+            [hasNext]="pagination().hasNext"
             [loading]="loading()"
             (pageChange)="onPageChange($event)">
         </app-pagination-controls>
