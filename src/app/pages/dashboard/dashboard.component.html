@@ -15,16 +15,27 @@
         } @else {
             <app-dashboard-metrics-strip [items]="metricas()"></app-dashboard-metrics-strip>
 
-            <section class="matches-section">
+            <section class="matches-section surface-card">
                 <div class="section-heading">
                     <div>
                         <h2>Próximos jogos</h2>
                         <p>Agenda enxuta das partidas mais próximas do cronograma.</p>
                     </div>
+
+                    <span class="pill pill-neutral">{{ pagination().total }} jogo(s)</span>
                 </div>
 
                 <app-dashboard-upcoming-table [confrontos]="proximosJogos()"></app-dashboard-upcoming-table>
             </section>
+
+            <app-pagination-controls
+                [page]="pagination().page"
+                [pageSize]="pagination().pageSize"
+                [total]="pagination().total"
+                [totalPages]="pagination().totalPages"
+                [loading]="loading()"
+                (pageChange)="onPageChange($event)">
+            </app-pagination-controls>
         }
     </div>
 </app-container-principal>

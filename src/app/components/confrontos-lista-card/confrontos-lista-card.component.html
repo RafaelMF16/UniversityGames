@@ -6,9 +6,12 @@
             <p>Consulte e filtre a agenda de partidas em uma leitura rápida.</p>
         </div>
 
-        @if (carregando) {
-            <app-loading-indicator [inline]="true" label="Atualizando lista..."></app-loading-indicator>
-        }
+        <div class="card-top__meta">
+            <span class="pill pill-neutral">{{ total }} confronto(s)</span>
+            @if (carregando) {
+                <app-loading-indicator [inline]="true" label="Atualizando lista..."></app-loading-indicator>
+            }
+        </div>
     </div>
 
     <div class="filters-grid">
@@ -49,54 +52,30 @@
                 <app-loading-indicator label="Carregando confrontos..." [inline]="true"></app-loading-indicator>
             </div>
         } @else if (confrontos.length) {
-            <div class="table-shell">
-                <table class="confrontos-table">
-                    <thead>
-                        <tr>
-                            <th>Confronto</th>
-                            <th>Modalidade</th>
-                            <th>Data</th>
-                            <th>Horário</th>
-                            <th>Local</th>
-                            <th>Status</th>
-                            <th class="actions-col">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (confronto of confrontos; track confronto.id) {
-                            <tr>
-                                <td>
-                                    <div class="matchup-cell">
-                                        <strong>{{ confronto.equipeA }}</strong>
-                                        <span>vs</span>
-                                        <strong>{{ confronto.equipeB }}</strong>
-                                    </div>
-                                </td>
-                                <td>{{ modalidadeLabel(confronto.modalidade) }}</td>
-                                <td>{{ formatarData(confronto.data) }}</td>
-                                <td>{{ confronto.horario }}</td>
-                                <td><span class="location-copy">{{ confronto.local }}</span></td>
-                                <td>
-                                    <span class="pill pill-neutral">{{ statusLabel(confronto.status) }}</span>
-                                </td>
-                                <td class="actions-col">
-                                    <button class="app-button-secondary table-action" type="button" (click)="verDetalhesClicado.emit(confronto.id)">
-                                        Ver detalhes
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            <div class="matches-grid">
+                @for (confronto of confrontos; track confronto.id) {
+                    <article class="match-card">
+                        <div class="match-card__top">
+                            <span class="pill pill-neutral">{{ modalidadeLabel(confronto.modalidade) }}</span>
+                            <span class="match-status">{{ statusLabel(confronto.status) }}</span>
+                        </div>
+
+                        <div class="match-card__copy">
+                            <h3>{{ confronto.equipeA }} <span>vs</span> {{ confronto.equipeB }}</h3>
+                            <p>{{ formatarData(confronto.data) }} · {{ confronto.horario }}</p>
+                            <p>{{ confronto.local }}</p>
+                        </div>
+
+                        <button class="app-button-secondary card-action" type="button" (click)="verDetalhesClicado.emit(confronto.id)">
+                            Ver detalhes
+                        </button>
+                    </article>
+                }
             </div>
         } @else {
             <div class="empty-state">
                 Nenhum confronto encontrado para os filtros informados.
             </div>
         }
-    </div>
-
-    <div class="card-footer">
-        <span>{{ confrontos.length }} confronto(s) exibido(s)</span>
     </div>
 </section>

@@ -23,6 +23,7 @@
             [equipes]="nomesEquipes()"
             [modalidades]="modalidades"
             [carregando]="loading()"
+            [total]="pagination().total"
             (filtrosAlterados)="onFiltrosAlterados($event)"
             (verDetalhesClicado)="onVerDetalhes($event)">
         </app-confrontos-lista-card>

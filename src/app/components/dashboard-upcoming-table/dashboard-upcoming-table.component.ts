@@ -1,10 +1,12 @@
 import { Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Confronto } from '../../models/confronto.model';
 import { getModalidadeLabel } from '../../models/equipe.model';
 
 @Component({
   selector: 'app-dashboard-upcoming-table',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './dashboard-upcoming-table.component.html',
   styleUrl: './dashboard-upcoming-table.component.css'
 })

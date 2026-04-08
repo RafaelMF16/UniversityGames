@@ -42,61 +42,57 @@
     gap: 12px;
 }
 
-.table-shell {
-    overflow-x: auto;
+.users-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
-.users-table {
-    border-collapse: collapse;
-    min-width: 760px;
-    width: 100%;
-}
-
-.users-table th,
-.users-table td {
-    border-bottom: 1px solid rgba(87, 112, 158, 0.16);
-    padding: 16px 10px;
-    text-align: left;
-    vertical-align: middle;
-}
-
-.users-table th {
-    color: var(--text-soft);
-    font-size: 0.8rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-.users-table td {
-    color: var(--text);
-}
-
-.user-copy {
+.user-card {
+    background: rgba(20, 35, 61, 0.56);
+    border: 1px solid rgba(87, 112, 158, 0.14);
+    border-radius: 18px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 16px;
+    justify-content: space-between;
+    min-height: 208px;
+    padding: 18px;
 }
 
-.user-copy span {
+.user-card__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.user-card__copy h3 {
+    color: var(--text);
+    font-size: 1.18rem;
+    line-height: 1.25;
+}
+
+.username-copy,
+.secondary-copy {
     color: var(--text-muted);
-    font-size: 0.92rem;
+    margin: 0;
+}
+
+.user-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .row-actions {
     display: flex;
     gap: 10px;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
-.table-action {
+.card-action {
     min-height: 40px;
     padding: 0 14px;
-}
-
-.actions-col {
-    text-align: right;
-    white-space: nowrap;
 }
 
 .danger-action {
@@ -118,6 +114,14 @@
     }
 
     .row-actions {
-        justify-content: flex-start;
+        flex-direction: column;
+    }
+
+    .card-action {
+        width: 100%;
+    }
+
+    .user-card {
+        min-height: auto;
     }
 }

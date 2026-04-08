@@ -87,14 +87,15 @@
                 </div>
             }
 
-            <app-pagination-controls
-                [page]="pagination().page"
-                [pageSize]="pagination().pageSize"
-                [total]="pagination().total"
-                [totalPages]="pagination().totalPages"
-                [loading]="loading()"
-                (pageChange)="onPageChange($event)">
-            </app-pagination-controls>
         </section>
+
+        <app-pagination-controls
+            [page]="pagination().page"
+            [pageSize]="pagination().pageSize"
+            [total]="pagination().total"
+            [totalPages]="pagination().totalPages"
+            [loading]="loading()"
+            (pageChange)="onPageChange($event)">
+        </app-pagination-controls>
     </div>
 </app-container-principal>

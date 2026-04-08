@@ -16,6 +16,7 @@ export class ConfrontosListaCardComponent {
   @Input() equipes: string[] = [];
   @Input() modalidades: ModalidadeEsporteConfig[] = [];
   @Input() carregando = false;
+  @Input() total = 0;
   @Output() verDetalhesClicado = new EventEmitter<number>();
   @Output() filtrosAlterados = new EventEmitter<ConfrontosFiltros>();
 

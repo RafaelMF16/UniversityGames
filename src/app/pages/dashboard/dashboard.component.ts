@@ -3,6 +3,7 @@ import { ContainerPrincipalComponent } from '../../components/container-principa
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
 import { DashboardMetricsStripComponent } from '../../components/dashboard-metrics-strip/dashboard-metrics-strip.component';
 import { DashboardUpcomingTableComponent } from '../../components/dashboard-upcoming-table/dashboard-upcoming-table.component';
+import { PaginationControlsComponent } from '../../components/pagination-controls/pagination-controls.component';
 import { DashboardStateService } from '../../services/dashboard-state.service';
 
 @Component({
@@ -12,7 +13,8 @@ import { DashboardStateService } from '../../services/dashboard-state.service';
     ContainerPrincipalComponent,
     LoadingIndicatorComponent,
     DashboardMetricsStripComponent,
-    DashboardUpcomingTableComponent
+    DashboardUpcomingTableComponent,
+    PaginationControlsComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -23,6 +25,7 @@ export class DashboardComponent {
   readonly loading = this.dashboardState.loading.asReadonly();
   readonly error = this.dashboardState.error.asReadonly();
   readonly proximosJogos = this.dashboardState.proximosConfrontos;
+  readonly pagination = this.dashboardState.pagination.asReadonly();
   readonly metricas = computed(() => {
     const resumo = this.dashboardState.resumo();
 
@@ -44,5 +47,9 @@ export class DashboardComponent {
 
   constructor() {
     void this.dashboardState.loadResumo();
+  }
+
+  async onPageChange(page: number) {
+    await this.dashboardState.changePage(page);
   }
 }

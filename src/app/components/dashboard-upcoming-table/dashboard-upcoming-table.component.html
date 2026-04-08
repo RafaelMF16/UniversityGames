@@ -1,57 +1,23 @@
-<section class="upcoming-table surface-card">
-    <div class="table-shell desktop-only">
-        <table>
-            <thead>
-                <tr>
-                    <th>Confronto</th>
-                    <th>Modalidade</th>
-                    <th>Data</th>
-                    <th>Horário</th>
-                    <th>Local</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (confronto of confrontos(); track confronto.id) {
-                    <tr>
-                        <td class="match-cell">
-                            <strong>{{ confronto.equipeA }}</strong>
-                            <span>vs</span>
-                            <strong>{{ confronto.equipeB }}</strong>
-                        </td>
-                        <td>
-                            <span class="pill pill-neutral">{{ modalidadeLabel(confronto.modalidade) }}</span>
-                        </td>
-                        <td>{{ formatarData(confronto.data) }}</td>
-                        <td>{{ confronto.horario }}</td>
-                        <td>{{ confronto.local }}</td>
-                    </tr>
-                } @empty {
-                    <tr>
-                        <td colspan="5" class="empty-copy">Nenhum confronto disponível.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+<section class="upcoming-cards">
+    @for (confronto of confrontos(); track confronto.id) {
+        <article class="match-card surface-card">
+            <div class="match-card__top">
+                <span class="pill pill-neutral">{{ modalidadeLabel(confronto.modalidade) }}</span>
+                <span class="match-time">{{ formatarData(confronto.data) }} · {{ confronto.horario }}</span>
+            </div>
 
-    <div class="mobile-list mobile-only">
-        @for (confronto of confrontos(); track confronto.id) {
-            <article class="mobile-row">
-                <div class="mobile-row-top">
-                    <strong>{{ confronto.equipeA }}</strong>
-                    <span class="vs">vs</span>
-                    <strong>{{ confronto.equipeB }}</strong>
-                </div>
+            <div class="match-card__copy">
+                <h3>{{ confronto.equipeA }} <span>vs</span> {{ confronto.equipeB }}</h3>
+                <p>{{ confronto.local }}</p>
+            </div>
 
-                <div class="mobile-row-meta">
-                    <span>{{ modalidadeLabel(confronto.modalidade) }}</span>
-                    <span>{{ formatarData(confronto.data) }}</span>
-                    <span>{{ confronto.horario }}</span>
-                    <span>{{ confronto.local }}</span>
-                </div>
-            </article>
-        } @empty {
-            <p class="empty-copy">Nenhum confronto disponível.</p>
-        }
-    </div>
+            <a class="app-button-secondary match-action" [routerLink]="['/confrontos', confronto.id]">
+                Ver detalhes
+            </a>
+        </article>
+    } @empty {
+        <div class="surface-card empty-state">
+            Nenhum confronto disponível.
+        </div>
+    }
 </section>

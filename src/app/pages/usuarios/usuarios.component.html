@@ -115,70 +115,56 @@
             @if (loading() && !usuarios().length) {
                 <app-loading-indicator label="Carregando usuários..."></app-loading-indicator>
             } @else {
-                <div class="table-shell">
-                    <table class="users-table">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Usuário</th>
-                                <th>Perfil</th>
-                                <th>Status</th>
-                                <th>Curso</th>
-                                <th class="actions-col">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (usuario of usuarios(); track usuario.id) {
-                                <tr>
-                                    <td>
-                                        <div class="user-copy">
-                                            <strong>{{ usuario.nome }}</strong>
-                                            @if (usuario.periodo) {
-                                                <span>{{ usuario.periodo }}</span>
-                                            }
-                                        </div>
-                                    </td>
-                                    <td>{{ usuario.username }}</td>
-                                    <td><span class="pill pill-primary">{{ roleLabel(usuario.role) }}</span></td>
-                                    <td>
-                                        <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
-                                            {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
-                                        </span>
-                                    </td>
-                                    <td>{{ usuario.curso || '-' }}</td>
-                                    <td class="actions-col">
-                                        <div class="row-actions">
-                                            <button class="app-button-ghost table-action" type="button" (click)="iniciarEdicao(usuario)" [disabled]="deletingId() === usuario.id">
-                                                Editar
-                                            </button>
-                                            <button class="app-button-danger table-action danger-action" type="button" (click)="remover(usuario.id)" [disabled]="deletingId() === usuario.id">
-                                                @if (deletingId() === usuario.id) {
-                                                    <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
-                                                } @else {
-                                                    Remover
-                                                }
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            } @empty {
-                                <tr>
-                                    <td colspan="6" class="empty-state">Nenhum usuário cadastrado ainda.</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                <div class="users-grid">
+                    @for (usuario of usuarios(); track usuario.id) {
+                        <article class="user-card">
+                            <div class="user-card__copy">
+                                <h3>{{ usuario.nome }}</h3>
+                                <p class="username-copy">&#64;{{ usuario.username }}</p>
+
+                                <div class="user-card__meta">
+                                    <span class="pill pill-primary">{{ roleLabel(usuario.role) }}</span>
+                                    <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
+                                        {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+                                    </span>
+                                </div>
+
+                                <p class="secondary-copy">
+                                    {{ usuario.curso || 'Curso não informado' }}
+                                    @if (usuario.periodo) {
+                                        <span> · {{ usuario.periodo }}</span>
+                                    }
+                                </p>
+                            </div>
+
+                            <div class="row-actions">
+                                <button class="app-button-ghost card-action" type="button" (click)="iniciarEdicao(usuario)" [disabled]="deletingId() === usuario.id">
+                                    Editar
+                                </button>
+                                <button class="app-button-danger card-action danger-action" type="button" (click)="remover(usuario.id)" [disabled]="deletingId() === usuario.id">
+                                    @if (deletingId() === usuario.id) {
+                                        <app-loading-indicator [inline]="true" [small]="true" label=""></app-loading-indicator>
+                                    } @else {
+                                        Remover
+                                    }
+                                </button>
+                            </div>
+                        </article>
+                    } @empty {
+                        <div class="empty-state">Nenhum usuário cadastrado ainda.</div>
+                    }
                 </div>
             }
 
-            <app-pagination-controls
-                [page]="pagination().page"
-                [pageSize]="pagination().pageSize"
-                [total]="pagination().total"
-                [totalPages]="pagination().totalPages"
-                [loading]="loading()"
-                (pageChange)="onPageChange($event)">
-            </app-pagination-controls>
         </section>
+
+        <app-pagination-controls
+            [page]="pagination().page"
+            [pageSize]="pagination().pageSize"
+            [total]="pagination().total"
+            [totalPages]="pagination().totalPages"
+            [loading]="loading()"
+            (pageChange)="onPageChange($event)">
+        </app-pagination-controls>
     </div>
 </app-container-principal>
