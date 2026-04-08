@@ -5,7 +5,6 @@ import { ApiRequestService } from './api-request.service';
 import { AuthResponse, LoginPayload, VisitorRegisterPayload } from '../models/auth.model';
 import { Usuario, UserRole } from '../models/usuario.model';
 
-const TOKEN_STORAGE_KEY = 'ug_access_token';
 const VISITOR_STORAGE_KEY = 'ug_visitor_mode';
 
 @Injectable({
@@ -17,13 +16,12 @@ export class AuthStateService {
   private initPromise: Promise<void> | null = null;
 
   readonly user = signal<Usuario | null>(null);
-  readonly token = signal<string | null>(null);
   readonly visitorMode = signal(false);
   readonly loading = signal(false);
   readonly initialized = signal(false);
   readonly error = signal<string | null>(null);
 
-  readonly isAuthenticated = computed(() => !!this.user() && !!this.token());
+  readonly isAuthenticated = computed(() => !!this.user());
   readonly isAnonymousVisitor = computed(() => !this.user() && this.visitorMode());
   readonly isAuthenticatedVisitor = computed(() => this.user()?.role === 'visitante');
   readonly canAccessShell = computed(() => this.isAuthenticated() || this.isAnonymousVisitor());
@@ -43,26 +41,28 @@ export class AuthStateService {
   }
 
   async login(payload: LoginPayload) {
-    return this.authenticate('/auth/login', payload, 'Não foi possível fazer login com as credenciais informadas.');
+    return this.authenticate('/auth/login', payload, 'Nao foi possivel fazer login com as credenciais informadas.');
   }
 
   async registerVisitor(payload: VisitorRegisterPayload) {
-    return this.authenticate('/auth/register-visitor', payload, 'Não foi possível concluir o cadastro de visitante.');
+    return this.authenticate('/auth/register-visitor', payload, 'Nao foi possivel concluir o cadastro de visitante.');
   }
 
   async refreshCurrentUser() {
     try {
       const user = await firstValueFrom(this.api.get<Usuario>('/auth/me'));
       this.user.set(user);
+      this.visitorMode.set(false);
+      localStorage.removeItem(VISITOR_STORAGE_KEY);
       return user;
     } catch {
-      this.clearSession(false);
+      this.user.set(null);
       return null;
     }
   }
 
   async enterAsVisitor() {
-    this.clearSession(false);
+    this.user.set(null);
     this.visitorMode.set(true);
     localStorage.setItem(VISITOR_STORAGE_KEY, '1');
     this.error.set(null);
@@ -76,6 +76,12 @@ export class AuthStateService {
   }
 
   async logout() {
+    try {
+      await firstValueFrom(this.api.post<void, Record<string, never>>('/auth/logout', {}));
+    } catch {
+      // Ignore logout transport errors and clear local state anyway.
+    }
+
     this.clearSession(false);
     await this.router.navigateByUrl('/login');
   }
@@ -90,7 +96,7 @@ export class AuthStateService {
     }
 
     if (role === 'capitao') {
-      return 'Capitão';
+      return 'Capitao';
     }
 
     return 'Visitante';
@@ -129,10 +135,9 @@ export class AuthStateService {
   }
 
   private async restoreSession() {
-    this.token.set(localStorage.getItem(TOKEN_STORAGE_KEY));
     this.visitorMode.set(localStorage.getItem(VISITOR_STORAGE_KEY) === '1');
 
-    if (this.token()) {
+    if (!this.visitorMode()) {
       await this.refreshCurrentUser();
     }
 
@@ -158,20 +163,16 @@ export class AuthStateService {
   }
 
   private setSession(response: AuthResponse) {
-    this.token.set(response.accessToken);
     this.user.set(response.user);
     this.visitorMode.set(false);
-    localStorage.setItem(TOKEN_STORAGE_KEY, response.accessToken);
     localStorage.removeItem(VISITOR_STORAGE_KEY);
     this.initialized.set(true);
   }
 
   clearSession(markInitialized = true) {
-    this.token.set(null);
     this.user.set(null);
     this.visitorMode.set(false);
     this.error.set(null);
-    localStorage.removeItem(TOKEN_STORAGE_KEY);
     localStorage.removeItem(VISITOR_STORAGE_KEY);
 
     if (markInitialized) {

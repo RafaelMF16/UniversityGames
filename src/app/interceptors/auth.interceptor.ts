@@ -7,20 +7,12 @@ import { AuthStateService } from '../services/auth-state.service';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authState = inject(AuthStateService);
   const router = inject(Router);
-  const token = authState.token();
-  const shouldAttachToken = !!token && !req.url.includes('/auth/login');
 
-  const request = shouldAttachToken
-    ? req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    : req;
-
-  return next(request).pipe(
+  return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && authState.token()) {
+      const isAuthEndpoint = req.url.includes('/auth/login') || req.url.includes('/auth/register-visitor') || req.url.includes('/auth/me');
+
+      if (error.status === 401 && !isAuthEndpoint && authState.isAuthenticated()) {
         authState.clearSession();
         void router.navigateByUrl('/login');
       }
