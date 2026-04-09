@@ -1,5 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
+import { ConfirmacaoExclusaoDialogComponent } from '../../components/confirmacao-exclusao-dialog/confirmacao-exclusao-dialog.component';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
 import { PaginationControlsComponent } from '../../components/pagination-controls/pagination-controls.component';
@@ -10,13 +13,14 @@ import { UsuariosStateService } from '../../services/usuarios-state.service';
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [ContainerPrincipalComponent, ReactiveFormsModule, LoadingIndicatorComponent, PaginationControlsComponent],
+  imports: [ContainerPrincipalComponent, ReactiveFormsModule, LoadingIndicatorComponent, PaginationControlsComponent, MatDialogModule],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.css'
 })
 export class UsuariosComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly usuariosState = inject(UsuariosStateService);
+  private readonly dialog = inject(MatDialog);
 
   readonly usuarioEditando = signal<Usuario | null>(null);
   readonly usuarios = this.usuariosState.usuarios.asReadonly();
@@ -116,11 +120,34 @@ export class UsuariosComponent {
   }
 
   async remover(usuarioId: number) {
+    const usuario = this.usuarios().find((item) => item.id === usuarioId);
+    const confirmou = await this.confirmarExclusao(
+      'Remover usuario?',
+      `O usuario ${usuario?.nome ?? 'selecionado'} sera removido. Se ainda existir vinculo com equipe ou inscricao, a API vai bloquear a remocao.`
+    );
+    if (!confirmou) {
+      return;
+    }
+
     await this.usuariosState.deleteUsuario(usuarioId);
 
     if (this.usuarioEditando()?.id === usuarioId) {
       this.cancelarEdicao();
     }
+  }
+
+  private async confirmarExclusao(titulo: string, mensagem: string) {
+    const dialogRef = this.dialog.open(ConfirmacaoExclusaoDialogComponent, {
+      width: '440px',
+      maxWidth: '94vw',
+      panelClass: 'dialog-sem-borda',
+      data: {
+        titulo,
+        mensagem
+      }
+    });
+
+    return (await firstValueFrom(dialogRef.afterClosed())) === true;
   }
 
   cancelarEdicao() {

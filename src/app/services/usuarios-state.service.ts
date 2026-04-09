@@ -117,8 +117,8 @@ export class UsuariosStateService {
       await firstValueFrom(this.api.delete<void>(`/usuarios/${usuarioId}`));
       await this.loadUsuarios(this.pagination().currentCursor, this.pagination().page);
       return true;
-    } catch {
-      this.error.set('Nao foi possivel remover o usuario.');
+    } catch (error: any) {
+      this.error.set(error?.error?.detail ?? 'Nao foi possivel remover o usuario.');
       return false;
     } finally {
       this.deletingId.set(null);

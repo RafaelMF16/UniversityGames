@@ -7,6 +7,7 @@ import { ContainerPrincipalComponent } from '../../components/container-principa
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
 import { EquipeFormDialogComponent } from '../../components/equipe-form-dialog/equipe-form-dialog.component';
 import { MembroFormDialogComponent } from '../../components/membro-form-dialog/membro-form-dialog.component';
+import { ConfirmacaoExclusaoDialogComponent } from '../../components/confirmacao-exclusao-dialog/confirmacao-exclusao-dialog.component';
 import {
   Equipe,
   Membro,
@@ -157,6 +158,15 @@ export class EsporteDetalheComponent {
       return;
     }
 
+    const membro = equipe.membros.find((item) => item.id === memberId);
+    const confirmou = await this.confirmarExclusao(
+      'Remover integrante?',
+      `O integrante ${membro?.nome ?? 'selecionado'} sera removido desta equipe.`
+    );
+    if (!confirmou) {
+      return;
+    }
+
     const membrosAtualizados = equipe.membros.filter((membro) => membro.id !== memberId);
     await this.equipesState.updateEquipe(equipe.id, this.criarPayloadComMembros(membrosAtualizados));
   }
@@ -167,10 +177,32 @@ export class EsporteDetalheComponent {
       return;
     }
 
+    const confirmou = await this.confirmarExclusao(
+      'Excluir cadastro?',
+      `O cadastro ${equipe.nome} sera removido. Se houver confrontos vinculados, a API vai bloquear a exclusao.`
+    );
+    if (!confirmou) {
+      return;
+    }
+
     const removeu = await this.equipesState.deleteEquipe(equipe.id);
     if (removeu) {
       await this.router.navigate(['/esportes']);
     }
+  }
+
+  private async confirmarExclusao(titulo: string, mensagem: string) {
+    const dialogRef = this.dialog.open(ConfirmacaoExclusaoDialogComponent, {
+      width: '440px',
+      maxWidth: '94vw',
+      panelClass: 'dialog-sem-borda',
+      data: {
+        titulo,
+        mensagem
+      }
+    });
+
+    return (await firstValueFrom(dialogRef.afterClosed())) === true;
   }
 
   private criarPayloadComMembros(membros: Array<Membro | MembroPayload>) {
