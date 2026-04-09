@@ -176,8 +176,8 @@ export class EquipesStateService {
       }
       await this.loadEquipes(this.pagination().currentCursor, this.pagination().page);
       return true;
-    } catch {
-      this.error.set('Nao foi possivel remover o esporte.');
+    } catch (error: any) {
+      this.error.set(error?.error?.detail ?? 'Nao foi possivel remover o esporte.');
       return false;
     } finally {
       this.deletingId.set(null);

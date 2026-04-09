@@ -1,8 +1,10 @@
 import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
 import { ConfrontoFormCardComponent } from '../../components/confronto-form-card/confronto-form-card.component';
+import { ConfirmacaoExclusaoDialogComponent } from '../../components/confirmacao-exclusao-dialog/confirmacao-exclusao-dialog.component';
 import { EditarPlacarDialogComponent } from '../../components/editar-placar-dialog/editar-placar-dialog.component';
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
 import { PredictionSummaryComponent } from '../../components/prediction-summary/prediction-summary.component';
@@ -156,9 +158,31 @@ export class ConfrontoDetalheComponent {
       return;
     }
 
+    const confirmou = await this.confirmarExclusao(
+      'Excluir confronto?',
+      `O confronto ${confronto.equipeA} vs ${confronto.equipeB} sera removido do calendario.`
+    );
+    if (!confirmou) {
+      return;
+    }
+
     const removeu = await this.confrontosState.deleteConfronto(confronto.id);
     if (removeu) {
       await this.router.navigate(['/confrontos']);
     }
+  }
+
+  private async confirmarExclusao(titulo: string, mensagem: string) {
+    const dialogRef = this.dialog.open(ConfirmacaoExclusaoDialogComponent, {
+      width: '440px',
+      maxWidth: '94vw',
+      panelClass: 'dialog-sem-borda',
+      data: {
+        titulo,
+        mensagem
+      }
+    });
+
+    return (await firstValueFrom(dialogRef.afterClosed())) === true;
   }
 }

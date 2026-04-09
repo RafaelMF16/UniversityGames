@@ -1,0 +1,51 @@
+.confirm-card {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 24px;
+}
+
+.confirm-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.eyebrow {
+    color: var(--text-soft);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.confirm-copy h2 {
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+    letter-spacing: -0.03em;
+}
+
+.confirm-copy p {
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+    .confirm-card {
+        padding: 20px;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+}
