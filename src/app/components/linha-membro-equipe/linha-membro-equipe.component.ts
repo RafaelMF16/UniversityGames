@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
-import { Membro } from '../../models/equipe.model';
+import { Membro, MembroPayload } from '../../models/equipe.model';
 
 @Component({
   selector: 'app-linha-membro-equipe',
@@ -10,7 +10,7 @@ import { Membro } from '../../models/equipe.model';
   styleUrl: './linha-membro-equipe.component.css'
 })
 export class LinhaMembroEquipeComponent {
-  @Input() membro!: Membro;
+  @Input() membro!: Membro | MembroPayload;
   @Input() podeRemover = false;
-  @Output() membroRemovido = new EventEmitter<number>();
+  @Output() membroRemovido = new EventEmitter<number | undefined>();
 }

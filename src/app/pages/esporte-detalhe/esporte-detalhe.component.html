@@ -21,7 +21,7 @@
                     <span class="eyebrow">{{ categoriaLabel() }}</span>
                     <h1>{{ equipe()!.nome }}</h1>
                     @if (!ehIndividual() && equipe()!.responsavel) {
-                        <p class="captain-copy">Capitão: {{ equipe()!.responsavel }}</p>
+                        <p class="captain-copy">Capitao: {{ equipe()!.responsavel }}</p>
                     }
                     <div class="hero-pills">
                         <span class="pill pill-neutral">{{ modalidadeLabel() }}</span>
@@ -33,7 +33,7 @@
                 <div class="hero-actions">
                     @if (podeEditar()) {
                         <button class="app-button-secondary" type="button" (click)="abrirModalEdicao()" [disabled]="deletingId() === equipe()!.id">
-                            Editar cadastro
+                            {{ ehIndividual() ? 'Editar inscricao' : 'Editar equipe e capitao' }}
                         </button>
                     }
                     @if (podeExcluir()) {
@@ -51,11 +51,11 @@
             <section class="members-section surface-card">
                 <div class="section-heading">
                     <div>
-                        <h2>{{ ehIndividual() ? 'Inscrição individual' : 'Membros da equipe' }}</h2>
+                        <h2>{{ ehIndividual() ? 'Inscricao individual' : 'Integrantes da equipe' }}</h2>
                         <p>
                             {{ ehIndividual()
-                                ? 'Essa modalidade não possui lista de membros.'
-                                : 'Visualize os membros e as habilidades cadastradas para esta equipe.' }}
+                                ? 'Essa modalidade nao possui lista de membros.'
+                                : 'O cadastro inicial fica so com equipe e capitao. Os demais membros entram por modal nesta tela.' }}
                         </p>
                     </div>
                 </div>
@@ -63,34 +63,78 @@
                 @if (ehIndividual()) {
                     <div class="empty-members">
                         <strong>Sem membros</strong>
-                        <p>Modalidades individuais não possuem composição de equipe.</p>
+                        <p>Modalidades individuais nao possuem composicao de equipe.</p>
                     </div>
                 } @else {
-                    <div class="members-grid">
-                        @for (membro of equipe()!.membros; track membro.id) {
-                            <article class="member-card">
-                                <div class="member-header">
+                    @if (formError()) {
+                        <div class="inline-feedback error">
+                            {{ formError() }}
+                        </div>
+                    }
+
+                    <div class="manager-actions">
+                        @if (limiteIntegrantes()) {
+                            <span class="pill pill-primary">{{ totalIntegrantes() }}/{{ limiteIntegrantes() }} integrantes</span>
+                        }
+
+                        @if (podeGerenciarMembros()) {
+                            <button class="app-button-secondary" type="button" (click)="abrirModalNovoMembro()" [disabled]="!podeAdicionarMembro()">
+                                @if (savingMembers()) {
+                                    <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
+                                } @else {
+                                    Novo integrante
+                                }
+                            </button>
+                        }
+                    </div>
+
+                    @if (!podeAdicionarMembro() && limiteIntegrantes()) {
+                        <small class="field-hint">O limite de integrantes da modalidade ja foi atingido.</small>
+                    }
+
+                    <div class="member-list-grid">
+                        @if (capitao()) {
+                            <article class="member-list-card">
+                                <div class="member-list-card__copy">
+                                    <span class="eyebrow">{{ capitao()!.funcao || 'Capitao' }}</span>
+                                    <h3>{{ capitao()!.nome }}</h3>
+                                    <p>{{ capitao()!.habilidades.length }} habilidade(s) cadastradas</p>
+                                    <div class="member-chip-row">
+                                        @for (habilidade of capitao()!.habilidades; track habilidade) {
+                                            <span class="mini-chip">{{ habilidade }}</span>
+                                        } @empty {
+                                            <span class="member-empty">Sem habilidades cadastradas.</span>
+                                        }
+                                    </div>
+                                </div>
+                            </article>
+                        }
+
+                        @for (membro of demaisMembros(); track membro.id) {
+                            <article class="member-list-card">
+                                <div class="member-list-card__copy">
+                                    <span class="eyebrow">{{ membro.funcao || 'Membro' }}</span>
                                     <h3>{{ membro.nome }}</h3>
-                                    <p>{{ membro.funcao || 'Função não informada' }}</p>
+                                    <p>{{ membro.habilidades.length }} habilidade(s) cadastradas</p>
+                                    <div class="member-chip-row">
+                                        @for (habilidade of membro.habilidades; track habilidade) {
+                                            <span class="mini-chip">{{ habilidade }}</span>
+                                        } @empty {
+                                            <span class="member-empty">Sem habilidades cadastradas.</span>
+                                        }
+                                    </div>
                                 </div>
 
-                                <div class="skills-block">
-                                    <span class="skills-label">Habilidades</span>
-                                    @if (membro.habilidades.length) {
-                                        <mat-chip-set>
-                                            @for (habilidade of membro.habilidades; track habilidade) {
-                                                <mat-chip>{{ habilidade }}</mat-chip>
-                                            }
-                                        </mat-chip-set>
-                                    } @else {
-                                        <p class="empty-copy">Sem habilidades informadas.</p>
-                                    }
-                                </div>
+                                @if (podeGerenciarMembros()) {
+                                    <button class="app-button-ghost member-remove" type="button" (click)="removerMembro(membro.id)" [disabled]="savingMembers()">
+                                        Remover
+                                    </button>
+                                }
                             </article>
                         } @empty {
                             <div class="empty-members">
-                                <strong>Sem membros cadastrados</strong>
-                                <p>Adicione participantes para enriquecer a composição dessa equipe.</p>
+                                <strong>Somente o capitao esta vinculado.</strong>
+                                <p>Adicione os outros integrantes desta equipe por aqui.</p>
                             </div>
                         }
                     </div>
@@ -98,8 +142,8 @@
             </section>
         } @else {
             <div class="surface-card feedback-card">
-                <strong>Cadastro não encontrado</strong>
-                <p>Esse cadastro pode ter sido removido ou ainda não está disponível.</p>
+                <strong>Cadastro nao encontrado</strong>
+                <p>Esse cadastro pode ter sido removido ou ainda nao esta disponivel.</p>
             </div>
         }
     </div>

@@ -18,12 +18,40 @@ export const MODALIDADES_CONFIG: ModalidadeEsporteConfig[] = [
 ];
 
 export const MODALIDADES_EQUIPE: ModalidadeEquipe[] = MODALIDADES_CONFIG.map((item) => item.valor);
+export const CAPITAO_FUNCAO = 'Capitao';
+export const MAX_HABILIDADES_POR_MEMBRO = 3;
+export const HABILIDADES_DISPONIVEIS = [
+    'Ataque',
+    'Defesa',
+    'Velocidade',
+    'Lideranca',
+    'Passe',
+    'Resistencia',
+    'Tatica',
+    'Comunicacao',
+    'Drible',
+    'Finalizacao'
+] as const;
+export const FUNCOES_POR_MODALIDADE: Record<Exclude<ModalidadeEquipe, 'Natacao'>, string[]> = {
+    Futsal: ['Goleiro', 'Fixo', 'Ala direita', 'Ala esquerda', 'Pivo'],
+    Volei: ['Levantador', 'Oposto', 'Ponteiro', 'Central', 'Libero'],
+    Queimada: ['Atacante', 'Defensor', 'Coringa', 'Reserva'],
+    Basquete: ['Armador', 'Ala-armador', 'Ala', 'Ala-pivo', 'Pivo']
+};
+export const LIMITES_INTEGRANTES_POR_MODALIDADE: Record<ModalidadeEquipe, number> = {
+    Futsal: 14,
+    Volei: 12,
+    Queimada: 10,
+    Basquete: 12,
+    Natacao: 1
+};
 
 export interface Membro {
     id: number;
     nome: string;
     habilidades: string[];
     funcao?: string;
+    usuarioId?: number | null;
 }
 
 export interface Equipe {
@@ -67,4 +95,26 @@ export function modalidadeEhColetiva(modalidade: ModalidadeEquipe | string | nul
 
 export function modalidadeUsaPlacar(modalidade: ModalidadeEquipe | string | null | undefined) {
     return getModalidadeConfig(modalidade)?.usaPlacar ?? true;
+}
+
+export function getLimiteIntegrantes(modalidade: ModalidadeEquipe | string | null | undefined) {
+    const modalidadeValida = MODALIDADES_CONFIG.find((item) => item.valor === modalidade)?.valor;
+    return modalidadeValida ? LIMITES_INTEGRANTES_POR_MODALIDADE[modalidadeValida] : null;
+}
+
+export function membroEhCapitao(membro: Pick<Membro, 'funcao'> | null | undefined) {
+    return (membro?.funcao ?? '').trim().toLowerCase() === CAPITAO_FUNCAO.toLowerCase();
+}
+
+export function getFuncoesPorModalidade(modalidade: ModalidadeEquipe | string | null | undefined) {
+    if (!modalidade || modalidade === 'Natacao') {
+        return [];
+    }
+
+    const modalidadeValida = MODALIDADES_CONFIG.find((item) => item.valor === modalidade)?.valor;
+    if (!modalidadeValida || modalidadeValida === 'Natacao') {
+        return [];
+    }
+
+    return FUNCOES_POR_MODALIDADE[modalidadeValida];
 }

@@ -121,7 +121,8 @@ export class EquipesComponent {
         modalidadesDisponiveis: getModalidadesPorCategoria(categoria),
         usuarioAtual: this.usuarioAtual(),
         individualAutopreenchido: categoria === 'individual' && this.usuarioPodeSeInscreverNoIndividual(),
-        modalidadesIndividuaisBloqueadas: this.modalidadesIndividuaisDoUsuario()
+        modalidadesIndividuaisBloqueadas: this.modalidadesIndividuaisDoUsuario(),
+        equipesReferencia: this.equipesState.equipesReferencia()
       }
     });
   }
