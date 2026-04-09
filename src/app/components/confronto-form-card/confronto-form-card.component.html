@@ -10,14 +10,18 @@
         <button
             class="tab-button"
             type="button"
+            [disabled]="categoriaTravada()"
             [class.active]="categoriaSelecionada() === 'coletivo'"
+            [class.locked]="categoriaTravada() && categoriaSelecionada() !== 'coletivo'"
             (click)="selecionarCategoria('coletivo')">
             Esporte coletivo
         </button>
         <button
             class="tab-button"
             type="button"
+            [disabled]="categoriaTravada()"
             [class.active]="categoriaSelecionada() === 'individual'"
+            [class.locked]="categoriaTravada() && categoriaSelecionada() !== 'individual'"
             (click)="selecionarCategoria('individual')">
             Esporte individual
         </button>

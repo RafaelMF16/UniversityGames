@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Confronto } from '../../models/confronto.model';
 import { getModalidadeLabel } from '../../models/equipe.model';
+import { formatarHorarioConfronto } from '../../utils/horario-confronto.util';
 
 @Component({
   selector: 'app-confronto-list-item',
@@ -27,5 +28,9 @@ export class ConfrontoListItemComponent {
     }
 
     return 'Agendado';
+  }
+
+  horarioLabel() {
+    return formatarHorarioConfronto(this.confronto.horario);
   }
 }

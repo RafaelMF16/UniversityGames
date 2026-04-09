@@ -10,6 +10,7 @@ import {
   getModalidadeConfig
 } from '../../models/equipe.model';
 import { ConfrontosStateService } from '../../services/confrontos-state.service';
+import { formatarHorarioConfronto, normalizarHorarioConfrontoParaEnvio } from '../../utils/horario-confronto.util';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 interface ConfrontoFormDialogData {
@@ -36,6 +37,7 @@ export class ConfrontoFormCardComponent {
   readonly modalidadesDisponiveis = computed(() =>
     MODALIDADES_CONFIG.filter((modalidade) => modalidade.categoria === this.categoriaSelecionada())
   );
+  readonly categoriaTravada = computed(() => !!this.confrontoEditando);
   readonly participantesDisponiveis = computed(() => {
     const modalidade = this.modalidadeSelecionada();
     if (!modalidade) {
@@ -73,7 +75,7 @@ export class ConfrontoFormCardComponent {
         participanteAId: this.findParticipanteId(this.confrontoEditando.participanteAId, this.confrontoEditando.equipeA),
         participanteBId: this.findParticipanteId(this.confrontoEditando.participanteBId, this.confrontoEditando.equipeB),
         data: this.confrontoEditando.data,
-        horario: this.confrontoEditando.horario,
+        horario: this.normalizarHorarioParaInput(this.confrontoEditando.horario),
         local: this.confrontoEditando.local,
         modalidade: this.confrontoEditando.modalidade,
         status: this.confrontoEditando.status
@@ -85,7 +87,7 @@ export class ConfrontoFormCardComponent {
       this.atualizarEstadoParticipantes(!!modalidade);
     });
 
-    this.atualizarEstadoParticipantes(!!this.form.controls.modalidade.value);
+    this.atualizarEstadoParticipantes(!!this.form.controls.modalidade.value, !this.confrontoEditando);
   }
 
   get titulo() {
@@ -107,6 +109,10 @@ export class ConfrontoFormCardComponent {
   }
 
   selecionarCategoria(categoria: CategoriaEsporte) {
+    if (this.categoriaTravada()) {
+      return;
+    }
+
     if (this.categoriaSelecionada() === categoria) {
       return;
     }
@@ -151,7 +157,7 @@ export class ConfrontoFormCardComponent {
       participanteAId: participanteA.id,
       participanteBId: participanteB.id,
       data: values.data,
-      horario: values.horario,
+      horario: normalizarHorarioConfrontoParaEnvio(values.horario),
       local: values.local,
       modalidade: values.modalidade as NonNullable<Confronto['modalidade']>,
       status: values.status as NonNullable<Confronto['status']>,
@@ -212,12 +218,18 @@ export class ConfrontoFormCardComponent {
     return this.equipes.find((item) => item.nome === nome)?.id ?? 0;
   }
 
-  private atualizarEstadoParticipantes(habilitado: boolean) {
+  private normalizarHorarioParaInput(horario: string | null | undefined) {
+    return formatarHorarioConfronto(horario);
+  }
+
+  private atualizarEstadoParticipantes(habilitado: boolean, resetarParticipantes = true) {
     const participanteAControl = this.form.controls.participanteAId;
     const participanteBControl = this.form.controls.participanteBId;
 
-    participanteAControl.setValue(0, { emitEvent: false });
-    participanteBControl.setValue(0, { emitEvent: false });
+    if (resetarParticipantes) {
+      participanteAControl.setValue(0, { emitEvent: false });
+      participanteBControl.setValue(0, { emitEvent: false });
+    }
 
     if (habilitado) {
       participanteAControl.enable({ emitEvent: false });

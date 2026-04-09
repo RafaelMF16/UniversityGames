@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { getModalidadeLabel } from '../../models/equipe.model';
+import { formatarHorarioConfronto } from '../../utils/horario-confronto.util';
 
 @Component({
   selector: 'app-proximos-confrontos-card',
@@ -21,5 +22,9 @@ export class ProximosConfrontosCardComponent {
 
   modalidadeLabel() {
     return getModalidadeLabel(this.confronto.modalidade);
+  }
+
+  horarioLabel() {
+    return formatarHorarioConfronto(this.confronto.horario);
   }
 }

@@ -20,21 +20,11 @@
                 <div class="hero-copy">
                     <span class="eyebrow">Detalhes do confronto</span>
                     <h1>{{ confronto()!.equipeA }} <span>vs</span> {{ confronto()!.equipeB }}</h1>
-                    <div class="hero-pills">
-                        <span class="pill pill-neutral">{{ modalidadeLabel() }}</span>
-                        <span class="status-pill">{{ statusLabel() }}</span>
-                    </div>
+                    <p>{{ modalidadeLabel() }} · {{ statusLabel() }}</p>
                 </div>
 
                 @if (podeGerenciar()) {
                     <div class="hero-actions">
-                        <button class="app-button-ghost" type="button" (click)="regerarPrevisao()" [disabled]="previsaoSalvandoId() === confronto()!.id || placarSalvandoId() === confronto()!.id || removendoId() === confronto()!.id">
-                            @if (previsaoSalvandoId() === confronto()!.id) {
-                                <app-loading-indicator [inline]="true" [small]="true" label="Regerando..."></app-loading-indicator>
-                            } @else {
-                                Regerar previsão
-                            }
-                        </button>
                         <button class="app-button-secondary" type="button" (click)="abrirDialogPlacar()" [disabled]="placarSalvandoId() === confronto()!.id || previsaoSalvandoId() === confronto()!.id || removendoId() === confronto()!.id">
                             @if (placarSalvandoId() === confronto()!.id) {
                                 <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
@@ -43,13 +33,13 @@
                             }
                         </button>
                         <button class="app-button-ghost" type="button" (click)="abrirModalEdicao()" [disabled]="placarSalvandoId() === confronto()!.id || previsaoSalvandoId() === confronto()!.id || removendoId() === confronto()!.id">
-                            Editar confronto
+                            Editar
                         </button>
                         <button class="app-button-danger" type="button" (click)="removerConfronto()" [disabled]="removendoId() === confronto()!.id">
                             @if (removendoId() === confronto()!.id) {
                                 <app-loading-indicator [inline]="true" [small]="true" label="Removendo..."></app-loading-indicator>
                             } @else {
-                                Excluir confronto
+                                Excluir
                             }
                         </button>
                     </div>
@@ -62,8 +52,17 @@
                         <div class="panel-header">
                             <div>
                                 <span class="eyebrow">Previsão</span>
-                                <h2>Análise do confronto</h2>
+                                <h2>Leitura do confronto</h2>
                             </div>
+                            @if (podeGerenciar()) {
+                                <button class="app-button-ghost panel-action" type="button" (click)="regerarPrevisao()" [disabled]="previsaoSalvandoId() === confronto()!.id || placarSalvandoId() === confronto()!.id || removendoId() === confronto()!.id">
+                                    @if (previsaoSalvandoId() === confronto()!.id) {
+                                        <app-loading-indicator [inline]="true" [small]="true" label="Regerando..."></app-loading-indicator>
+                                    } @else {
+                                        Regerar
+                                    }
+                                </button>
+                            }
                         </div>
 
                         <app-prediction-summary
@@ -72,48 +71,35 @@
                             [participanteB]="confronto()!.equipeB">
                         </app-prediction-summary>
                     </div>
-
-                    <div class="surface-card panel-card">
-                        <div class="panel-header">
-                            <div>
-                                <span class="eyebrow">Participantes</span>
-                                <h2>Quem vai jogar</h2>
-                            </div>
-                        </div>
-
-                        <div class="participants-grid">
-                            <div class="participant-card">
-                                <span class="meta-label">Lado A</span>
-                                <strong>{{ confronto()!.equipeA }}</strong>
-                            </div>
-                            <div class="participant-card">
-                                <span class="meta-label">Lado B</span>
-                                <strong>{{ confronto()!.equipeB }}</strong>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <aside class="side-column">
-                    <div class="surface-card info-card">
-                        <span class="meta-label">Resultado</span>
-                        <strong>{{ resultadoLabel() }}</strong>
-                    </div>
+                    <div class="surface-card info-panel">
+                        <div class="panel-header compact">
+                            <div>
+                                <span class="eyebrow">Resumo</span>
+                                <h2>Informações</h2>
+                            </div>
+                        </div>
 
-                    <div class="surface-card info-card">
-                        <span class="meta-label">Data</span>
-                        <strong>{{ formatarData(confronto()!.data) }}</strong>
-                        <span>{{ confronto()!.horario }}</span>
-                    </div>
-
-                    <div class="surface-card info-card">
-                        <span class="meta-label">Local</span>
-                        <strong>{{ confronto()!.local }}</strong>
-                    </div>
-
-                    <div class="surface-card info-card">
-                        <span class="meta-label">Status</span>
-                        <strong>{{ statusLabel() }}</strong>
+                        <dl class="info-list">
+                            <div>
+                                <dt>Resultado</dt>
+                                <dd>{{ resultadoLabel() }}</dd>
+                            </div>
+                            <div>
+                                <dt>Data</dt>
+                                <dd>{{ formatarData(confronto()!.data) }} às {{ formatarHorario(confronto()!.horario) }}</dd>
+                            </div>
+                            <div>
+                                <dt>Local</dt>
+                                <dd>{{ confronto()!.local }}</dd>
+                            </div>
+                            <div>
+                                <dt>Status</dt>
+                                <dd>{{ statusLabel() }}</dd>
+                            </div>
+                        </dl>
                     </div>
                 </aside>
             </section>
