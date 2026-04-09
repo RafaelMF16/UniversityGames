@@ -52,11 +52,9 @@
                 <div class="section-heading">
                     <div>
                         <h2>{{ ehIndividual() ? 'Inscricao individual' : 'Integrantes da equipe' }}</h2>
-                        <p>
-                            {{ ehIndividual()
-                                ? 'Essa modalidade nao possui lista de membros.'
-                                : 'O cadastro inicial fica so com equipe e capitao. Os demais membros entram por modal nesta tela.' }}
-                        </p>
+                        @if (ehIndividual()) {
+                            <p>Essa modalidade nao possui lista de membros.</p>
+                        }
                     </div>
                 </div>
 
@@ -133,8 +131,7 @@
                             </article>
                         } @empty {
                             <div class="empty-members">
-                                <strong>Somente o capitao esta vinculado.</strong>
-                                <p>Adicione os outros integrantes desta equipe por aqui.</p>
+                                <strong>Nenhum outro integrante cadastrado.</strong>
                             </div>
                         }
                     </div>

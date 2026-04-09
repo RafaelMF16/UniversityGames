@@ -37,7 +37,6 @@
                 @if (isInvalid('curso')) {
                     <small class="field-error">{{ getErrorMessage('curso') }}</small>
                 }
-                <small class="field-hint">Esse curso deve ser o mesmo do capitao vinculado a equipe.</small>
             </div>
 
             <div class="field-group">
@@ -51,7 +50,6 @@
                 @if (isInvalid('periodo')) {
                     <small class="field-error">{{ getErrorMessage('periodo') }}</small>
                 }
-                <small class="field-hint">Esse periodo deve ser o mesmo do capitao vinculado a equipe.</small>
             </div>
         } @else {
             <div class="field-group full-width">
@@ -91,32 +89,11 @@
             </div>
 
             <div class="member-grid">
-                <div class="field-group">
-                    <label for="capitao-nome">Nome do capitao</label>
-                    <input
-                        id="capitao-nome"
-                        class="app-input"
-                        [class.invalid]="isCaptainInvalid('nome')"
-                        formControlName="nome"
-                        placeholder="Ex: Ana Clara"
-                        type="text">
-                    @if (isCaptainInvalid('nome')) {
-                        <small class="field-error">Informe pelo menos 2 caracteres.</small>
-                    }
-                    <small class="field-hint">
-                        @if (nomeCapitaoTravado) {
-                            O capitao autenticado sera vinculado automaticamente a equipe.
-                        } @else {
-                            Esse capitao sera o primeiro integrante vinculado a equipe.
-                        }
-                    </small>
-                </div>
-
                 <div class="field-group full-width">
                     <app-habilidades-selector
                         label="Habilidades do capitao"
                         [selected]="habilidadesSelecionadasCapitao"
-                        [helperText]="'Escolha ate ' + maxHabilidades + ' habilidades ja cadastradas no projeto.'"
+                        helperText="Habilidades"
                         (selectedChange)="onHabilidadesCapitaoChange($event)">
                     </app-habilidades-selector>
                 </div>

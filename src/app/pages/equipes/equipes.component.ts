@@ -88,8 +88,12 @@ export class EquipesComponent {
     await this.equipesState.changePage(page);
   }
 
-  async onVerDetalhes(equipeId: number) {
-    await this.router.navigate(['/esportes', equipeId]);
+  async onVerDetalhes(equipe: Equipe) {
+    if (modalidadeEhIndividual(equipe.modalidade)) {
+      return;
+    }
+
+    await this.router.navigate(['/esportes', equipe.id]);
   }
 
   categoriaTitulo() {
@@ -104,6 +108,10 @@ export class EquipesComponent {
 
   modalidadeLabel(modalidade: string) {
     return getModalidadeLabel(modalidade);
+  }
+
+  ehIndividual(modalidade: ModalidadeEquipe) {
+    return modalidadeEhIndividual(modalidade);
   }
 
   abrirModalCadastro(equipeEditando: Equipe | null = null, categoria = this.categoriaSelecionada()) {

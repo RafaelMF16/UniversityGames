@@ -103,10 +103,6 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     return this.ehColetivo && this.usuarioEhCapitao && !!this.usuarioAtual?.curso && !!this.usuarioAtual?.periodo;
   }
 
-  get nomeCapitaoTravado() {
-    return this.ehColetivo && this.usuarioEhCapitao;
-  }
-
   get modalidadeBloqueada() {
     const modalidade = this.form.controls.modalidade.value;
     if (!modalidade) {
@@ -157,9 +153,7 @@ export class CadastrarEquipeCardComponent implements OnChanges {
       return null;
     }
 
-    const nome = this.usuarioEhCapitao
-      ? this.usuarioAtual?.nome ?? ''
-      : this.captainForm.getRawValue().nome?.trim() ?? '';
+    const nome = this.nomeCapitaoAtual;
 
     if (!nome) {
       return null;
@@ -177,6 +171,11 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   get habilidadesSelecionadasCapitao() {
     return this.lerHabilidadesSelecionadas(this.captainForm.getRawValue().habilidades);
+  }
+
+  get nomeCapitaoAtual() {
+    const capitaoExistente = this.obterMembroCapitaoExistente()?.nome?.trim();
+    return this.usuarioAtual?.nome?.trim() || capitaoExistente || this.captainForm.getRawValue().nome?.trim() || '';
   }
 
   salvar() {
@@ -226,11 +225,6 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   isInvalid(controlName: 'nome' | 'curso' | 'periodo' | 'modalidade') {
     const control = this.form.controls[controlName];
-    return control.invalid && (control.touched || control.dirty);
-  }
-
-  isCaptainInvalid(controlName: 'nome') {
-    const control = this.captainForm.controls[controlName];
     return control.invalid && (control.touched || control.dirty);
   }
 
@@ -299,18 +293,14 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   private preencherCapitao(capitao: Equipe['membros'][number] | null) {
     const habilidades = capitao?.habilidades ?? [];
-    const nome = this.usuarioEhCapitao ? this.usuarioAtual?.nome ?? '' : capitao?.nome ?? '';
+    const nome = this.usuarioAtual?.nome ?? capitao?.nome ?? '';
 
     this.captainForm.reset({
       nome,
       habilidades
     }, { emitEvent: false });
 
-    if (this.usuarioEhCapitao && this.ehColetivo) {
-      this.captainForm.controls.nome.disable({ emitEvent: false });
-    } else {
-      this.captainForm.controls.nome.enable({ emitEvent: false });
-    }
+    this.captainForm.controls.nome.disable({ emitEvent: false });
   }
 
   private validarFormularioColetivo() {
@@ -321,11 +311,6 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
     if (this.usuarioEhCapitao && (!this.usuarioAtual?.curso || !this.usuarioAtual?.periodo)) {
       this.form.markAllAsTouched();
-      return false;
-    }
-
-    if (!this.usuarioEhCapitao && this.captainForm.invalid) {
-      this.captainForm.markAllAsTouched();
       return false;
     }
 
