@@ -1,0 +1,57 @@
+<section class="card surface-card">
+    <div class="card-header">
+        <div>
+            <h2>Novo integrante</h2>
+            <p>Habilidades</p>
+        </div>
+    </div>
+
+    <form class="form-grid" [formGroup]="form">
+        <div class="field-group">
+            <label for="membro-nome">Nome do integrante</label>
+            <input
+                id="membro-nome"
+                class="app-input"
+                [class.invalid]="isInvalid('nome')"
+                formControlName="nome"
+                placeholder="Ex: Joao Pedro"
+                type="text">
+            @if (isInvalid('nome')) {
+                <small class="field-error">Informe pelo menos 2 caracteres.</small>
+            }
+        </div>
+
+        <div class="field-group">
+            <label for="membro-funcao">Funcao</label>
+            <select id="membro-funcao" class="app-select" [class.invalid]="isFuncaoInvalid()" formControlName="funcao">
+                <option value="">Selecione a funcao</option>
+                @for (funcao of funcoesDisponiveis; track funcao) {
+                    <option [value]="funcao">{{ funcao }}</option>
+                }
+            </select>
+            @if (isFuncaoInvalid()) {
+                <small class="field-error">Selecione uma funcao valida para essa modalidade.</small>
+            }
+        </div>
+
+        <div class="field-group full-width">
+            <app-habilidades-selector
+                label="Habilidades"
+                [selected]="habilidadesSelecionadas"
+                [helperText]="'Selecionadas: ' + habilidadesSelecionadas.length + '/' + maxHabilidades"
+                (selectedChange)="onHabilidadesChange($event)">
+            </app-habilidades-selector>
+        </div>
+    </form>
+
+    <div class="actions">
+        <button class="app-button-secondary" type="button" (click)="salvar()" [disabled]="data.salvando || habilidadesSelecionadas.length > maxHabilidades">
+            @if (data.salvando) {
+                <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
+            } @else {
+                Salvar integrante
+            }
+        </button>
+        <button class="app-button-ghost" type="button" (click)="cancelar()" [disabled]="data.salvando">Cancelar</button>
+    </div>
+</section>

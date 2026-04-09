@@ -263,6 +263,17 @@ small {
     border-radius: 0 !important;
     box-shadow: none !important;
     padding: 0 !important;
+    width: min(960px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    overflow: hidden !important;
+}
+
+.dialog-sem-borda .mat-mdc-dialog-content,
+.dialog-sem-borda .mdc-dialog__content {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator,

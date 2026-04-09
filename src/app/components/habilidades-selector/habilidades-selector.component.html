@@ -1,0 +1,18 @@
+<div class="field-group">
+    <label>{{ label }}</label>
+    <div class="choice-chips" [attr.aria-label]="label" role="group">
+        @for (habilidade of habilidadesDisponiveis; track habilidade) {
+            <button
+                class="choice-chip"
+                type="button"
+                [class.choice-chip--selected]="habilidadeSelecionada(habilidade)"
+                [class.choice-chip--disabled]="!podeSelecionarMais(habilidade)"
+                [attr.aria-pressed]="habilidadeSelecionada(habilidade)"
+                [disabled]="!podeSelecionarMais(habilidade)"
+                (click)="toggle(habilidade)">
+                {{ habilidade }}
+            </button>
+        }
+    </div>
+    <small class="field-hint">{{ helperText }}</small>
+</div>

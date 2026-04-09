@@ -13,6 +13,7 @@ interface EquipeFormDialogData {
   usuarioAtual: Usuario | null;
   individualAutopreenchido: boolean;
   modalidadesIndividuaisBloqueadas: ModalidadeEquipe[];
+  equipesReferencia: Equipe[];
 }
 
 @Component({

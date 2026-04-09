@@ -15,17 +15,19 @@
                 <input
                     id="nome-equipe"
                     class="app-input"
-                    [class.invalid]="isInvalid('nome')"
+                    [class.invalid]="isInvalid('nome') || nomeDuplicado"
                     formControlName="nome"
-                    [placeholder]="ehColetivo ? 'Ex: Time Alfa' : 'Ex: Maria da Silva'"
+                    [placeholder]="ehColetivo ? 'Ex: Biomed Furia' : 'Ex: Maria da Silva'"
                     type="text">
                 @if (isInvalid('nome')) {
                     <small class="field-error">{{ getErrorMessage('nome') }}</small>
+                } @else if (nomeDuplicado) {
+                    <small class="field-error">Ja existe uma equipe cadastrada com esse nome nessa modalidade.</small>
                 }
             </div>
 
-            <div class="field-group">
-                <label for="curso-equipe">Curso</label>
+                <div class="field-group">
+                <label for="curso-equipe">Curso da equipe</label>
                 <select id="curso-equipe" class="app-select" [class.invalid]="isInvalid('curso')" formControlName="curso">
                     <option value="">Selecione o curso</option>
                     @for (curso of cursosDisponiveis; track curso) {
@@ -38,9 +40,9 @@
             </div>
 
             <div class="field-group">
-                <label for="periodo-equipe">Período</label>
+                <label for="periodo-equipe">Periodo da equipe</label>
                 <select id="periodo-equipe" class="app-select" [class.invalid]="isInvalid('periodo')" formControlName="periodo">
-                    <option value="">Selecione o período</option>
+                    <option value="">Selecione o periodo</option>
                     @for (periodo of periodosDisponiveis; track periodo) {
                         <option [value]="periodo">{{ periodo }}</option>
                     }
@@ -72,10 +74,33 @@
                 <small class="field-error">{{ getErrorMessage('modalidade') }}</small>
             }
             @if (modalidadeBloqueada) {
-                <small class="field-error">Você já possui inscrição nessa modalidade.</small>
+                <small class="field-error">Voce ja possui inscricao nessa modalidade.</small>
             }
         </div>
     </form>
+
+    @if (ehColetivo) {
+        <section class="surface-card member-section" [formGroup]="captainForm">
+            <div class="section-top">
+                <div>
+                    <h3>Capitao da equipe</h3>
+                    <p>Esse membro e obrigatorio e tambem conta no limite de integrantes.</p>
+                </div>
+            </div>
+
+            <div class="member-grid">
+                <div class="field-group full-width">
+                    <app-habilidades-selector
+                        label="Habilidades do capitao"
+                        [selected]="habilidadesSelecionadasCapitao"
+                        helperText="Habilidades"
+                        (selectedChange)="onHabilidadesCapitaoChange($event)">
+                    </app-habilidades-selector>
+                </div>
+            </div>
+        </section>
+
+    }
 
     <div class="actions">
         @if (equipeEditando) {
@@ -83,7 +108,7 @@
                 @if (salvando) {
                     <app-loading-indicator [inline]="true" [small]="true" label="Atualizando..."></app-loading-indicator>
                 } @else {
-                    {{ ehColetivo ? 'Atualizar equipe' : 'Atualizar inscrição' }}
+                    {{ ehColetivo ? 'Salvar equipe e capitao' : 'Atualizar inscricao' }}
                 }
             </button>
             <button class="app-button-ghost" type="button" (click)="onCancelarEdicao()" [disabled]="salvando">Cancelar</button>
@@ -92,7 +117,7 @@
                 @if (salvando) {
                     <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
                 } @else {
-                    {{ ehColetivo ? 'Salvar equipe' : 'Confirmar inscrição' }}
+                    {{ ehColetivo ? 'Salvar equipe e capitao' : 'Confirmar inscricao' }}
                 }
             </button>
         }

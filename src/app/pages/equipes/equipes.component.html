@@ -75,9 +75,11 @@
                                 }
                             </div>
 
-                            <button class="app-button-secondary card-action" type="button" (click)="onVerDetalhes(equipe.id)">
-                                Ver detalhes
-                            </button>
+                            @if (!ehIndividual(equipe.modalidade)) {
+                                <button class="app-button-secondary card-action" type="button" (click)="onVerDetalhes(equipe)">
+                                    Ver detalhes
+                                </button>
+                            }
                         </article>
                     } @empty {
                         <div class="empty-state">

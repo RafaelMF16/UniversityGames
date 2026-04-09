@@ -54,6 +54,13 @@
     gap: 18px;
 }
 
+.member-manager {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px 22px;
+}
+
 .members-grid {
     display: grid;
     gap: 14px;
@@ -117,14 +124,84 @@
 }
 
 .empty-members,
+.inline-feedback,
 .feedback-card p,
 .empty-copy {
     color: var(--text-muted);
 }
 
+.inline-feedback.error {
+    background: color-mix(in srgb, var(--danger) 10%, white);
+    border-radius: 14px;
+    color: var(--danger);
+    padding: 12px 14px;
+}
+
 .empty-members p,
 .feedback-card p {
     margin-top: 8px;
+}
+
+.field-hint {
+    color: var(--text-muted);
+}
+
+.manager-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.member-list-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.member-list-card {
+    background: rgba(20, 35, 61, 0.72);
+    border: 1px solid rgba(87, 112, 158, 0.14);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    justify-content: space-between;
+    padding: 18px;
+}
+
+.member-list-card__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.member-list-card__copy h3 {
+    font-size: 1.08rem;
+}
+
+.member-list-card__copy p,
+.member-empty {
+    color: var(--text-muted);
+}
+
+.member-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mini-chip {
+    background: rgba(36, 144, 255, 0.12);
+    border: 1px solid rgba(36, 144, 255, 0.28);
+    border-radius: 999px;
+    color: var(--primary);
+    font-size: 0.84rem;
+    font-weight: 600;
+    padding: 7px 10px;
+}
+
+.member-remove {
+    align-self: flex-start;
 }
 
 @media (max-width: 760px) {
@@ -140,5 +217,9 @@
 
     .hero-actions button {
         width: 100%;
+    }
+
+    .member-list-grid {
+        grid-template-columns: 1fr;
     }
 }
