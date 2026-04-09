@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Confronto, ConfrontosFiltros, StatusConfronto } from '../../models/confronto.model';
 import { ModalidadeEsporteConfig, ModalidadeEquipe } from '../../models/equipe.model';
+import { formatarHorarioConfronto } from '../../utils/horario-confronto.util';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 @Component({
@@ -59,5 +60,9 @@ export class ConfrontosListaCardComponent {
     }
 
     return `${dia}/${mes}/${ano}`;
+  }
+
+  formatarHorario(horario: string) {
+    return formatarHorarioConfronto(horario);
   }
 }

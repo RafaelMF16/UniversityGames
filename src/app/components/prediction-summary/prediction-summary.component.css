@@ -1,19 +1,17 @@
 .prediction-card {
-    background: rgba(24, 37, 58, 0.72);
-    border: 1px solid rgba(87, 112, 158, 0.14);
-    border-radius: 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 14px 16px;
+    gap: 14px;
 }
 
 .prediction-card.stale {
-    border-color: rgba(255, 207, 112, 0.35);
+    border-left: 3px solid rgba(255, 207, 112, 0.85);
+    padding-left: 14px;
 }
 
 .prediction-card.error {
-    border-color: rgba(255, 109, 109, 0.3);
+    border-left: 3px solid rgba(255, 109, 109, 0.85);
+    padding-left: 14px;
 }
 
 .prediction-top,
@@ -27,16 +25,17 @@
 .status,
 .model {
     color: var(--text-soft);
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
 .percentage-row {
     align-items: center;
     display: grid;
-    gap: 12px;
-    grid-template-columns: minmax(90px, auto) minmax(140px, 1fr) minmax(90px, auto);
+    gap: 14px;
+    grid-template-columns: minmax(110px, auto) minmax(180px, 1fr) minmax(110px, auto);
 }
 
 .score-chip {
@@ -46,12 +45,13 @@
 }
 
 .score-chip strong {
-    font-size: 1.1rem;
+    font-size: 1.35rem;
+    letter-spacing: -0.03em;
 }
 
 .score-chip span {
     color: var(--text-muted);
-    font-size: 0.88rem;
+    font-size: 0.9rem;
 }
 
 .align-end {
@@ -61,13 +61,13 @@
 .bar {
     background: rgba(39, 57, 86, 0.9);
     border-radius: 999px;
-    height: 10px;
+    height: 12px;
     overflow: hidden;
     position: relative;
 }
 
 .fill-a {
-    background: linear-gradient(90deg, rgba(36, 144, 255, 0.9), rgba(91, 165, 255, 0.9));
+    background: linear-gradient(90deg, rgba(36, 144, 255, 0.95), rgba(91, 165, 255, 0.95));
     border-radius: 999px;
     display: block;
     height: 100%;
@@ -76,8 +76,12 @@
 .prediction-card p,
 .favorite-line {
     color: var(--text-muted);
-    line-height: 1.45;
+    line-height: 1.5;
     margin: 0;
+}
+
+.favorite-line strong {
+    color: var(--text-primary);
 }
 
 @media (max-width: 760px) {

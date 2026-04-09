@@ -3,7 +3,7 @@
         <article class="match-card surface-card">
             <div class="match-card__top">
                 <span class="pill pill-neutral">{{ modalidadeLabel(confronto.modalidade) }}</span>
-                <span class="match-time">{{ formatarData(confronto.data) }} · {{ confronto.horario }}</span>
+                <span class="match-time">{{ formatarData(confronto.data) }} · {{ formatarHorario(confronto.horario) }}</span>
             </div>
 
             <div class="match-card__copy">
@@ -17,7 +17,7 @@
         </article>
     } @empty {
         <div class="surface-card empty-state">
-            Nenhum confronto disponível.
+            Nenhum confronto disponivel.
         </div>
     }
 </section>

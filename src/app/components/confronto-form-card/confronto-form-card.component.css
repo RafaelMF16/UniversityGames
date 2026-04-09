@@ -45,6 +45,14 @@
     background: rgba(40, 70, 112, 0.88);
 }
 
+.tab-button:disabled {
+    cursor: not-allowed;
+}
+
+.tab-button.locked {
+    opacity: 0.5;
+}
+
 .form-grid {
     display: grid;
     gap: 16px 18px;

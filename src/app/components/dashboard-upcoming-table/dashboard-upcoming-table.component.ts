@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Confronto } from '../../models/confronto.model';
 import { getModalidadeLabel } from '../../models/equipe.model';
+import { formatarHorarioConfronto } from '../../utils/horario-confronto.util';
 
 @Component({
   selector: 'app-dashboard-upcoming-table',
@@ -28,5 +29,9 @@ export class DashboardUpcomingTableComponent {
     }
 
     return `${dia}/${mes}/${ano}`;
+  }
+
+  formatarHorario(horario: string) {
+    return formatarHorarioConfronto(horario);
   }
 }

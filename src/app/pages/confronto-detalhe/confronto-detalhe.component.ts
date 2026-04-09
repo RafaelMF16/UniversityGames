@@ -10,6 +10,7 @@ import { getModalidadeLabel, modalidadeUsaPlacar } from '../../models/equipe.mod
 import { AuthStateService } from '../../services/auth-state.service';
 import { ConfrontosStateService } from '../../services/confrontos-state.service';
 import { EquipesStateService } from '../../services/equipes-state.service';
+import { formatarHorarioConfronto } from '../../utils/horario-confronto.util';
 
 @Component({
   selector: 'app-confronto-detalhe',
@@ -100,6 +101,10 @@ export class ConfrontoDetalheComponent {
     }
 
     return `${dia}/${mes}/${ano}`;
+  }
+
+  formatarHorario(horario: string | null | undefined) {
+    return formatarHorarioConfronto(horario);
   }
 
   async voltar() {
