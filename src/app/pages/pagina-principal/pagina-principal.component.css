@@ -16,7 +16,7 @@
 }
 
 .shell-sidebar {
-    background: #0b1320;
+    background: var(--drawer-background);
     border-right: 0;
     padding: 16px 0 16px 16px;
     width: 280px;

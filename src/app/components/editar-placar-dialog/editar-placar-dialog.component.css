@@ -49,7 +49,7 @@
 }
 
 .score-input {
-    background: rgba(37, 51, 77, 0.92);
+    background: var(--field-background);
     border: 1px solid var(--border-strong);
     border-radius: 18px;
     color: var(--text);

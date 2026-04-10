@@ -13,13 +13,71 @@
     --text-soft: #788bab;
     --primary: #5ba4ff;
     --primary-strong: #3d8aed;
+    --accent-primary: var(--primary);
     --success: #3ccfa4;
     --warning: #f2bd55;
     --danger: #ef7373;
     --shadow: 0 18px 40px rgba(2, 10, 20, 0.22);
+    --surface-muted: var(--bg-soft);
     --radius-lg: 24px;
     --radius-md: 18px;
     --radius-sm: 14px;
+    --body-background:
+        radial-gradient(circle at top, rgba(91, 164, 255, 0.12), transparent 26%),
+        linear-gradient(180deg, #102031 0%, var(--bg) 28%, #0a131d 100%);
+    --surface-card-background: linear-gradient(180deg, rgba(19, 31, 47, 0.94) 0%, rgba(15, 24, 37, 0.96) 100%);
+    --field-background: rgba(37, 51, 77, 0.92);
+    --field-focus-background: rgba(31, 45, 68, 0.98);
+    --button-secondary-background: rgba(20, 34, 52, 0.92);
+    --button-ghost-background: rgba(255, 255, 255, 0.02);
+    --header-background: rgba(10, 20, 33, 0.84);
+    --header-border: rgba(34, 52, 83, 0.92);
+    --drawer-background: #0b1320;
+    --item-card-background: rgba(20, 35, 61, 0.56);
+    --item-card-background-strong: rgba(20, 35, 61, 0.72);
+    --chip-background: rgba(29, 43, 66, 0.92);
+    --tab-background: rgba(37, 57, 88, 0.72);
+    --tab-active-background: rgba(40, 70, 112, 0.88);
+    --sticky-actions-background: linear-gradient(180deg, rgba(15, 24, 37, 0) 0%, rgba(15, 24, 37, 0.92) 22%, rgba(15, 24, 37, 0.98) 100%);
+}
+
+:root.theme-light {
+    --bg: #f8fbff;
+    --bg-elevated: #ffffff;
+    --bg-soft: #edf6ff;
+    --bg-muted: #dcecff;
+    --border: rgba(91, 164, 255, 0.18);
+    --border-strong: rgba(67, 142, 235, 0.28);
+    --text: #17304f;
+    --text-primary: #17304f;
+    --text-muted: #60748e;
+    --text-soft: #8aa0ba;
+    --primary: #2f8df2;
+    --primary-strong: #1d78d8;
+    --accent-primary: var(--primary);
+    --success: #12805f;
+    --warning: #9a650c;
+    --danger: #c94242;
+    --shadow: 0 18px 38px rgba(54, 111, 180, 0.12);
+    --surface-muted: var(--bg-soft);
+    --body-background:
+        radial-gradient(circle at top left, rgba(140, 202, 255, 0.34), transparent 30%),
+        radial-gradient(circle at 85% 8%, rgba(216, 239, 255, 0.8), transparent 28%),
+        linear-gradient(180deg, #ffffff 0%, #f7fbff 48%, #edf6ff 100%);
+    --surface-card-background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 253, 255, 0.98) 100%);
+    --field-background: rgba(255, 255, 255, 0.96);
+    --field-focus-background: #ffffff;
+    --button-secondary-background: rgba(233, 245, 255, 0.98);
+    --button-ghost-background: rgba(255, 255, 255, 0.92);
+    --header-background: rgba(255, 255, 255, 0.86);
+    --header-border: rgba(91, 164, 255, 0.16);
+    --drawer-background: #ffffff;
+    --item-card-background: rgba(255, 255, 255, 0.94);
+    --item-card-background-strong: rgba(255, 255, 255, 0.98);
+    --chip-background: rgba(241, 248, 255, 0.98);
+    --tab-background: rgba(239, 247, 255, 0.98);
+    --tab-active-background: rgba(220, 238, 255, 0.98);
+    --sticky-actions-background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.94) 22%, rgba(255, 255, 255, 0.99) 100%);
 }
 
 * {
@@ -34,9 +92,7 @@ body {
 }
 
 body {
-    background:
-        radial-gradient(circle at top, rgba(91, 164, 255, 0.12), transparent 26%),
-        linear-gradient(180deg, #102031 0%, var(--bg) 28%, #0a131d 100%);
+    background: var(--body-background);
     color: var(--text);
     font-family: 'Manrope', sans-serif;
     font-size: 15px;
@@ -86,7 +142,7 @@ small {
 }
 
 .icon-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
     color: var(--text);
     transform: translateY(-1px);
 }
@@ -95,7 +151,7 @@ small {
 .app-input,
 .app-select {
     appearance: none;
-    background: rgba(37, 51, 77, 0.92);
+    background: var(--field-background);
     border: 1px solid var(--border-strong);
     border-radius: 16px;
     color: var(--text);
@@ -114,7 +170,7 @@ small {
 .input:focus,
 .app-input:focus,
 .app-select:focus {
-    background: rgba(31, 45, 68, 0.98);
+    background: var(--field-focus-background);
     border-color: rgba(36, 144, 255, 0.9);
     box-shadow: 0 0 0 3px rgba(36, 144, 255, 0.16);
 }
@@ -150,13 +206,13 @@ small {
 }
 
 .app-button-secondary {
-    background: rgba(20, 34, 52, 0.92);
+    background: var(--button-secondary-background);
     border: 1px solid rgba(91, 164, 255, 0.2);
     color: var(--primary);
 }
 
 .app-button-ghost {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--button-ghost-background);
     border: 1px solid var(--border-strong);
     color: var(--text-muted);
 }
@@ -175,7 +231,7 @@ small {
 }
 
 .surface-card {
-    background: linear-gradient(180deg, rgba(19, 31, 47, 0.94) 0%, rgba(15, 24, 37, 0.96) 100%);
+    background: var(--surface-card-background);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     color: var(--text);
@@ -274,6 +330,66 @@ small {
     max-height: none !important;
     overflow: visible !important;
     padding: 0 !important;
+}
+
+.theme-light app-header .header {
+    background: var(--header-background);
+    border-bottom-color: var(--header-border);
+}
+
+.theme-light app-header .brand-main {
+    color: var(--text);
+}
+
+.theme-light app-header .menu-button,
+.theme-light app-header .profile-button {
+    background: rgba(255, 255, 255, 0.94);
+    border-color: var(--border-strong);
+    box-shadow: 0 10px 24px rgba(54, 111, 180, 0.1);
+}
+
+.theme-light app-sidebar .sidebar,
+.theme-light .shell-sidebar {
+    background: #ffffff;
+    color: var(--text);
+}
+
+.theme-light .mat-drawer-container,
+.theme-light .mat-drawer-content {
+    background: transparent;
+    color: var(--text);
+}
+
+.theme-light .mat-drawer,
+.theme-light .mat-drawer-inner-container {
+    background: #ffffff;
+    color: var(--text);
+}
+
+.theme-light app-sidebar .sidebar-link.active,
+.theme-light app-sidebar .sidebar-link:hover {
+    background: rgba(91, 164, 255, 0.14);
+    border-color: rgba(91, 164, 255, 0.26);
+    color: var(--primary-strong);
+}
+
+.theme-light .pill-neutral {
+    background: rgba(91, 164, 255, 0.12);
+    color: #547190;
+}
+
+.theme-light .pill-primary {
+    background: rgba(47, 141, 242, 0.12);
+}
+
+.theme-light .app-button-danger,
+.theme-light .app-input.invalid,
+.theme-light .app-select.invalid {
+    background: rgba(255, 236, 236, 0.92);
+}
+
+.theme-light .mat-mdc-dialog-container {
+    --mdc-dialog-container-color: transparent;
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator,

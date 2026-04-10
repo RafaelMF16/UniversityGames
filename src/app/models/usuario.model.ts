@@ -1,5 +1,6 @@
 export type UserRole = 'admin' | 'juiz' | 'capitao' | 'visitante';
 export type ManagedUserRole = UserRole;
+export type TemaUsuario = 'dark' | 'light' | 'system';
 
 export interface Usuario {
     id: number;
@@ -10,6 +11,7 @@ export interface Usuario {
     curso?: string | null;
     periodo?: string | null;
     ativo: boolean;
+    tema: TemaUsuario;
 }
 
 export interface UsuarioPayload {
@@ -21,4 +23,5 @@ export interface UsuarioPayload {
     curso?: string | null;
     periodo?: string | null;
     ativo: boolean;
+    tema?: TemaUsuario;
 }

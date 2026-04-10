@@ -54,6 +54,15 @@
                     </select>
                 </div>
 
+                <div class="field-group">
+                    <label for="usuario-tema">Tema</label>
+                    <select id="usuario-tema" class="app-select" formControlName="tema">
+                        @for (tema of temas; track tema.value) {
+                            <option [value]="tema.value">{{ tema.label }}</option>
+                        }
+                    </select>
+                </div>
+
                 @if (form.controls.role.value === 'visitante' || form.controls.role.value === 'capitao') {
                     <div class="field-group">
                         <label for="usuario-curso">Curso</label>
@@ -127,6 +136,7 @@
                                     <span class="pill" [class.pill-success]="usuario.ativo" [class.pill-warning]="!usuario.ativo">
                                         {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
                                     </span>
+                                    <span class="pill pill-neutral">Tema {{ temaLabel(usuario.tema) }}</span>
                                 </div>
 
                                 <p class="secondary-copy">

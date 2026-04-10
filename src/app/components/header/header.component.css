@@ -1,8 +1,8 @@
 .header {
     align-items: center;
     backdrop-filter: blur(18px);
-    background: rgba(10, 20, 33, 0.84);
-    border-bottom: 1px solid rgba(34, 52, 83, 0.92);
+    background: var(--header-background);
+    border-bottom: 1px solid var(--header-border);
     display: flex;
     gap: 18px;
     justify-content: space-between;
@@ -30,7 +30,7 @@
 }
 
 .brand-main {
-    color: #f8fbff;
+    color: var(--text);
 }
 
 .actions {
@@ -43,8 +43,8 @@
 .menu-button,
 .profile-button {
     align-items: center;
-    background: rgba(22, 35, 55, 0.92);
-    border: 1px solid rgba(76, 103, 146, 0.45);
+    background: color-mix(in srgb, var(--bg-elevated) 86%, var(--primary) 14%);
+    border: 1px solid var(--border-strong);
     border-radius: 16px;
     color: var(--text);
     cursor: pointer;
@@ -58,7 +58,7 @@
 
 .menu-button:hover,
 .profile-button:hover {
-    background: rgba(30, 47, 73, 0.98);
+    background: color-mix(in srgb, var(--bg-elevated) 80%, var(--primary) 20%);
     border-color: rgba(36, 144, 255, 0.42);
 }
 
@@ -85,6 +85,26 @@ mat-icon {
 
 .profile-copy span {
     color: var(--text-muted);
+}
+
+.theme-toggle {
+    align-items: center;
+    background: rgba(36, 144, 255, 0.1);
+    border: 1px solid rgba(36, 144, 255, 0.22);
+    border-radius: 14px;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    font-weight: 800;
+    gap: 10px;
+    justify-content: flex-start;
+    min-height: 44px;
+    padding: 0 12px;
+}
+
+.theme-toggle mat-icon {
+    color: var(--primary);
 }
 
 .menu-link {

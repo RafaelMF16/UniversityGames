@@ -7,7 +7,7 @@ import { ContainerPrincipalComponent } from '../../components/container-principa
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
 import { PaginationControlsComponent } from '../../components/pagination-controls/pagination-controls.component';
 import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
-import { ManagedUserRole, Usuario, UsuarioPayload } from '../../models/usuario.model';
+import { ManagedUserRole, TemaUsuario, Usuario, UsuarioPayload } from '../../models/usuario.model';
 import { UsuariosStateService } from '../../services/usuarios-state.service';
 
 @Component({
@@ -40,6 +40,11 @@ export class UsuariosComponent {
     { value: 'capitao', label: 'Capitão' },
     { value: 'visitante', label: 'Visitante' }
   ];
+  readonly temas: { value: TemaUsuario; label: string; }[] = [
+    { value: 'dark', label: 'Escuro' },
+    { value: 'light', label: 'Claro' },
+    { value: 'system', label: 'Sistema' }
+  ];
 
   readonly form = this.formBuilder.nonNullable.group({
     nome: ['', [Validators.required, Validators.minLength(3)]],
@@ -48,7 +53,8 @@ export class UsuariosComponent {
     role: ['admin' as ManagedUserRole, Validators.required],
     curso: [''],
     periodo: [''],
-    ativo: [true]
+    ativo: [true],
+    tema: ['dark' as TemaUsuario]
   });
 
   constructor() {
@@ -93,6 +99,7 @@ export class UsuariosComponent {
       curso: values.role === 'visitante' || values.role === 'capitao' ? values.curso : null,
       periodo: values.role === 'visitante' || values.role === 'capitao' ? values.periodo : null,
       ativo: values.ativo,
+      tema: values.tema,
       ...(values.senha ? { senha: values.senha } : {})
     };
 
@@ -115,7 +122,8 @@ export class UsuariosComponent {
       role: usuario.role,
       curso: usuario.curso ?? '',
       periodo: usuario.periodo ?? '',
-      ativo: usuario.ativo
+      ativo: usuario.ativo,
+      tema: usuario.tema ?? 'dark'
     });
   }
 
@@ -159,7 +167,8 @@ export class UsuariosComponent {
       role: 'admin',
       curso: '',
       periodo: '',
-      ativo: true
+      ativo: true,
+      tema: 'dark'
     });
   }
 
@@ -181,6 +190,10 @@ export class UsuariosComponent {
     }
 
     return 'Visitante';
+  }
+
+  temaLabel(tema: TemaUsuario | undefined) {
+    return this.temas.find((item) => item.value === (tema ?? 'dark'))?.label ?? 'Escuro';
   }
 
   isInvalid(controlName: 'nome' | 'username' | 'senha' | 'role' | 'curso' | 'periodo') {

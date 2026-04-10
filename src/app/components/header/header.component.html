@@ -23,6 +23,11 @@
                     <span>Perfil: {{ perfilLabel() }}</span>
                 </div>
 
+                <button class="theme-toggle" type="button" (click)="alternarTema()">
+                    <mat-icon>{{ temaAplicado() === 'dark' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+                    <span>{{ temaLabel() }}</span>
+                </button>
+
                 @if (isVisitor()) {
                     <button class="menu-link" type="button" (click)="entrar()">Entrar</button>
                 } @else {

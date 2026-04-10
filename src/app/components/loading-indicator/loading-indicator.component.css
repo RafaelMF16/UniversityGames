@@ -1,7 +1,7 @@
 .loading {
     align-items: center;
-    background: rgba(19, 31, 47, 0.72);
-    border: 1px solid rgba(101, 126, 167, 0.18);
+    background: var(--item-card-background);
+    border: 1px solid var(--border);
     border-radius: 18px;
     color: var(--text-muted);
     display: flex;

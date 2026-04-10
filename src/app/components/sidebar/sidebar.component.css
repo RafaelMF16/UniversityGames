@@ -1,5 +1,5 @@
 .sidebar {
-    background: #0b1320;
+    background: var(--bg);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -27,7 +27,7 @@
 
 .sidebar-link:hover,
 .sidebar-link.active {
-    background: rgba(36, 144, 255, 0.12);
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
     border-color: rgba(36, 144, 255, 0.2);
     color: var(--text);
     transform: translateX(2px);
