@@ -1,7 +1,7 @@
 .membro-card {
     align-items: flex-start;
-    background: rgba(30, 43, 66, 0.82);
-    border: 1px solid rgba(46, 70, 112, 0.62);
+    background: var(--item-card-background-strong);
+    border: 1px solid var(--border);
     border-radius: 18px;
     display: flex;
     gap: 12px;

@@ -59,7 +59,7 @@
 }
 
 .bar {
-    background: rgba(39, 57, 86, 0.9);
+    background: color-mix(in srgb, var(--primary) 14%, var(--bg-muted));
     border-radius: 999px;
     height: 12px;
     overflow: hidden;

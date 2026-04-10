@@ -12,7 +12,7 @@
 
 .choice-chip {
     appearance: none;
-    background: rgba(29, 43, 66, 0.92);
+    background: var(--chip-background);
     border: 1px solid var(--border-strong);
     border-radius: 999px;
     color: var(--text);
@@ -27,7 +27,7 @@
 }
 
 .choice-chip--selected {
-    background: rgba(36, 144, 255, 0.12);
+    background: color-mix(in srgb, var(--primary) 14%, var(--bg-elevated));
     border-color: rgba(36, 144, 255, 0.42);
     color: var(--primary);
 }

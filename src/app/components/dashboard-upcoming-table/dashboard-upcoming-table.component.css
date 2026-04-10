@@ -5,8 +5,8 @@
 }
 
 .match-card {
-    background: rgba(20, 35, 61, 0.56);
-    border: 1px solid rgba(87, 112, 158, 0.14);
+    background: var(--item-card-background);
+    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     gap: 16px;

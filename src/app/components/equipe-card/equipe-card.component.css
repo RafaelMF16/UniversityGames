@@ -64,7 +64,7 @@
 
 .expand-btn {
     align-items: center;
-    background: rgba(31, 45, 68, 0.98);
+    background: var(--button-secondary-background);
     border: 1px solid var(--border-strong);
     border-radius: 16px;
     color: var(--text);
@@ -106,7 +106,7 @@
 }
 
 .skill-chip {
-    background: rgba(29, 43, 66, 0.92);
+    background: var(--chip-background);
     border: 1px solid var(--border-strong);
     border-radius: 999px;
     color: var(--text-muted);

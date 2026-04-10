@@ -38,7 +38,7 @@
     padding-top: 14px;
     position: sticky;
     bottom: 0;
-    background: linear-gradient(180deg, rgba(15, 24, 37, 0) 0%, rgba(15, 24, 37, 0.92) 22%, rgba(15, 24, 37, 0.98) 100%);
+    background: var(--sticky-actions-background);
 }
 
 @media (max-width: 900px) {

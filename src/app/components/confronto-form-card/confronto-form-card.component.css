@@ -29,9 +29,9 @@
 }
 
 .tab-button {
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-strong);
     border-radius: 16px;
-    background: rgba(37, 57, 88, 0.72);
+    background: var(--tab-background);
     color: var(--text-muted);
     min-height: 48px;
     font-weight: 700;
@@ -42,7 +42,7 @@
 .tab-button.active {
     border-color: rgba(84, 148, 255, 0.7);
     color: var(--text);
-    background: rgba(40, 70, 112, 0.88);
+    background: var(--tab-active-background);
 }
 
 .tab-button:disabled {

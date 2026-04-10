@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, HostListener, Output, inject, sign
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { AuthStateService } from '../../services/auth-state.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -13,12 +14,15 @@ import { AuthStateService } from '../../services/auth-state.service';
 export class HeaderComponent {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly authState = inject(AuthStateService);
+  private readonly themeService = inject(ThemeService);
 
   @Output() menuToggle = new EventEmitter<void>();
   readonly menuAberto = signal(false);
   readonly nomeUsuario = this.authState.displayName;
   readonly roleAtual = this.authState.currentRole;
   readonly isVisitor = this.authState.isAnonymousVisitor;
+  readonly temaLabel = this.themeService.labelTemaAtual.bind(this.themeService);
+  readonly temaAplicado = this.themeService.temaAplicado;
 
   toggleMenu(event: MouseEvent) {
     event.stopPropagation();
@@ -37,6 +41,10 @@ export class HeaderComponent {
   async sair() {
     this.menuAberto.set(false);
     await this.authState.logout();
+  }
+
+  async alternarTema() {
+    await this.authState.updateTheme(this.themeService.proximoTema());
   }
 
   fecharMenu() {

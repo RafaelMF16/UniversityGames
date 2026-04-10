@@ -68,8 +68,8 @@
 }
 
 .member-card {
-    background: rgba(20, 35, 61, 0.72);
-    border: 1px solid rgba(87, 112, 158, 0.14);
+    background: var(--item-card-background-strong);
+    border: 1px solid var(--border);
     border-radius: 18px;
     display: flex;
     flex-direction: column;
@@ -159,8 +159,8 @@
 }
 
 .member-list-card {
-    background: rgba(20, 35, 61, 0.72);
-    border: 1px solid rgba(87, 112, 158, 0.14);
+    background: var(--item-card-background-strong);
+    border: 1px solid var(--border);
     border-radius: 20px;
     display: flex;
     flex-direction: column;

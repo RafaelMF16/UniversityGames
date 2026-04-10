@@ -2,8 +2,9 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ApiRequestService } from './api-request.service';
+import { ThemeService } from './theme.service';
 import { AuthResponse, LoginPayload, VisitorRegisterPayload } from '../models/auth.model';
-import { Usuario, UserRole } from '../models/usuario.model';
+import { TemaUsuario, Usuario, UserRole } from '../models/usuario.model';
 
 const VISITOR_STORAGE_KEY = 'ug_visitor_mode';
 
@@ -13,6 +14,7 @@ const VISITOR_STORAGE_KEY = 'ug_visitor_mode';
 export class AuthStateService {
   private readonly api = inject(ApiRequestService);
   private readonly router = inject(Router);
+  private readonly themeService = inject(ThemeService);
   private initPromise: Promise<void> | null = null;
 
   readonly user = signal<Usuario | null>(null);
@@ -52,6 +54,7 @@ export class AuthStateService {
     try {
       const user = await firstValueFrom(this.api.get<Usuario>('/auth/me'));
       this.user.set(user);
+      this.themeService.aplicarTemaDoUsuario(user.tema);
       this.visitorMode.set(false);
       localStorage.removeItem(VISITOR_STORAGE_KEY);
       return user;
@@ -65,6 +68,7 @@ export class AuthStateService {
     this.user.set(null);
     this.visitorMode.set(true);
     localStorage.setItem(VISITOR_STORAGE_KEY, '1');
+    this.themeService.aplicarTemaLocal(this.themeService.preferencia());
     this.error.set(null);
     this.initialized.set(true);
     await this.router.navigateByUrl('/dashboard');
@@ -84,6 +88,27 @@ export class AuthStateService {
 
     this.clearSession(false);
     await this.router.navigateByUrl('/login');
+  }
+
+  async updateTheme(tema: TemaUsuario) {
+    const usuario = this.user();
+
+    if (!usuario) {
+      this.themeService.aplicarTemaLocal(tema);
+      return true;
+    }
+
+    this.themeService.aplicarTemaDoUsuario(tema);
+
+    try {
+      const user = await firstValueFrom(this.api.put<Usuario, { tema: TemaUsuario }>('/auth/me/tema', { tema }));
+      this.user.set(user);
+      this.themeService.aplicarTemaDoUsuario(user.tema);
+      return true;
+    } catch {
+      this.themeService.aplicarTemaDoUsuario(usuario.tema);
+      return false;
+    }
   }
 
   displayRole(role: UserRole) {
@@ -164,6 +189,7 @@ export class AuthStateService {
 
   private setSession(response: AuthResponse) {
     this.user.set(response.user);
+    this.themeService.aplicarTemaDoUsuario(response.user.tema);
     this.visitorMode.set(false);
     localStorage.removeItem(VISITOR_STORAGE_KEY);
     this.initialized.set(true);
