@@ -76,7 +76,7 @@
         </div>
 
         <div class="field-group">
-            <label for="confronto-hora">Horario</label>
+            <label for="confronto-hora">Horário</label>
             <input id="confronto-hora" class="app-input" [class.invalid]="isInvalid('horario')" type="time" formControlName="horario">
             @if (isInvalid('horario')) {
                 <small class="field-error">{{ getErrorMessage('horario') }}</small>
@@ -111,7 +111,7 @@
             @if (salvando()) {
                 <app-loading-indicator [inline]="true" [small]="true" [label]="confrontoEditando ? 'Salvando...' : 'Cadastrando...'"></app-loading-indicator>
             } @else {
-                {{ confrontoEditando ? 'Salvar alteracoes' : 'Cadastrar confronto' }}
+                {{ confrontoEditando ? 'Salvar alterações' : 'Cadastrar confronto' }}
             }
         </button>
     </div>

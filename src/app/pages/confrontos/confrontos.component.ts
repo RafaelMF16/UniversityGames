@@ -32,17 +32,11 @@ export class ConfrontosComponent {
   private readonly authState = inject(AuthStateService);
 
   readonly confrontos = this.confrontosState.confrontos.asReadonly();
-  readonly equipes = this.equipesState.equipesReferencia.asReadonly();
   readonly loading = computed(() => this.confrontosState.loading() || this.equipesState.loading());
   readonly error = computed(() => this.confrontosState.error() ?? this.equipesState.error());
-  readonly nomesEquipes = computed(() => Array.from(new Set(this.equipes().map((equipe) => equipe.nome))));
   readonly modalidades = MODALIDADES_CONFIG;
   readonly pagination = this.confrontosState.pagination.asReadonly();
   readonly podeGerenciarConfrontos = computed(() => this.authState.canManageConfrontos());
-
-  constructor() {
-    void this.equipesState.loadEquipesReferencia();
-  }
 
   abrirModalConfronto(confronto?: Confronto) {
     if (!this.authState.canManageConfrontos()) {
@@ -54,7 +48,6 @@ export class ConfrontosComponent {
       maxWidth: '94vw',
       panelClass: 'dialog-sem-borda',
       data: {
-        equipes: this.equipes(),
         confronto: confronto ?? null
       }
     });

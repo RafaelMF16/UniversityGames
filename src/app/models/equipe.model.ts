@@ -1,6 +1,6 @@
 export type CategoriaEsporte = 'coletivo' | 'individual';
 export type ModalidadeEquipe = 'Futsal' | 'Volei' | 'Queimada' | 'Basquete' | 'Natacao';
-export type NivelAtletaIndividual = 'Iniciante' | 'Intermediario' | 'Avancado';
+export type NivelAtletaIndividual = 'Iniciante' | 'Intermediário' | 'Avançado';
 
 export interface ModalidadeEsporteConfig {
     valor: ModalidadeEquipe;
@@ -12,10 +12,10 @@ export interface ModalidadeEsporteConfig {
 
 export const MODALIDADES_CONFIG: ModalidadeEsporteConfig[] = [
     { valor: 'Futsal', label: 'Futsal', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
-    { valor: 'Volei', label: 'Volei', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
+    { valor: 'Volei', label: 'Vôlei', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
     { valor: 'Queimada', label: 'Queimada', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
     { valor: 'Basquete', label: 'Basquete', categoria: 'coletivo', permiteMembros: true, usaPlacar: true },
-    { valor: 'Natacao', label: 'Natacao', categoria: 'individual', permiteMembros: false, usaPlacar: false }
+    { valor: 'Natacao', label: 'Natação', categoria: 'individual', permiteMembros: false, usaPlacar: false }
 ];
 
 export const MODALIDADES_EQUIPE: ModalidadeEquipe[] = MODALIDADES_CONFIG.map((item) => item.valor);
@@ -26,38 +26,38 @@ export const HABILIDADES_DISPONIVEIS = [
     'Ataque',
     'Defesa',
     'Velocidade',
-    'Lideranca',
+    'Liderança',
     'Passe',
-    'Resistencia',
-    'Tatica',
-    'Comunicacao',
+    'Resistência',
+    'Tática',
+    'Comunicação',
     'Drible',
-    'Finalizacao'
+    'Finalização'
 ] as const;
 export const HABILIDADES_NATACAO = [
-    'Explosao',
-    'Resistencia',
-    'Tecnica',
+    'Explosão',
+    'Resistência',
+    'Técnica',
     'Ritmo',
     'Virada',
-    'Saida',
-    'Respiracao',
-    'Coordenacao',
-    'Concentracao',
-    'Consistencia'
+    'Saída',
+    'Respiração',
+    'Coordenação',
+    'Concentração',
+    'Consistência'
 ] as const;
-export const NIVEIS_ATLETA_INDIVIDUAL: NivelAtletaIndividual[] = ['Iniciante', 'Intermediario', 'Avancado'];
+export const NIVEIS_ATLETA_INDIVIDUAL: NivelAtletaIndividual[] = ['Iniciante', 'Intermediário', 'Avançado'];
 export const ESPECIALIDADES_POR_MODALIDADE: Record<'Natacao', string[]> = {
-    Natacao: ['Livre', 'Costas', 'Peito', 'Borboleta', 'Medley', 'Resistencia']
+    Natacao: ['Livre', 'Costas', 'Peito', 'Borboleta', 'Medley', 'Resistência']
 };
 export const HABILIDADES_POR_MODALIDADE: Partial<Record<ModalidadeEquipe, readonly string[]>> = {
     Natacao: HABILIDADES_NATACAO
 };
 export const FUNCOES_POR_MODALIDADE: Record<Exclude<ModalidadeEquipe, 'Natacao'>, string[]> = {
-    Futsal: ['Goleiro', 'Fixo', 'Ala direita', 'Ala esquerda', 'Pivo'],
-    Volei: ['Levantador', 'Oposto', 'Ponteiro', 'Central', 'Libero'],
+    Futsal: ['Goleiro', 'Fixo', 'Ala direita', 'Ala esquerda', 'Pivô'],
+    Volei: ['Levantador', 'Oposto', 'Ponteiro', 'Central', 'Líbero'],
     Queimada: ['Atacante', 'Defensor', 'Coringa', 'Reserva'],
-    Basquete: ['Armador', 'Ala-armador', 'Ala', 'Ala-pivo', 'Pivo']
+    Basquete: ['Armador', 'Ala-armador', 'Ala', 'Ala-pivô', 'Pivô']
 };
 export const LIMITES_INTEGRANTES_POR_MODALIDADE: Record<ModalidadeEquipe, number> = {
     Futsal: 14,

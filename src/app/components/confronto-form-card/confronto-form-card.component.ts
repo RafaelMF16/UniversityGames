@@ -10,11 +10,11 @@ import {
   getModalidadeConfig
 } from '../../models/equipe.model';
 import { ConfrontosStateService } from '../../services/confrontos-state.service';
+import { EquipesStateService } from '../../services/equipes-state.service';
 import { formatarHorarioConfronto, normalizarHorarioConfrontoParaEnvio } from '../../utils/horario-confronto.util';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
 interface ConfrontoFormDialogData {
-  equipes: Equipe[];
   confronto?: Confronto | null;
 }
 
@@ -28,8 +28,16 @@ interface ConfrontoFormDialogData {
 export class ConfrontoFormCardComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly confrontosState = inject(ConfrontosStateService);
+  private readonly equipesState = inject(EquipesStateService);
 
-  readonly equipes: Equipe[];
+  readonly equipes = computed<Equipe[]>(() => {
+    const modalidade = this.modalidadeSelecionada();
+    if (!modalidade) {
+      return [];
+    }
+
+    return this.equipesState.participantesReferencia()[modalidade] ?? [];
+  });
   readonly confrontoEditando: Confronto | null;
   readonly salvando = signal(false);
   readonly categoriaSelecionada = signal<CategoriaEsporte>('coletivo');
@@ -44,7 +52,7 @@ export class ConfrontoFormCardComponent {
       return [];
     }
 
-    return this.equipes.filter((item) => {
+    return this.equipes().filter((item) => {
       const config = getModalidadeConfig(item.modalidade);
       return !!config && config.categoria === this.categoriaSelecionada() && item.modalidade === modalidade;
     });
@@ -64,7 +72,6 @@ export class ConfrontoFormCardComponent {
     private readonly dialogRef: MatDialogRef<ConfrontoFormCardComponent, Confronto | undefined>,
     @Optional() @Inject(MAT_DIALOG_DATA) data: ConfrontoFormDialogData | null
   ) {
-    this.equipes = data?.equipes ?? [];
     this.confrontoEditando = data?.confronto ?? null;
 
     if (this.confrontoEditando) {
@@ -80,11 +87,15 @@ export class ConfrontoFormCardComponent {
         modalidade: this.confrontoEditando.modalidade,
         status: this.confrontoEditando.status
       });
+      void this.carregarParticipantes(this.confrontoEditando.modalidade);
     }
 
     this.form.controls.modalidade.valueChanges.subscribe((modalidade) => {
       this.modalidadeSelecionada.set(modalidade ?? '');
       this.atualizarEstadoParticipantes(!!modalidade);
+      if (modalidade) {
+        void this.carregarParticipantes(modalidade);
+      }
     });
 
     this.atualizarEstadoParticipantes(!!this.form.controls.modalidade.value, !this.confrontoEditando);
@@ -96,8 +107,8 @@ export class ConfrontoFormCardComponent {
 
   get subtitulo() {
     return this.categoriaSelecionada() === 'coletivo'
-      ? 'Defina equipes, horario, local e modalidade da partida coletiva.'
-      : 'Defina atletas, horario, local e modalidade da disputa individual.';
+      ? 'Defina equipes, horário, local e modalidade da partida coletiva.'
+      : 'Defina atletas, horário, local e modalidade da disputa individual.';
   }
 
   get labelParticipanteA() {
@@ -196,7 +207,7 @@ export class ConfrontoFormCardComponent {
     const control = this.form.controls[controlName];
 
     if (control.hasError('required') || control.hasError('min')) {
-      return 'Este campo e obrigatorio.';
+      return 'Este campo é obrigatório.';
     }
 
     if (control.hasError('minlength')) {
@@ -215,7 +226,29 @@ export class ConfrontoFormCardComponent {
       return id;
     }
 
-    return this.equipes.find((item) => item.nome === nome)?.id ?? 0;
+    return this.equipes().find((item) => item.nome === nome)?.id ?? 0;
+  }
+
+  private async carregarParticipantes(modalidade: ModalidadeEquipe) {
+    await this.equipesState.loadParticipantesPorModalidade(modalidade);
+
+    if (!this.confrontoEditando) {
+      return;
+    }
+
+    if (!this.form.controls.participanteAId.value) {
+      this.form.controls.participanteAId.setValue(
+        this.findParticipanteId(this.confrontoEditando.participanteAId, this.confrontoEditando.equipeA),
+        { emitEvent: false }
+      );
+    }
+
+    if (!this.form.controls.participanteBId.value) {
+      this.form.controls.participanteBId.setValue(
+        this.findParticipanteId(this.confrontoEditando.participanteBId, this.confrontoEditando.equipeB),
+        { emitEvent: false }
+      );
+    }
   }
 
   private normalizarHorarioParaInput(horario: string | null | undefined) {

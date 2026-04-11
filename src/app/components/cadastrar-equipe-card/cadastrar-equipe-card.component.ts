@@ -84,20 +84,20 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   get titulo() {
     if (this.equipeEditando) {
-      return this.ehColetivo ? 'Editar equipe' : 'Editar inscricao individual';
+      return this.ehColetivo ? 'Editar equipe' : 'Editar inscrição individual';
     }
 
-    return this.ehColetivo ? 'Cadastrar equipe' : 'Confirmar inscricao individual';
+    return this.ehColetivo ? 'Cadastrar equipe' : 'Confirmar inscrição individual';
   }
 
   get descricao() {
     if (!this.ehColetivo) {
       return this.individualUsaDadosDaConta
-        ? 'Seus dados da conta serao usados automaticamente para concluir a inscricao.'
-        : 'Cadastre o atleta com os dados principais da inscricao individual.';
+        ? 'Seus dados da conta serão usados automaticamente para concluir a inscrição.'
+        : 'Cadastre o atleta com os dados principais da inscrição individual.';
     }
 
-    return 'Cadastre a equipe com os dados do capitao. Os demais integrantes serao adicionados depois, na tela de detalhes.';
+    return 'Cadastre a equipe com os dados do capitão. Os demais integrantes serão adicionados depois, na tela de detalhes.';
   }
 
   get ehColetivo() {
@@ -230,7 +230,7 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   get helperTextHabilidadesAtleta() {
     return modalidadeUsaHabilidadesEspecificas(this.modalidadeSelecionada)
-      ? 'Escolha ate 3 habilidades da natacao.'
+      ? 'Escolha até 3 habilidades da natação.'
       : 'Habilidades';
   }
 
@@ -302,17 +302,17 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     const control = this.form.controls[controlName];
 
     if (control.hasError('required')) {
-      return 'Este campo e obrigatorio.';
+      return 'Este campo é obrigatório.';
     }
 
     if (control.hasError('minlength')) {
       return controlName === 'periodo'
-        ? 'Informe um periodo valido.'
+        ? 'Informe um período válido.'
         : 'Informe pelo menos 2 caracteres.';
     }
 
     if (controlName === 'nome' && this.nomeDuplicado) {
-      return 'Ja existe uma equipe cadastrada com esse nome nessa modalidade.';
+      return 'Já existe uma equipe cadastrada com esse nome nessa modalidade.';
     }
 
     return '';

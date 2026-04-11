@@ -11,7 +11,6 @@ import { PredictionSummaryComponent } from '../../components/prediction-summary/
 import { getModalidadeLabel, modalidadeUsaPlacar } from '../../models/equipe.model';
 import { AuthStateService } from '../../services/auth-state.service';
 import { ConfrontosStateService } from '../../services/confrontos-state.service';
-import { EquipesStateService } from '../../services/equipes-state.service';
 import { formatarHorarioConfronto } from '../../utils/horario-confronto.util';
 
 @Component({
@@ -31,21 +30,17 @@ export class ConfrontoDetalheComponent {
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly confrontosState = inject(ConfrontosStateService);
-  private readonly equipesState = inject(EquipesStateService);
   private readonly authState = inject(AuthStateService);
 
   readonly confronto = this.confrontosState.selectedConfronto.asReadonly();
-  readonly detailLoading = computed(() => this.confrontosState.detailLoading() || this.equipesState.loading());
-  readonly detailError = computed(() => this.confrontosState.detailError() ?? this.equipesState.error());
+  readonly detailLoading = this.confrontosState.detailLoading.asReadonly();
+  readonly detailError = this.confrontosState.detailError.asReadonly();
   readonly removendoId = this.confrontosState.deletingId.asReadonly();
   readonly placarSalvandoId = this.confrontosState.placarSavingId.asReadonly();
   readonly previsaoSalvandoId = this.confrontosState.predictionSavingId.asReadonly();
-  readonly equipes = this.equipesState.equipesReferencia.asReadonly();
   readonly podeGerenciar = computed(() => this.authState.canManageConfrontos());
 
   constructor() {
-    void this.equipesState.loadEquipesReferencia();
-
     this.route.paramMap.subscribe((params) => {
       const confrontoId = Number(params.get('id'));
       if (!Number.isFinite(confrontoId) || confrontoId <= 0) {
@@ -124,7 +119,6 @@ export class ConfrontoDetalheComponent {
       maxWidth: '94vw',
       panelClass: 'dialog-sem-borda',
       data: {
-        equipes: this.equipes(),
         confronto
       }
     });
@@ -160,7 +154,7 @@ export class ConfrontoDetalheComponent {
 
     const confirmou = await this.confirmarExclusao(
       'Excluir confronto?',
-      `O confronto ${confronto.equipeA} vs ${confronto.equipeB} sera removido do calendario.`
+      `O confronto ${confronto.equipeA} vs ${confronto.equipeB} será removido do calendário.`
     );
     if (!confirmou) {
       return;

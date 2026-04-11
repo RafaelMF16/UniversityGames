@@ -1,13 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ContainerPrincipalComponent } from '../../components/container-principal/container-principal.component';
 import {
   CategoriaEsporte,
   Equipe,
-  Membro,
   ModalidadeEquipe,
-  getEspecialidadesPorModalidade,
   getModalidadeLabel,
   getModalidadesPorCategoria,
   modalidadeEhIndividual
@@ -37,25 +35,21 @@ export class EquipesComponent {
   private readonly router = inject(Router);
 
   readonly categoriaSelecionada = signal<CategoriaEsporte>('coletivo');
+  readonly filtroNomeExato = signal('');
+  private readonly ultimoUsuarioCarregadoId = signal<number | null>(null);
   readonly equipes = this.equipesState.equipes.asReadonly();
   readonly loading = this.equipesState.loading.asReadonly();
   readonly error = this.equipesState.error.asReadonly();
   readonly pagination = this.equipesState.pagination.asReadonly();
+  readonly nomeExato = this.equipesState.nomeExato;
   readonly carregandoLista = computed(() => this.loading() && !this.equipes().length);
   readonly modalidadesDaCategoria = computed(() => getModalidadesPorCategoria(this.categoriaSelecionada()));
   readonly usuarioAtual = this.authState.user.asReadonly();
   readonly visitanteAnonimo = this.authState.isAnonymousVisitor;
   readonly usuarioPodeSeInscreverNoIndividual = computed(() => this.authState.canCreateIndividualRegistration());
-  readonly modalidadesIndividuaisDoUsuario = computed<ModalidadeEquipe[]>(() => {
-    const usuario = this.usuarioAtual();
-    if (!usuario) {
-      return [];
-    }
-
-    return this.equipesState.equipesReferencia()
-      .filter((equipe) => modalidadeEhIndividual(equipe.modalidade) && equipe.usuarioId === usuario.id)
-      .map((equipe) => equipe.modalidade);
-  });
+  readonly modalidadesIndividuaisDoUsuario = computed<ModalidadeEquipe[]>(() =>
+    this.equipesState.inscricoesIndividuaisUsuario().map((equipe) => equipe.modalidade)
+  );
   readonly bloqueouTodasModalidadesIndividuais = computed(() => {
     if (!this.usuarioAtual() || !this.usuarioPodeSeInscreverNoIndividual()) {
       return false;
@@ -73,8 +67,20 @@ export class EquipesComponent {
   });
 
   constructor() {
-    void this.equipesState.loadEquipesReferencia();
     void this.equipesState.setCategoria('coletivo');
+
+    effect(() => {
+      const usuario = this.usuarioAtual();
+      if (usuario) {
+        if (this.ultimoUsuarioCarregadoId() !== usuario.id) {
+          this.ultimoUsuarioCarregadoId.set(usuario.id);
+          void this.equipesState.loadInscricoesIndividuaisUsuario(usuario.id, true);
+        }
+      } else {
+        this.ultimoUsuarioCarregadoId.set(null);
+        this.equipesState.inscricoesIndividuaisUsuario.set([]);
+      }
+    });
   }
 
   async selecionarCategoria(categoria: CategoriaEsporte) {
@@ -116,19 +122,13 @@ export class EquipesComponent {
     return modalidadeEhIndividual(modalidade);
   }
 
-  atletaPrincipal(equipe: Equipe): Membro | null {
-    return equipe.membros[0] ?? null;
+  async aplicarFiltroNomeExato() {
+    await this.equipesState.setNomeExatoFilter(this.filtroNomeExato());
   }
 
-  resumoAtletaIndividual(equipe: Equipe) {
-    const atleta = this.atletaPrincipal(equipe);
-    if (!atleta) {
-      return 'Perfil esportivo pendente.';
-    }
-
-    const nivel = atleta.nivel?.trim() || 'Nivel nao informado';
-    const especialidade = atleta.especialidade?.trim() || getEspecialidadesPorModalidade(equipe.modalidade)[0] || '';
-    return especialidade ? `${nivel} · ${especialidade}` : nivel;
+  async limparFiltroNomeExato() {
+    this.filtroNomeExato.set('');
+    await this.equipesState.setNomeExatoFilter('');
   }
 
   abrirModalCadastro(equipeEditando: Equipe | null = null, categoria = this.categoriaSelecionada()) {
@@ -147,7 +147,7 @@ export class EquipesComponent {
         usuarioAtual: this.usuarioAtual(),
         individualAutopreenchido: categoria === 'individual' && this.usuarioPodeSeInscreverNoIndividual(),
         modalidadesIndividuaisBloqueadas: this.modalidadesIndividuaisDoUsuario(),
-        equipesReferencia: this.equipesState.equipesReferencia()
+        equipesReferencia: []
       }
     });
   }
