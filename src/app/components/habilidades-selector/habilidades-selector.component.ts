@@ -11,9 +11,9 @@ export class HabilidadesSelectorComponent {
   @Input() selected: string[] = [];
   @Input() label = 'Habilidades';
   @Input() helperText = `Escolha ate ${MAX_HABILIDADES_POR_MEMBRO} habilidades ja cadastradas no projeto.`;
+  @Input() availableSkills: readonly string[] = HABILIDADES_DISPONIVEIS;
   @Output() selectedChange = new EventEmitter<string[]>();
 
-  readonly habilidadesDisponiveis = HABILIDADES_DISPONIVEIS;
   readonly maxHabilidades = MAX_HABILIDADES_POR_MEMBRO;
 
   toggle(habilidade: string) {
@@ -39,6 +39,10 @@ export class HabilidadesSelectorComponent {
 
   get selectedNormalizadas() {
     return this.normalizar(this.selected);
+  }
+
+  get habilidadesDisponiveis() {
+    return this.availableSkills?.length ? this.availableSkills : HABILIDADES_DISPONIVEIS;
   }
 
   private normalizar(habilidades: string[] | null | undefined) {

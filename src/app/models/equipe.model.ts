@@ -1,5 +1,6 @@
 export type CategoriaEsporte = 'coletivo' | 'individual';
 export type ModalidadeEquipe = 'Futsal' | 'Volei' | 'Queimada' | 'Basquete' | 'Natacao';
+export type NivelAtletaIndividual = 'Iniciante' | 'Intermediario' | 'Avancado';
 
 export interface ModalidadeEsporteConfig {
     valor: ModalidadeEquipe;
@@ -19,6 +20,7 @@ export const MODALIDADES_CONFIG: ModalidadeEsporteConfig[] = [
 
 export const MODALIDADES_EQUIPE: ModalidadeEquipe[] = MODALIDADES_CONFIG.map((item) => item.valor);
 export const CAPITAO_FUNCAO = 'Capitao';
+export const ATLETA_FUNCAO = 'Atleta';
 export const MAX_HABILIDADES_POR_MEMBRO = 3;
 export const HABILIDADES_DISPONIVEIS = [
     'Ataque',
@@ -32,6 +34,25 @@ export const HABILIDADES_DISPONIVEIS = [
     'Drible',
     'Finalizacao'
 ] as const;
+export const HABILIDADES_NATACAO = [
+    'Explosao',
+    'Resistencia',
+    'Tecnica',
+    'Ritmo',
+    'Virada',
+    'Saida',
+    'Respiracao',
+    'Coordenacao',
+    'Concentracao',
+    'Consistencia'
+] as const;
+export const NIVEIS_ATLETA_INDIVIDUAL: NivelAtletaIndividual[] = ['Iniciante', 'Intermediario', 'Avancado'];
+export const ESPECIALIDADES_POR_MODALIDADE: Record<'Natacao', string[]> = {
+    Natacao: ['Livre', 'Costas', 'Peito', 'Borboleta', 'Medley', 'Resistencia']
+};
+export const HABILIDADES_POR_MODALIDADE: Partial<Record<ModalidadeEquipe, readonly string[]>> = {
+    Natacao: HABILIDADES_NATACAO
+};
 export const FUNCOES_POR_MODALIDADE: Record<Exclude<ModalidadeEquipe, 'Natacao'>, string[]> = {
     Futsal: ['Goleiro', 'Fixo', 'Ala direita', 'Ala esquerda', 'Pivo'],
     Volei: ['Levantador', 'Oposto', 'Ponteiro', 'Central', 'Libero'],
@@ -51,6 +72,8 @@ export interface Membro {
     nome: string;
     habilidades: string[];
     funcao?: string;
+    nivel?: NivelAtletaIndividual | null;
+    especialidade?: string | null;
     usuarioId?: number | null;
 }
 
@@ -117,4 +140,30 @@ export function getFuncoesPorModalidade(modalidade: ModalidadeEquipe | string | 
     }
 
     return FUNCOES_POR_MODALIDADE[modalidadeValida];
+}
+
+export function getEspecialidadesPorModalidade(modalidade: ModalidadeEquipe | string | null | undefined) {
+    if (!modalidade || modalidade !== 'Natacao') {
+        return [];
+    }
+
+    return ESPECIALIDADES_POR_MODALIDADE.Natacao;
+}
+
+export function getHabilidadesPorModalidade(modalidade: ModalidadeEquipe | string | null | undefined) {
+    if (!modalidade) {
+        return [...HABILIDADES_DISPONIVEIS];
+    }
+
+    const modalidadeValida = MODALIDADES_CONFIG.find((item) => item.valor === modalidade)?.valor;
+    if (!modalidadeValida) {
+        return [...HABILIDADES_DISPONIVEIS];
+    }
+
+    return [...(HABILIDADES_POR_MODALIDADE[modalidadeValida] ?? HABILIDADES_DISPONIVEIS)];
+}
+
+export function modalidadeUsaHabilidadesEspecificas(modalidade: ModalidadeEquipe | string | null | undefined) {
+    const modalidadeValida = MODALIDADES_CONFIG.find((item) => item.valor === modalidade)?.valor;
+    return !!(modalidadeValida && HABILIDADES_POR_MODALIDADE[modalidadeValida]);
 }

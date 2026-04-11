@@ -100,6 +100,53 @@
             </div>
         </section>
 
+    } @else {
+        <section class="surface-card member-section" [formGroup]="athleteForm">
+            <div class="section-top">
+                <div>
+                    <h3>Perfil do atleta</h3>
+                    <p>Esses dados ajudam a melhorar a previsão da IA nos confrontos individuais.</p>
+                </div>
+            </div>
+
+            <div class="member-grid">
+                <div class="field-group">
+                    <label for="nivel-atleta">Nivel</label>
+                    <select id="nivel-atleta" class="app-select" formControlName="nivel">
+                        <option value="">Selecione o nivel</option>
+                        @for (nivel of niveisAtletaIndividual; track nivel) {
+                            <option [value]="nivel">{{ nivel }}</option>
+                        }
+                    </select>
+                    @if (athleteForm.controls.nivel.invalid && (athleteForm.controls.nivel.touched || athleteForm.controls.nivel.dirty)) {
+                        <small class="field-error">Este campo e obrigatorio.</small>
+                    }
+                </div>
+
+                <div class="field-group">
+                    <label for="especialidade-atleta">Especialidade</label>
+                    <select id="especialidade-atleta" class="app-select" formControlName="especialidade">
+                        <option value="">Selecione a especialidade</option>
+                        @for (especialidade of especialidadesNatacao; track especialidade) {
+                            <option [value]="especialidade">{{ especialidade }}</option>
+                        }
+                    </select>
+                    @if (athleteForm.controls.especialidade.invalid && (athleteForm.controls.especialidade.touched || athleteForm.controls.especialidade.dirty)) {
+                        <small class="field-error">Este campo e obrigatorio.</small>
+                    }
+                </div>
+
+                <div class="field-group full-width">
+                    <app-habilidades-selector
+                        label="Habilidades do atleta"
+                        [selected]="habilidadesSelecionadasAtleta"
+                        [availableSkills]="habilidadesAtletaDisponiveis"
+                        [helperText]="helperTextHabilidadesAtleta"
+                        (selectedChange)="onHabilidadesAtletaChange($event)">
+                    </app-habilidades-selector>
+                </div>
+            </div>
+        </section>
     }
 
     <div class="actions">

@@ -5,7 +5,9 @@ import { ContainerPrincipalComponent } from '../../components/container-principa
 import {
   CategoriaEsporte,
   Equipe,
+  Membro,
   ModalidadeEquipe,
+  getEspecialidadesPorModalidade,
   getModalidadeLabel,
   getModalidadesPorCategoria,
   modalidadeEhIndividual
@@ -112,6 +114,21 @@ export class EquipesComponent {
 
   ehIndividual(modalidade: ModalidadeEquipe) {
     return modalidadeEhIndividual(modalidade);
+  }
+
+  atletaPrincipal(equipe: Equipe): Membro | null {
+    return equipe.membros[0] ?? null;
+  }
+
+  resumoAtletaIndividual(equipe: Equipe) {
+    const atleta = this.atletaPrincipal(equipe);
+    if (!atleta) {
+      return 'Perfil esportivo pendente.';
+    }
+
+    const nivel = atleta.nivel?.trim() || 'Nivel nao informado';
+    const especialidade = atleta.especialidade?.trim() || getEspecialidadesPorModalidade(equipe.modalidade)[0] || '';
+    return especialidade ? `${nivel} · ${especialidade}` : nivel;
   }
 
   abrirModalCadastro(equipeEditando: Equipe | null = null, categoria = this.categoriaSelecionada()) {
