@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ApiRequestService } from './api-request.service';
-import { CategoriaEsporte, Equipe, EquipePayload } from '../models/equipe.model';
+import { CategoriaEsporte, Equipe, EquipePayload, ModalidadeEquipe } from '../models/equipe.model';
 import { CursorPaginatedResponse, CursorPaginationState, DEFAULT_CURSOR_PAGINATION_STATE } from '../models/pagination.model';
 
 @Injectable({
@@ -10,10 +10,11 @@ import { CursorPaginatedResponse, CursorPaginationState, DEFAULT_CURSOR_PAGINATI
 export class EquipesStateService {
   private readonly api = inject(ApiRequestService);
   private readonly categoriaAtual = signal<CategoriaEsporte>('coletivo');
-  private readonly referenciaCarregada = signal(false);
+  private readonly nomeExatoAtual = signal('');
 
   readonly equipes = signal<Equipe[]>([]);
-  readonly equipesReferencia = signal<Equipe[]>([]);
+  readonly participantesReferencia = signal<Record<string, Equipe[]>>({});
+  readonly inscricoesIndividuaisUsuario = signal<Equipe[]>([]);
   readonly selectedEquipe = signal<Equipe | null>(null);
   readonly detailLoading = signal(false);
   readonly detailError = signal<string | null>(null);
@@ -24,6 +25,7 @@ export class EquipesStateService {
   readonly error = signal<string | null>(null);
   readonly pagination = signal<CursorPaginationState>(DEFAULT_CURSOR_PAGINATION_STATE);
   readonly categoria = this.categoriaAtual.asReadonly();
+  readonly nomeExato = this.nomeExatoAtual.asReadonly();
 
   async loadEquipes(cursor = this.pagination().currentCursor, page = this.pagination().page) {
     this.loading.set(true);
@@ -33,6 +35,7 @@ export class EquipesStateService {
       const response = await firstValueFrom(this.api.get<CursorPaginatedResponse<Equipe>>('/equipes', {
         params: {
           categoria: this.categoriaAtual(),
+          nome_exato: this.nomeExatoAtual() || undefined,
           cursor,
           page_size: this.pagination().pageSize
         }
@@ -52,7 +55,7 @@ export class EquipesStateService {
         await this.changePage(page - 1);
       }
     } catch {
-      this.error.set('Nao foi possivel carregar os esportes.');
+      this.error.set('Não foi possível carregar os esportes.');
     } finally {
       this.loading.set(false);
     }
@@ -68,29 +71,48 @@ export class EquipesStateService {
       return equipe;
     } catch {
       this.selectedEquipe.set(null);
-      this.detailError.set('Nao foi possivel carregar os detalhes do esporte.');
+      this.detailError.set('Não foi possível carregar os detalhes do esporte.');
       return null;
     } finally {
       this.detailLoading.set(false);
     }
   }
 
-  async loadEquipesReferencia(force = false) {
-    if (this.referenciaCarregada() && !force) {
+  async loadParticipantesPorModalidade(modalidade: ModalidadeEquipe, force = false) {
+    if (this.participantesReferencia()[modalidade] && !force) {
       return;
     }
 
     try {
-      const response = await firstValueFrom(this.api.get<CursorPaginatedResponse<Equipe>>('/equipes', {
-        params: {
-          page_size: 50
-        }
-      }));
+      const itens = await this.collectAllPages({
+        modalidade,
+        page_size: 50
+      });
 
-      this.equipesReferencia.set(response.items);
-      this.referenciaCarregada.set(true);
+      this.participantesReferencia.update((current) => ({
+        ...current,
+        [modalidade]: itens
+      }));
     } catch {
-      this.error.set('Nao foi possivel carregar os cadastros de referencia.');
+      this.error.set('Não foi possível carregar os participantes da modalidade selecionada.');
+    }
+  }
+
+  async loadInscricoesIndividuaisUsuario(usuarioId: number, force = false) {
+    if (!force && this.inscricoesIndividuaisUsuario().length) {
+      return;
+    }
+
+    try {
+      const itens = await this.collectAllPages({
+        categoria: 'individual',
+        usuario_id: usuarioId,
+        page_size: 10
+      });
+
+      this.inscricoesIndividuaisUsuario.set(itens);
+    } catch {
+      this.error.set('Não foi possível carregar as inscrições individuais do usuário.');
     }
   }
 
@@ -126,18 +148,29 @@ export class EquipesStateService {
     await this.loadEquipes();
   }
 
+  async setNomeExatoFilter(nome: string) {
+    const valorNormalizado = nome.trim();
+    if (this.nomeExatoAtual() === valorNormalizado) {
+      return;
+    }
+
+    this.nomeExatoAtual.set(valorNormalizado);
+    this.resetPagination();
+    await this.loadEquipes();
+  }
+
   async createEquipe(payload: EquipePayload) {
     this.formSaving.set(true);
     this.error.set(null);
 
     try {
       const equipe = await firstValueFrom(this.api.post<Equipe, EquipePayload>('/equipes', payload));
-      this.equipesReferencia.update((equipes) => this.mergeEquipeReferencia(equipes, equipe));
+      this.atualizarCachesAposMutacao(equipe);
       this.resetPagination();
       await this.loadEquipes();
       return equipe;
     } catch (error: any) {
-      this.error.set(error?.error?.detail ?? 'Nao foi possivel cadastrar o esporte.');
+      this.error.set(error?.error?.detail ?? 'Não foi possível cadastrar o esporte.');
       return null;
     } finally {
       this.formSaving.set(false);
@@ -150,14 +183,14 @@ export class EquipesStateService {
 
     try {
       const equipe = await firstValueFrom(this.api.put<Equipe, EquipePayload>(`/equipes/${equipeId}`, payload));
-      this.equipesReferencia.update((equipes) => this.mergeEquipeReferencia(equipes, equipe));
+      this.atualizarCachesAposMutacao(equipe);
       if (this.selectedEquipe()?.id === equipeId) {
         this.selectedEquipe.set(equipe);
       }
       await this.loadEquipes(this.pagination().currentCursor, this.pagination().page);
       return equipe;
     } catch (error: any) {
-      this.error.set(error?.error?.detail ?? 'Nao foi possivel atualizar o esporte.');
+      this.error.set(error?.error?.detail ?? 'Não foi possível atualizar o esporte.');
       return null;
     } finally {
       this.updatingId.set(null);
@@ -170,14 +203,14 @@ export class EquipesStateService {
 
     try {
       await firstValueFrom(this.api.delete<void>(`/equipes/${equipeId}`));
-      this.equipesReferencia.update((equipes) => equipes.filter((equipe) => equipe.id !== equipeId));
+      this.removerDosCaches(equipeId);
       if (this.selectedEquipe()?.id === equipeId) {
         this.selectedEquipe.set(null);
       }
       await this.loadEquipes(this.pagination().currentCursor, this.pagination().page);
       return true;
     } catch (error: any) {
-      this.error.set(error?.error?.detail ?? 'Nao foi possivel remover o esporte.');
+      this.error.set(error?.error?.detail ?? 'Não foi possível remover o esporte.');
       return false;
     } finally {
       this.deletingId.set(null);
@@ -188,13 +221,63 @@ export class EquipesStateService {
     this.pagination.set(DEFAULT_CURSOR_PAGINATION_STATE);
   }
 
-  private mergeEquipeReferencia(equipes: Equipe[], equipeAtualizada: Equipe) {
-    const indice = equipes.findIndex((equipe) => equipe.id === equipeAtualizada.id);
+  private async collectAllPages(params: Record<string, string | number | undefined>) {
+    const itens: Equipe[] = [];
+    let cursor: string | null = null;
+    let hasNext = true;
 
-    if (indice === -1) {
-      return [...equipes, equipeAtualizada].sort((a, b) => a.id - b.id);
+    while (hasNext) {
+      const response: CursorPaginatedResponse<Equipe> = await firstValueFrom(this.api.get<CursorPaginatedResponse<Equipe>>('/equipes', {
+        params: {
+          ...params,
+          cursor: cursor ?? undefined
+        }
+      }));
+
+      itens.push(...response.items);
+      cursor = response.next_cursor;
+      hasNext = response.has_next;
     }
 
-    return equipes.map((equipe) => (equipe.id === equipeAtualizada.id ? equipeAtualizada : equipe));
+    return itens;
+  }
+
+  private atualizarCachesAposMutacao(equipeAtualizada: Equipe) {
+    this.participantesReferencia.update((current) => {
+      const proximo = { ...current };
+      const modalidadeAtual = equipeAtualizada.modalidade;
+      const listaAtual = proximo[modalidadeAtual];
+
+      if (listaAtual) {
+        const indice = listaAtual.findIndex((equipe) => equipe.id === equipeAtualizada.id);
+        proximo[modalidadeAtual] = indice === -1
+          ? [...listaAtual, equipeAtualizada].sort((a, b) => a.id - b.id)
+          : listaAtual.map((equipe) => (equipe.id === equipeAtualizada.id ? equipeAtualizada : equipe));
+      }
+
+      return proximo;
+    });
+
+    if (equipeAtualizada.usuarioId != null) {
+      const listaAtual = this.inscricoesIndividuaisUsuario();
+      const indice = listaAtual.findIndex((equipe) => equipe.id === equipeAtualizada.id);
+      this.inscricoesIndividuaisUsuario.set(
+        indice === -1
+          ? [...listaAtual, equipeAtualizada].sort((a, b) => a.id - b.id)
+          : listaAtual.map((equipe) => (equipe.id === equipeAtualizada.id ? equipeAtualizada : equipe))
+      );
+    }
+  }
+
+  private removerDosCaches(equipeId: number) {
+    this.participantesReferencia.update((current) => {
+      const proximo: Record<string, Equipe[]> = {};
+      for (const [modalidade, equipes] of Object.entries(current)) {
+        proximo[modalidade] = equipes.filter((equipe) => equipe.id !== equipeId);
+      }
+      return proximo;
+    });
+
+    this.inscricoesIndividuaisUsuario.update((equipes) => equipes.filter((equipe) => equipe.id !== equipeId));
   }
 }

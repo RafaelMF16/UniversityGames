@@ -118,7 +118,7 @@ export class EsporteDetalheComponent {
         usuarioAtual: this.authState.user(),
         individualAutopreenchido: modalidadeEhIndividual(equipe.modalidade) && this.authState.canCreateIndividualRegistration(),
         modalidadesIndividuaisBloqueadas: [],
-        equipesReferencia: this.equipesState.equipesReferencia()
+        equipesReferencia: []
       }
     });
   }

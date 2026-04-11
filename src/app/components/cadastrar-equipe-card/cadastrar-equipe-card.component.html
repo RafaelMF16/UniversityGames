@@ -17,16 +17,16 @@
                     class="app-input"
                     [class.invalid]="isInvalid('nome') || nomeDuplicado"
                     formControlName="nome"
-                    [placeholder]="ehColetivo ? 'Ex: Biomed Furia' : 'Ex: Maria da Silva'"
+                    [placeholder]="ehColetivo ? 'Ex: Biomed Fúria' : 'Ex: Maria da Silva'"
                     type="text">
                 @if (isInvalid('nome')) {
                     <small class="field-error">{{ getErrorMessage('nome') }}</small>
                 } @else if (nomeDuplicado) {
-                    <small class="field-error">Ja existe uma equipe cadastrada com esse nome nessa modalidade.</small>
+                    <small class="field-error">Já existe uma equipe cadastrada com esse nome nessa modalidade.</small>
                 }
             </div>
 
-                <div class="field-group">
+            <div class="field-group">
                 <label for="curso-equipe">Curso da equipe</label>
                 <select id="curso-equipe" class="app-select" [class.invalid]="isInvalid('curso')" formControlName="curso">
                     <option value="">Selecione o curso</option>
@@ -40,9 +40,9 @@
             </div>
 
             <div class="field-group">
-                <label for="periodo-equipe">Periodo da equipe</label>
+                <label for="periodo-equipe">Período da equipe</label>
                 <select id="periodo-equipe" class="app-select" [class.invalid]="isInvalid('periodo')" formControlName="periodo">
-                    <option value="">Selecione o periodo</option>
+                    <option value="">Selecione o período</option>
                     @for (periodo of periodosDisponiveis; track periodo) {
                         <option [value]="periodo">{{ periodo }}</option>
                     }
@@ -74,7 +74,7 @@
                 <small class="field-error">{{ getErrorMessage('modalidade') }}</small>
             }
             @if (modalidadeBloqueada) {
-                <small class="field-error">Voce ja possui inscricao nessa modalidade.</small>
+                <small class="field-error">Você já possui inscrição nessa modalidade.</small>
             }
         </div>
     </form>
@@ -83,15 +83,15 @@
         <section class="surface-card member-section" [formGroup]="captainForm">
             <div class="section-top">
                 <div>
-                    <h3>Capitao da equipe</h3>
-                    <p>Esse membro e obrigatorio e tambem conta no limite de integrantes.</p>
+                    <h3>Capitão da equipe</h3>
+                    <p>Esse membro é obrigatório e também conta no limite de integrantes.</p>
                 </div>
             </div>
 
             <div class="member-grid">
                 <div class="field-group full-width">
                     <app-habilidades-selector
-                        label="Habilidades do capitao"
+                        label="Habilidades do capitão"
                         [selected]="habilidadesSelecionadasCapitao"
                         helperText="Habilidades"
                         (selectedChange)="onHabilidadesCapitaoChange($event)">
@@ -111,15 +111,15 @@
 
             <div class="member-grid">
                 <div class="field-group">
-                    <label for="nivel-atleta">Nivel</label>
+                    <label for="nivel-atleta">Nível</label>
                     <select id="nivel-atleta" class="app-select" formControlName="nivel">
-                        <option value="">Selecione o nivel</option>
+                        <option value="">Selecione o nível</option>
                         @for (nivel of niveisAtletaIndividual; track nivel) {
                             <option [value]="nivel">{{ nivel }}</option>
                         }
                     </select>
                     @if (athleteForm.controls.nivel.invalid && (athleteForm.controls.nivel.touched || athleteForm.controls.nivel.dirty)) {
-                        <small class="field-error">Este campo e obrigatorio.</small>
+                        <small class="field-error">Este campo é obrigatório.</small>
                     }
                 </div>
 
@@ -132,7 +132,7 @@
                         }
                     </select>
                     @if (athleteForm.controls.especialidade.invalid && (athleteForm.controls.especialidade.touched || athleteForm.controls.especialidade.dirty)) {
-                        <small class="field-error">Este campo e obrigatorio.</small>
+                        <small class="field-error">Este campo é obrigatório.</small>
                     }
                 </div>
 
@@ -155,7 +155,7 @@
                 @if (salvando) {
                     <app-loading-indicator [inline]="true" [small]="true" label="Atualizando..."></app-loading-indicator>
                 } @else {
-                    {{ ehColetivo ? 'Salvar equipe e capitao' : 'Atualizar inscricao' }}
+                    {{ ehColetivo ? 'Salvar equipe e capitão' : 'Atualizar inscrição' }}
                 }
             </button>
             <button class="app-button-ghost" type="button" (click)="onCancelarEdicao()" [disabled]="salvando">Cancelar</button>
@@ -164,7 +164,7 @@
                 @if (salvando) {
                     <app-loading-indicator [inline]="true" [small]="true" label="Salvando..."></app-loading-indicator>
                 } @else {
-                    {{ ehColetivo ? 'Salvar equipe e capitao' : 'Confirmar inscricao' }}
+                    {{ ehColetivo ? 'Salvar equipe e capitão' : 'Confirmar inscrição' }}
                 }
             </button>
         }

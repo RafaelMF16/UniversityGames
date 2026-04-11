@@ -60,6 +60,30 @@
     padding: 22px 24px;
 }
 
+.filter-row {
+    align-items: end;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-field label {
+    color: var(--text-soft);
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
 .sports-grid {
     display: grid;
     gap: 14px;
@@ -129,6 +153,14 @@
 
     .tabs-row {
         grid-template-columns: 1fr;
+    }
+
+    .filter-row {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-actions {
+        flex-wrap: wrap;
     }
 
     .list-section {
