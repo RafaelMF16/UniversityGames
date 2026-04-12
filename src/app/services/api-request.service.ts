@@ -15,7 +15,7 @@ export interface ApiRequestOptions {
 })
 export class ApiRequestService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${window.location.protocol}//${window.location.hostname}:8000/api/v1`;
+  private readonly baseUrl = this.resolveBaseUrl();
 
   get<T>(endpoint: string, options?: ApiRequestOptions): Observable<T> {
     return this.http.get<T>(this.resolveUrl(endpoint), this.createOptions(options));
@@ -63,5 +63,16 @@ export class ApiRequestService {
     }
 
     return `${this.baseUrl.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
+  }
+
+  private resolveBaseUrl(): string {
+    const { hostname, origin, port, protocol } = window.location;
+    const isAngularDevServer = ['localhost', '127.0.0.1'].includes(hostname) && port === '4200';
+
+    if (isAngularDevServer) {
+      return `${protocol}//${hostname}:8000/api/v1`;
+    }
+
+    return `${origin}/api/v1`;
   }
 }
