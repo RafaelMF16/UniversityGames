@@ -1,5 +1,8 @@
 <section class="login-shell">
     <section class="login-card surface-card">
+        <div class="logo-container">
+            <img src="logoFPM.png" alt="Logo FPM" class="brand-logo">
+        </div>
         <div class="brand-copy">
             <h1>Jogos internos <span>FPM</span></h1>
             <p>Acesse sua conta ou crie um cadastro de visitante para se inscrever nos esportes individuais.</p>
@@ -7,7 +10,7 @@
 
         <div class="mode-tabs">
             <button class="mode-tab" type="button" [class.active]="modo() === 'login'" (click)="selecionarModo('login')">Entrar</button>
-            <button class="mode-tab" type="button" [class.active]="modo() === 'cadastro'" (click)="selecionarModo('cadastro')">Criar conta visitante</button>
+            <button class="mode-tab" type="button" [class.active]="modo() === 'cadastro'" (click)="selecionarModo('cadastro')">Criar conta</button>
         </div>
 
         @if (modo() === 'login') {

@@ -31,7 +31,7 @@
 
                 <div class="field-group">
                     <label for="usuario-username">Usuário</label>
-                    <input id="usuario-username" class="app-input" [class.invalid]="isInvalid('username')" formControlName="username" placeholder="nome.usuario" type="text" autocomplete="off">
+                    <input id="usuario-username" class="app-input" [class.invalid]="isInvalid('username')" formControlName="username" placeholder="Usuário" type="text" autocomplete="off">
                     @if (isInvalid('username')) {
                         <small class="field-error">{{ getErrorMessage('username') }}</small>
                     }
