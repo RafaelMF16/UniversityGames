@@ -8,5 +8,5 @@ export const loginGuard: CanActivateFn = async () => {
 
   await authState.ensureInitialized();
 
-  return authState.canAccessShell() ? router.createUrlTree(['/dashboard']) : true;
+  return authState.isAuthenticated() ? router.createUrlTree(['/dashboard']) : true;
 };
