@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 import { LoadingIndicatorComponent } from '../../components/loading-indicator/loading-indicator.component';
 import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
 import { AuthStateService } from '../../services/auth-state.service';
+import { profanityValidator } from '../../validators/profanity.validator';
 
 @Component({
   selector: 'app-login',
@@ -27,8 +28,8 @@ export class LoginComponent {
   });
 
   readonly cadastroForm = this.formBuilder.nonNullable.group({
-    nome: ['', [Validators.required, Validators.minLength(3), nomeCompletoValidator()]],
-    username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
+    nome: ['', [Validators.required, Validators.minLength(3), nomeCompletoValidator(), profanityValidator()]],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/), profanityValidator()]],
     senha: ['', [Validators.required, Validators.minLength(6)]],
     curso: ['', Validators.required],
     periodo: ['', Validators.required]
@@ -92,6 +93,10 @@ export class LoginComponent {
 
     if (controlName === 'nome' && control.hasError('nomeCompleto')) {
       return 'Informe nome e sobrenome.';
+    }
+
+    if (control.hasError('palavrao')) {
+      return 'Este campo contém conteúdo inapropriado.';
     }
 
     if (controlName === 'username' && control.hasError('pattern')) {
