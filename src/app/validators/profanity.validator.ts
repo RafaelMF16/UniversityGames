@@ -8,17 +8,17 @@ const TERMOS_PROIBIDOS: string[] = [
   'piranha', 'prostituta', 'canalha', 'corno', 'corna', 'cornao',
   'fdp', 'filhadaputa', 'filhodaputa', 'desgraçado',
   'idiota', 'imbecil', 'babaca', 'otario', 'cretino', 'retardado',
-  'anta', 'besta', 'trouxa',
+  'anta', 'besta', 'trouxa', 'vtnc', 'vaitomanocu', 'porra', 'merda',
   // Termos sexuais explícitos
-  'buceta', 'xota', 'xoxota', 'ppk', 'xereca', 'boceta',
-  'caralho', 'pinto', 'rola', 'pau',
-  'cuzao', 'cuzão', 'cu', 'bunda',
+  'buceta', 'xota', 'xoxota', 'ppk', 'xereca', 'boceta', 'perereca', 'piriquita', 'vagina', 'xana', 'xaninha',
+  'caralho', 'pinto', 'rola', 'pau', 'penis', 'pênis',
+  'cuzao', 'cuzão', 'cu', 'bunda', 'anus', 'ânus', 'furico', 'cuzinho',
   'foder', 'fuder', 'foda', 'fudeu', 'fodasse', 'fodase',
-  'porno', 'pornô', 'putaria', 'sacanagem',
+  'porno', 'pornô', 'putaria',
   'tesao', 'tesão',
   'punheta',
   // Variações com números
-  'put4', 'fud3', 'c4ralho', 'buc3ta',
+  'put4', 'fud3', 'c4ralho', 'buc3ta', 'p1nto',
   // Termos discriminatórios
   'viado', 'viadao', 'viadão', 'bicha', 'traveco',
   'sapatao', 'sapatão',
