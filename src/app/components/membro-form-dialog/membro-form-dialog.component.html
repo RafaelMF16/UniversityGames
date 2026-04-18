@@ -17,7 +17,11 @@
                 placeholder="Ex: Joao Pedro"
                 type="text">
             @if (isInvalid('nome')) {
-                <small class="field-error">Informe pelo menos 2 caracteres.</small>
+                @if (form.controls.nome.hasError('palavrao')) {
+                    <small class="field-error">Este campo contém conteúdo inapropriado.</small>
+                } @else {
+                    <small class="field-error">Informe pelo menos 2 caracteres.</small>
+                }
             }
         </div>
 
@@ -33,6 +37,20 @@
                 <small class="field-error">Selecione uma funcao valida para essa modalidade.</small>
             }
         </div>
+
+        @if (exigeGenero) {
+            <div class="field-group">
+                <label for="membro-genero">Gênero</label>
+                <select id="membro-genero" class="app-select" [class.invalid]="form.controls.genero.invalid && (form.controls.genero.touched || form.controls.genero.dirty)" formControlName="genero">
+                    <option value="">Selecione o gênero</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                </select>
+                @if (form.controls.genero.invalid && (form.controls.genero.touched || form.controls.genero.dirty)) {
+                    <small class="field-error">Selecione o gênero (obrigatório para Tênis de mesa).</small>
+                }
+            </div>
+        }
 
         <div class="field-group full-width">
             <app-habilidades-selector

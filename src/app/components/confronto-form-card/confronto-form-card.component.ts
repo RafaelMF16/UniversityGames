@@ -1,5 +1,6 @@
 import { Component, Inject, Optional, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { profanityValidator } from '../../validators/profanity.validator';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Confronto, ConfrontoPayload } from '../../models/confronto.model';
 import {
@@ -63,7 +64,7 @@ export class ConfrontoFormCardComponent {
     participanteBId: [{ value: 0, disabled: true }, [Validators.required, Validators.min(1)]],
     data: ['', Validators.required],
     horario: ['', Validators.required],
-    local: ['', [Validators.required, Validators.minLength(3)]],
+    local: ['', [Validators.required, Validators.minLength(3), profanityValidator()]],
     modalidade: ['' as '' | ModalidadeEquipe, Validators.required],
     status: ['' as '' | NonNullable<Confronto['status']>, Validators.required]
   });
@@ -205,6 +206,10 @@ export class ConfrontoFormCardComponent {
 
   getErrorMessage(controlName: 'participanteAId' | 'participanteBId' | 'data' | 'horario' | 'local' | 'modalidade' | 'status') {
     const control = this.form.controls[controlName];
+
+    if (control.hasError('palavrao')) {
+      return 'Este campo contém conteúdo inapropriado.';
+    }
 
     if (control.hasError('required') || control.hasError('min')) {
       return 'Este campo é obrigatório.';

@@ -89,10 +89,24 @@
             </div>
 
             <div class="member-grid">
+                @if (exigeGeneroCapitao) {
+                    <div class="field-group">
+                        <label for="capitao-genero">Gênero do capitão</label>
+                        <select id="capitao-genero" class="app-select" [class.invalid]="captainForm.controls.genero.invalid && (captainForm.controls.genero.touched || captainForm.controls.genero.dirty)" formControlName="genero">
+                            <option value="">Selecione o gênero</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                        </select>
+                        @if (captainForm.controls.genero.invalid && (captainForm.controls.genero.touched || captainForm.controls.genero.dirty)) {
+                            <small class="field-error">Gênero obrigatório para Tênis de mesa.</small>
+                        }
+                    </div>
+                }
                 <div class="field-group full-width">
                     <app-habilidades-selector
                         label="Habilidades do capitão"
                         [selected]="habilidadesSelecionadasCapitao"
+                        [availableSkills]="habilidadesCapitaoDisponiveis"
                         helperText="Habilidades"
                         (selectedChange)="onHabilidadesCapitaoChange($event)">
                     </app-habilidades-selector>
@@ -119,19 +133,6 @@
                         }
                     </select>
                     @if (athleteForm.controls.nivel.invalid && (athleteForm.controls.nivel.touched || athleteForm.controls.nivel.dirty)) {
-                        <small class="field-error">Este campo é obrigatório.</small>
-                    }
-                </div>
-
-                <div class="field-group">
-                    <label for="especialidade-atleta">Especialidade</label>
-                    <select id="especialidade-atleta" class="app-select" formControlName="especialidade">
-                        <option value="">Selecione a especialidade</option>
-                        @for (especialidade of especialidadesNatacao; track especialidade) {
-                            <option [value]="especialidade">{{ especialidade }}</option>
-                        }
-                    </select>
-                    @if (athleteForm.controls.especialidade.invalid && (athleteForm.controls.especialidade.touched || athleteForm.controls.especialidade.dirty)) {
                         <small class="field-error">Este campo é obrigatório.</small>
                     }
                 </div>

@@ -1,20 +1,21 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
+import { profanityValidator } from '../../validators/profanity.validator';
 import {
   ATLETA_FUNCAO,
   CAPITAO_FUNCAO,
   CategoriaEsporte,
-  ESPECIALIDADES_POR_MODALIDADE,
   Equipe,
   EquipePayload,
+  GeneroMembro,
   getHabilidadesPorModalidade,
   MAX_HABILIDADES_POR_MEMBRO,
   MembroPayload,
   ModalidadeEquipe,
   ModalidadeEsporteConfig,
   NIVEIS_ATLETA_INDIVIDUAL,
-  modalidadeUsaHabilidadesEspecificas,
+  modalidadeExigeGenero,
   modalidadeEhIndividual,
   membroEhCapitao
 } from '../../models/equipe.model';
@@ -47,10 +48,9 @@ export class CadastrarEquipeCardComponent implements OnChanges {
   readonly cursosDisponiveis = CURSOS_DISPONIVEIS;
   readonly maxHabilidades = MAX_HABILIDADES_POR_MEMBRO;
   readonly niveisAtletaIndividual = NIVEIS_ATLETA_INDIVIDUAL;
-  readonly especialidadesNatacao = ESPECIALIDADES_POR_MODALIDADE.Natacao;
 
   readonly form = this.formBuilder.group({
-    nome: ['', [Validators.required, Validators.minLength(3)]],
+    nome: ['', [Validators.required, Validators.minLength(3), profanityValidator()]],
     curso: ['', [Validators.required, Validators.minLength(2)]],
     periodo: ['', [Validators.required, Validators.minLength(1)]],
     modalidade: ['' as '' | ModalidadeEquipe, Validators.required]
@@ -58,13 +58,13 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   readonly captainForm = this.formBuilder.group({
     nome: ['', [Validators.required, Validators.minLength(2)]],
+    genero: ['' as '' | GeneroMembro],
     habilidades: this.formBuilder.nonNullable.control<string[]>([])
   });
 
   readonly athleteForm = this.formBuilder.group({
     habilidades: this.formBuilder.nonNullable.control<string[]>([]),
-    nivel: ['' as '' | typeof NIVEIS_ATLETA_INDIVIDUAL[number], Validators.required],
-    especialidade: ['', Validators.required]
+    nivel: ['' as '' | typeof NIVEIS_ATLETA_INDIVIDUAL[number], Validators.required]
   });
 
   ngOnChanges(changes: SimpleChanges) {
@@ -170,6 +170,10 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     return capitao ? [capitao] : [];
   }
 
+  get exigeGeneroCapitao() {
+    return modalidadeExigeGenero(this.modalidadeSelecionada);
+  }
+
   get atletaPayload(): MembroPayload | null {
     if (this.ehColetivo) {
       return null;
@@ -188,7 +192,6 @@ export class CadastrarEquipeCardComponent implements OnChanges {
       habilidades: this.habilidadesSelecionadasAtleta,
       funcao: ATLETA_FUNCAO,
       nivel: values.nivel || undefined,
-      especialidade: values.especialidade?.trim() || undefined,
       usuarioId: this.individualUsaDadosDaConta
         ? this.usuarioAtual?.id ?? atletaBase?.usuarioId ?? null
         : atletaBase?.usuarioId ?? null
@@ -206,12 +209,14 @@ export class CadastrarEquipeCardComponent implements OnChanges {
       return null;
     }
 
+    const values = this.captainForm.getRawValue();
     const membroBase = this.obterMembroCapitaoExistente();
     return {
       id: membroBase?.id,
       nome,
       habilidades: this.habilidadesSelecionadasCapitao,
       funcao: CAPITAO_FUNCAO,
+      genero: (values.genero as GeneroMembro) || undefined,
       usuarioId: this.usuarioEhCapitao ? this.usuarioAtual?.id ?? null : membroBase?.usuarioId ?? null
     };
   }
@@ -224,14 +229,16 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     return this.lerHabilidadesSelecionadas(this.athleteForm.getRawValue().habilidades);
   }
 
+  get habilidadesCapitaoDisponiveis() {
+    return getHabilidadesPorModalidade(this.modalidadeSelecionada);
+  }
+
   get habilidadesAtletaDisponiveis() {
     return getHabilidadesPorModalidade(this.modalidadeSelecionada);
   }
 
   get helperTextHabilidadesAtleta() {
-    return modalidadeUsaHabilidadesEspecificas(this.modalidadeSelecionada)
-      ? 'Escolha até 3 habilidades da natação.'
-      : 'Habilidades';
+    return 'Habilidades';
   }
 
   get nomeCapitaoAtual() {
@@ -300,6 +307,10 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   getErrorMessage(controlName: 'nome' | 'curso' | 'periodo' | 'modalidade') {
     const control = this.form.controls[controlName];
+
+    if (control.hasError('palavrao')) {
+      return 'Este campo contém conteúdo inapropriado.';
+    }
 
     if (control.hasError('required')) {
       return 'Este campo é obrigatório.';
@@ -381,6 +392,11 @@ export class CadastrarEquipeCardComponent implements OnChanges {
       return false;
     }
 
+    if (this.exigeGeneroCapitao && !this.captainForm.getRawValue().genero) {
+      this.captainForm.markAllAsTouched();
+      return false;
+    }
+
     if (this.usuarioEhCapitao && (!this.usuarioAtual?.curso || !this.usuarioAtual?.periodo)) {
       this.form.markAllAsTouched();
       return false;
@@ -426,8 +442,7 @@ export class CadastrarEquipeCardComponent implements OnChanges {
   private preencherAtletaIndividual(atleta: Equipe['membros'][number] | null) {
     this.athleteForm.reset({
       habilidades: atleta?.habilidades ?? [],
-      nivel: atleta?.nivel ?? '',
-      especialidade: atleta?.especialidade ?? ''
+      nivel: atleta?.nivel ?? ''
     }, { emitEvent: false });
   }
 
