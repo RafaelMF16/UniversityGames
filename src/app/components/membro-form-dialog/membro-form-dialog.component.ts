@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GeneroMembro, MAX_HABILIDADES_POR_MEMBRO, MembroPayload, ModalidadeEquipe, getFuncoesPorModalidade, modalidadeExigeGenero } from '../../models/equipe.model';
 import { HabilidadesSelectorComponent } from '../habilidades-selector/habilidades-selector.component';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
+import { profanityValidator } from '../../validators/profanity.validator';
 
 interface MembroFormDialogData {
   salvando: boolean;
@@ -25,7 +26,7 @@ export class MembroFormDialogComponent {
   readonly exigeGenero = modalidadeExigeGenero(this.data.modalidade);
 
   readonly form = this.formBuilder.group({
-    nome: ['', [Validators.required, Validators.minLength(2)]],
+    nome: ['', [Validators.required, Validators.minLength(2), profanityValidator()]],
     funcao: ['', Validators.required],
     genero: ['' as '' | GeneroMembro],
     habilidades: this.formBuilder.nonNullable.control<string[]>([])

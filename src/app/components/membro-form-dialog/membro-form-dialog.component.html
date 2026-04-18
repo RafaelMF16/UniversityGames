@@ -17,7 +17,11 @@
                 placeholder="Ex: Joao Pedro"
                 type="text">
             @if (isInvalid('nome')) {
-                <small class="field-error">Informe pelo menos 2 caracteres.</small>
+                @if (form.controls.nome.hasError('palavrao')) {
+                    <small class="field-error">Este campo contém conteúdo inapropriado.</small>
+                } @else {
+                    <small class="field-error">Informe pelo menos 2 caracteres.</small>
+                }
             }
         </div>
 

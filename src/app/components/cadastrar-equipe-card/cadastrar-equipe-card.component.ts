@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
+import { profanityValidator } from '../../validators/profanity.validator';
 import {
   ATLETA_FUNCAO,
   CAPITAO_FUNCAO,
@@ -49,7 +50,7 @@ export class CadastrarEquipeCardComponent implements OnChanges {
   readonly niveisAtletaIndividual = NIVEIS_ATLETA_INDIVIDUAL;
 
   readonly form = this.formBuilder.group({
-    nome: ['', [Validators.required, Validators.minLength(3)]],
+    nome: ['', [Validators.required, Validators.minLength(3), profanityValidator()]],
     curso: ['', [Validators.required, Validators.minLength(2)]],
     periodo: ['', [Validators.required, Validators.minLength(1)]],
     modalidade: ['' as '' | ModalidadeEquipe, Validators.required]
@@ -306,6 +307,10 @@ export class CadastrarEquipeCardComponent implements OnChanges {
 
   getErrorMessage(controlName: 'nome' | 'curso' | 'periodo' | 'modalidade') {
     const control = this.form.controls[controlName];
+
+    if (control.hasError('palavrao')) {
+      return 'Este campo contém conteúdo inapropriado.';
+    }
 
     if (control.hasError('required')) {
       return 'Este campo é obrigatório.';
