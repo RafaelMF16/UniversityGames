@@ -36,6 +36,22 @@ export const HABILIDADES_DISPONIVEIS = [
     'Finalização'
 ] as const;
 export const NIVEIS_ATLETA_INDIVIDUAL: NivelAtletaIndividual[] = ['Iniciante', 'Intermediário', 'Avançado'];
+export const HABILIDADES_TENIS_DE_MESA = [
+    'Saque',
+    'Topspin',
+    'Forehand',
+    'Backhand',
+    'Bloqueio',
+    'Smash',
+    'Corte',
+    'Reflexo',
+    'Posicionamento',
+    'Consistência'
+] as const;
+export const HABILIDADES_POR_MODALIDADE: Partial<Record<ModalidadeEquipe, readonly string[]>> = {
+    TenisDeMesa: HABILIDADES_TENIS_DE_MESA,
+    TenisDeMesaIndividual: HABILIDADES_TENIS_DE_MESA
+};
 export const FUNCOES_POR_MODALIDADE: Record<Exclude<ModalidadeEquipe, 'TenisDeMesaIndividual'>, string[]> = {
     Futsal: ['Goleiro', 'Fixo', 'Ala direita', 'Ala esquerda', 'Pivô'],
     Volei: ['Levantador', 'Oposto', 'Ponteiro', 'Central', 'Líbero'],
@@ -131,13 +147,18 @@ export function getFuncoesPorModalidade(modalidade: ModalidadeEquipe | string | 
 }
 
 export function getHabilidadesPorModalidade(modalidade: ModalidadeEquipe | string | null | undefined) {
-    if (!modalidade) {
-        return [...HABILIDADES_DISPONIVEIS];
+    const modalidadeValida = MODALIDADES_CONFIG.find((item) => item.valor === modalidade)?.valor;
+    if (modalidadeValida) {
+        const especificas = HABILIDADES_POR_MODALIDADE[modalidadeValida];
+        if (especificas) {
+            return [...especificas];
+        }
     }
 
     return [...HABILIDADES_DISPONIVEIS];
 }
 
-export function modalidadeUsaHabilidadesEspecificas(_modalidade: ModalidadeEquipe | string | null | undefined) {
-    return false;
+export function modalidadeUsaHabilidadesEspecificas(modalidade: ModalidadeEquipe | string | null | undefined) {
+    const modalidadeValida = MODALIDADES_CONFIG.find((item) => item.valor === modalidade)?.valor;
+    return !!(modalidadeValida && HABILIDADES_POR_MODALIDADE[modalidadeValida]);
 }
