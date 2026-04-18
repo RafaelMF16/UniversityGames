@@ -228,6 +228,10 @@ export class CadastrarEquipeCardComponent implements OnChanges {
     return this.lerHabilidadesSelecionadas(this.athleteForm.getRawValue().habilidades);
   }
 
+  get habilidadesCapitaoDisponiveis() {
+    return getHabilidadesPorModalidade(this.modalidadeSelecionada);
+  }
+
   get habilidadesAtletaDisponiveis() {
     return getHabilidadesPorModalidade(this.modalidadeSelecionada);
   }
