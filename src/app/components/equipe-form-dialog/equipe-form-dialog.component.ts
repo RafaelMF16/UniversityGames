@@ -40,7 +40,7 @@ export class EquipeFormDialogComponent {
     }
 
     const usuario = this.data.usuarioAtual;
-    if (payload.modalidade !== 'Natacao' && usuario?.role === 'capitao' && !usuario.equipeId) {
+    if (payload.modalidade !== 'TenisDeMesaIndividual' && usuario?.role === 'capitao' && !usuario.equipeId) {
       await this.authState.refreshCurrentUser();
     }
 

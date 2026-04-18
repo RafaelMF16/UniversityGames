@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MAX_HABILIDADES_POR_MEMBRO, MembroPayload, ModalidadeEquipe, getFuncoesPorModalidade } from '../../models/equipe.model';
+import { GeneroMembro, MAX_HABILIDADES_POR_MEMBRO, MembroPayload, ModalidadeEquipe, getFuncoesPorModalidade, modalidadeExigeGenero } from '../../models/equipe.model';
 import { HabilidadesSelectorComponent } from '../habilidades-selector/habilidades-selector.component';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 
@@ -22,14 +22,24 @@ export class MembroFormDialogComponent {
   readonly data = inject<MembroFormDialogData>(MAT_DIALOG_DATA);
   private readonly formBuilder = inject(FormBuilder);
 
+  readonly exigeGenero = modalidadeExigeGenero(this.data.modalidade);
+
   readonly form = this.formBuilder.group({
     nome: ['', [Validators.required, Validators.minLength(2)]],
     funcao: ['', Validators.required],
+    genero: ['' as '' | GeneroMembro],
     habilidades: this.formBuilder.nonNullable.control<string[]>([])
   });
 
   readonly maxHabilidades = MAX_HABILIDADES_POR_MEMBRO;
   readonly funcoesDisponiveis = getFuncoesPorModalidade(this.data.modalidade);
+
+  constructor() {
+    if (this.exigeGenero) {
+      this.form.controls.genero.addValidators(Validators.required);
+      this.form.controls.genero.updateValueAndValidity();
+    }
+  }
 
   get habilidadesSelecionadas() {
     return this.lerHabilidadesSelecionadas(this.form.getRawValue().habilidades);
@@ -45,6 +55,7 @@ export class MembroFormDialogComponent {
     const payload: MembroPayload = {
       nome: values.nome?.trim() ?? '',
       funcao: values.funcao?.trim() || undefined,
+      genero: (values.genero as GeneroMembro) || undefined,
       habilidades: this.habilidadesSelecionadas,
       usuarioId: null
     };
