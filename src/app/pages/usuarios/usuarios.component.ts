@@ -9,6 +9,7 @@ import { PaginationControlsComponent } from '../../components/pagination-control
 import { CURSOS_DISPONIVEIS, PERIODOS_DISPONIVEIS } from '../../models/academic-options.model';
 import { ManagedUserRole, TemaUsuario, Usuario, UsuarioPayload } from '../../models/usuario.model';
 import { UsuariosStateService } from '../../services/usuarios-state.service';
+import { profanityValidator } from '../../validators/profanity.validator';
 
 @Component({
   selector: 'app-usuarios',
@@ -47,8 +48,8 @@ export class UsuariosComponent {
   ];
 
   readonly form = this.formBuilder.nonNullable.group({
-    nome: ['', [Validators.required, Validators.minLength(3)]],
-    username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
+    nome: ['', [Validators.required, Validators.minLength(3), profanityValidator()]],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._-]+$/), profanityValidator()]],
     senha: ['', [Validators.minLength(6)]],
     role: ['admin' as ManagedUserRole, Validators.required],
     curso: [''],
@@ -210,6 +211,10 @@ export class UsuariosComponent {
 
     if (controlName === 'senha' && !this.usuarioEditando() && !control.value) {
       return 'Informe a senha inicial do usuário.';
+    }
+
+    if (control.hasError('palavrao')) {
+      return 'Este campo contém conteúdo inapropriado.';
     }
 
     if (controlName === 'username' && control.hasError('pattern')) {
